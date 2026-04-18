@@ -1,0 +1,38 @@
+## Evaluation: Canon Completeness
+
+**Score: 7/10**
+
+This document provides strong internal consistency and excellent knowledge boundary tracking for primary characters, but suffers from uneven coverage across factions and gaps in magic system mechanics that could cause inconsistencies during drafting.
+
+---
+
+### Supporting Passages
+
+**1. Strong Knowledge Boundary Tracking (primary strength)**
+> "Vera — KNOWS: Breeding program exists; smuggled evidence of it four years ago; evidence hidden somewhere Covenant cannot reach; Mira is Vessel-class; Covenant's internal structure; location of Pale Tower and general facility location. DOESN'T KNOW: Exact location of hidden evidence; what is on sub-level beneath facility; whether 'something old' beneath facility is connected to tideglass source; what Mira's 'processing' status is"
+
+This dual-column approach effectively tracks what characters know versus don't know, preventing "I never told her that" contradictions during drafting.
+
+**2. Specific, Verifiable Character Facts**
+> "Left Hand: Salt-white scarring from blood-burn (mark of practitioner who pulled too much essence in single working); scars weep clear fluid on humid days"
+
+Specific sensory detail anchors the document in verifiable fictional facts. The 37 tattoo marks, the 18-20 years of accelerated aging from 15 years of bloodforge use, and the "Year 254" birth date all cohere internally.
+
+**3. Internal Timeline Consistency**
+> "was junior Bloodlord during Pale Tower Incident, Year 289—4 years before present" + "smuggled evidence four years ago" + "Vera born Year 254, current age 37" = consistent chronology
+
+The dates align: current year is approximately 293, Vera's first solo mission at 14 places it at ~268, parents drowned when she was 12 at ~266.
+
+---
+
+### Improvement Suggestion
+
+**Add magic system mechanics and timeline specifics for Pale Tower Incident.**
+
+The document references "Memory Drop technique" and "essence pathways" without explaining their rules, and names the five Bloodlords but only develops Kael's personality. If Sera's "processing" or the "something old" beneath the facility becomes plot-relevant, the lack of defined mechanics will create problems:
+
+- What are the limits of Memory Drop? Can it be reversed?
+- What are the observable symptoms of damaged essence pathways?
+- What exactly is "tideglass"? How does it connect to bloodforge?
+
+**Concrete addition**: A "Magic System Reference" section with defined rules for bloodforge use, Vessel-class activation effects, and the mechanics of the Drowning Pools disposal method would prevent mid-novel contradictions.

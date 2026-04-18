@@ -1,0 +1,33 @@
+# Evaluation: Character Distinctiveness
+
+## Score: 9/10
+
+This is among the best character construction I've encountered in character profiles. The writing achieves exceptional distinctiveness through meticulous attention to voice, psychology, and the interconnection between body and inner life. Both major characters transcend archetype while maintaining immediate recognizability.
+
+---
+
+## Supporting Passages
+
+### 1. Voice Distinction — Maren's Physical Self as Voice
+
+> "Her hands are her most expressive feature—they gesture very little, but they're never quite still. Fingers tapping against thighs, adjusting objects that don't need adjusting. The fidgeting of someone who learned to keep their hands ready."
+
+This passage achieves what dialogue cannot—it embeds Maren's combat-readiness into her unconscious physicality. A reader encountering her in scene would *feel* the danger in her stillness before she speaks. The hands tell us everything: trained, controlled, perpetually ready. Compare this to how her voice is described: "smoker's rasp that never quite went away" and sentences that "trail off when the sentence would require her to articulate feeling." The body and the speech are in alignment—both trained toward concealment.
+
+### 2. Psychological Depth — Dova's Incompleteness
+
+> "The cold is not illness; it is age, and the age is the price of working with mercury-thread for fifty years. Her fingers are the warmest part of her, burning with the residual heat of handled death."
+
+This is remarkable psychological-physical integration. Dova is cold everywhere except where she has touched the instruments of killing. The detail is concrete and visceral, yet it carries the full weight of her moral architecture. She has given herself to the work so completely that her body temperature now reflects her history. This is not "she's a hardened killer" but a specific, strange, true-feeling person whose physical reality embodies her profession.
+
+### 3. Relationship Dynamics — The Void Clerk as Shared Wound
+
+> "The death was righteous by her standards—necessary, even—but righteousness does not erase ledgers. The Covenant has been waiting for the right moment to collect. Now they have Elara."
+
+This single paragraph establishes the entire relational architecture between Maren and the Covenant. The Void Clerk Incident is both wound and leverage—Maren's moral certainty ("righteous," "necessary") collides with the Covenant's different accounting. The fact that they waited fifteen years for "the right moment" suggests patient, intelligent cruelty that Dova would architect. The daughter's kidnapping is not just threat but *correction*—Dova is completing an entry she never finished.
+
+---
+
+## Improvement Suggestion
+
+**Develop Dova's "Middle" and "Turning Point" to match Maren's arc complexity.** Currently, the excerpt cuts off during Dova's trajectory at "Beginning: Dova believes she is in control." Her psychological profile establishes her as a woman facing mortality without heir—but her arc in the text itself remains skeletal. Given that she is framed as the antagonist, her trajectory deserves the same specificity as Maren's: What does she discover about the Void Clerk Incident that reframes her understanding? How does her dying body complicate her control? The profile suggests she has more dimension than "woman in control who gets proven wrong"—her incompleteness should *cost* her in ways the narrative can explore.

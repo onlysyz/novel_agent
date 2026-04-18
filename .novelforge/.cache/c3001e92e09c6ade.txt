@@ -1,0 +1,28 @@
+## World Coherence Evaluation
+
+**Score: 8/10**
+
+This is a strongly constructed world with exceptional internal logic and thematic coherence. The central metaphor of death-as-transaction permeates every element—geography, politics, religion, economics—creating a unified vision that feels both intellectually satisfying and atmospherically rich. It falls short of exceptional because while all elements connect, some lack the surprise or visceral distinctiveness that would make this unforgettable. The architecture is impressive; the emotional texture occasionally settles for competence over revelation.
+
+### Supporting Passages
+
+**On Internal Consistency:**
+> "Water carries memory here. The rain remembers what it touched on the way down. The sea keeps its accounts with perfect fidelity. Those who work with death magic in Verantum learn to read the weather."
+
+This single passage links geography, climate, and magic into a seamless system. The environmental details in The Tide Quarter ("the foundation posts of the original fishing village emerge from the mud like the ribs of some drowned animal") and the magic system's water-based mechanics create genuine interconnectedness, not just adjacency.
+
+**On Magic System Specificity:**
+> "The Arithmetician has never spent sovereign-grade thread, only accumulated it. Her power is measured in deaths she has not yet spent."
+
+This crystallizes the magic system into character and politics simultaneously. The three-tier mercury-thread hierarchy (Common/Notable/Sovereign) is explicit, has clear costs (killing protected individuals "requires a practitioner to risk themselves significantly"), and generates immediate dramatic stakes. The visible/invisible distinction for Readers vs. untrained observers is a smart detail that suggests social stratification without exposition.
+
+**On Memorability:**
+> "Void Clerks do not collect debts. They eliminate them. Permanently."
+
+The precise, bureaucratic language applied to assassination is the kind of distinctive voice that makes worldbuilding memorable. Compare this to: "They were killers for the organization." The former carries the world's logic in its diction. Similarly, "The Hollow" with its "murmuration" of pigeons that locals don't look at, and the repeated phrase "It feels wrong, somehow. Important things happened here once," create patterns that anchor the world in reader memory.
+
+### Concrete Improvement Suggestion
+
+The world has strong individual elements but lacks a singular, visceral sensory signature—a recurring image or sensation that would make Verantum immediately identifiable in a reader's mind. Consider: what does mercury-thread *feel* like to a Reader when they touch it? Not just "writhes and coils," but the physical sensation. Or the protagonist's subjective experience of the compression—what does it feel like to be someone whose body is "keeping accounts" while the walls sweat and the mattress never quite dries?
+
+Adding one or two concrete sensory moments—perhaps a brief scene-description of the Arithmetician's hands on the ledger, or what the protagonist tasted when she first saw mercury-thread—would transform this sophisticated architecture into something that lives in the body as well as the mind.

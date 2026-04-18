@@ -1,0 +1,556 @@
+# THE STILLWATER COVENANT
+
+## Complete Story Outline
+
+---
+
+# STRUCTURAL OVERVIEW
+
+## Word Count Allocation
+
+| Act | Percentage | Word Count | Chapters | Focus |
+|-----|------------|------------|----------|-------|
+| **Act I** | 0-23% | 18,400 | 1-6 | Setup, inciting incident, break into two |
+| **Act II Part 1** | 23-50% | 21,600 | 7-12 | Fun & games, midpoint reversal |
+| **Act II Part 2** | 50-77% | 21,600 | 13-18 | Bad guys close in, all is lost |
+| **Act III** | 77-100% | 18,400 | 19-24 | Final battle, climax, denouement |
+
+## Chapter Distribution
+
+| Act | Chapters | Beat Type | Emotional Trajectory |
+|-----|----------|-----------|---------------------|
+| **I** | 1-6 | Setup | Ordinary world → Disruption |
+| **II-A** | 7-12 | Fun & Games | Desperate hope → Grim recognition |
+| **II-B** | 13-18 | Bad Guys Close In | Escalating pressure → Devastation |
+| **III** | 19-24 | Resolution | Confrontation → Choice/Consequence |
+
+---
+
+# FORESHADOWING LEDGER
+
+| Thread | Plant | Reinforce | Payoff | Type |
+|--------|-------|-----------|--------|------|
+| **Elara's latent ability** | Ch. 1 | Ch. 4, 8 | Ch. 20 | Character |
+| **Dova's mortality/illness** | Ch. 2 | Ch. 7, 11 | Ch. 22, 24 | Character |
+| **The Void Clerk Incident** | Ch. 3 | Ch. 6, 9 | Ch. 14, 16 | Plot |
+| **Covenant Quarters' tensions** | Ch. 2 | Ch. 7, 12 | Ch. 19, 21 | Political |
+| **The river's significance** | Ch. 1 | Ch. 5, 10 | Ch. 23 | Setting/Symbol |
+| **Maren's parents' fate** | Ch. 3 | Ch. 8 | Ch. 16 | Backstory |
+| **Mercury-thread mechanics** | Ch. 1 | Ch. 4, 9 | Ch. 18, 22 | World-building |
+| **The scar's origin** | Ch. 1 | Ch. 6 | Ch. 16 | Character |
+| **Three trusted Quarters** | Ch. 5 | Ch. 11, 15 | Ch. 19, 21 | Political |
+| **The untrusted Quarter** | Ch. 5 | Ch. 12, 17 | Ch. 19, 22 | Political |
+| **Dova's succession problem** | Ch. 2 | Ch. 11, 15 | Ch. 23 | Plot |
+| **The Great Compromise** | Ch. 6 | Ch. 13 | Ch. 24 | Historical |
+| **Elara discovers truth** | Ch. 4 | Ch. 8, 13 | Ch. 17 | Character |
+| **Maren's hands never still** | Ch. 1 | Ch. 5, 9 | Ch. 21 | Character |
+| **The Taking tradition** | Ch. 1 | Ch. 10 | Ch. 23 | Cultural |
+| **Verantum's layered history** | Ch. 1 | Ch. 3, 7 | Ch. 24 | Setting |
+| **Silence Laws enforcement** | Ch. 3 | Ch. 8, 13 | Ch. 18 | World-building |
+
+---
+
+# ACT I: SETUP
+
+## Chapters 1-6 (0-23%)
+
+**Core Question Established:** Can Maren protect her daughter without becoming what she was?
+
+---
+
+## Chapter 1: The Weight of Small Things
+
+**POV:** Maren Cole
+**Location:** Maren's shop, Tide Quarter → Her apartment above
+**Save the Cat Beat:** Setup
+**Position Marker:** 4%
+
+### Emotional Arc
+Maren moves through her ordinary morning with the hyperawareness she's learned to disguise as habit. The chapter establishes her vigilance, her love for Elara, and the first hints that the life she's built is a careful construction.
+
+### Try-Fail Cycle
+**Yes-But:** She maintains her ordinary life, but the weight of what she carries is increasingly unsustainable.
+
+### Scene Beats
+
+1. **Opening image:** Maren counting the coins in the register, her fingers never quite still—fidgeting that reads as nervous habit to anyone watching, readiness to anyone who knows what to look for.
+
+2. **Ordinary world establishment:** The shop sells salvage and repair parts—useful cover for someone who needs to disappear into the landscape of small mechanical things. She describes inventory to herself, not because she needs to but because the recitation keeps her mind occupied.
+
+3. **First Elara appearance:** A brief phone call. Maren's voice changes—becomes softer, less controlled. She asks about school, about eating breakfast, about the guitar she's let her daughter keep despite the noise. The love is visible in what she doesn't say.
+
+4. **The scar:** A customer reaches across the counter, and Maren flinches—a micro-movement she corrects immediately, but the customer notices her eyes go to Maren's temple. She makes an excuse about headaches. The scar is mentioned in the text, white and precise, invisible unless you're looking for it.
+
+5. **Closing image:** After closing, walking home through the Tide Quarter. She notes the river in the distance, the smell of salt and something older. She passes the water's edge where fishermen's families come for the Taking. She does not look at it directly. A man watches her from a doorway; she notes his silhouette, his stillness, files him away as neutral.
+
+### Foreshadowing Plants
+
+- The fidgeting hands → Maren's combat readiness never left her
+- The scar → Origin to be revealed later
+- The river/The Taking → Cultural element that will matter
+- The watching man → Possible Covenant surveillance established
+
+### Payoffs
+*None in this chapter—this is pure setup*
+
+### Character Movement
+Maren's relationship with her environment is one of careful assessment. She loves this neighborhood but doesn't trust it. She loves her life but doesn't believe in it.
+
+### Word Count Target
+3,500 words
+
+---
+
+## Chapter 2: The Arithmetician's Ledger
+
+**POV:** Maren Cole
+**Location:** Maren's apartment → Compact Council building
+**Save the Cat Beat:** Setup / Theme Stated
+**Position Marker:** 8%
+
+### Emotional Arc
+Maren's careful world is penetrated by officialdom—a Compact investigator arrives with questions about a body that washed up in the Tide Quarter. The chapter establishes Maren's past as something the Covenant hasn't forgotten, and introduces the political dimension of the world.
+
+### Try-Fail Cycle
+**Yes-But:** The investigator is polite, professional, not a threat—but his presence reminds Maren that her past exists in official ledgers too.
+
+### Scene Beats
+
+1. **Opening image:** Early morning. The investigator—a middle-aged man with the careful posture of someone who has learned to look harmless—arrives at her door with questions about a body found near the old fishing village foundations.
+
+2. **The body:** The victim was a Void Clerk, one of Maren's former colleagues. Killed recently. The investigator doesn't know what the victim was, only that he had something in his possession with Maren's name on it—a piece of paper, an address.
+
+3. **Maren's assessment:** She examines her own face in the mirror above her sink, looking for tells. Fifteen years of careful ordinariness. The lie has worn smooth. But she knows how this works—the Covenant doesn't forget, and sometimes it sends messengers.
+
+4. **Covenant history exposition (integrated):** The investigator mentions the Arithmetician—a name Maren hasn't heard spoken aloud in fifteen years. Dova Salter. He describes her as "still running things up in Ashworth Heights, if you can believe it." Maren's hands grip the sink edge until her knuckles go white.
+
+5. **Closing image:** After the investigator leaves, Maren opens the floorboard where she keeps a box she doesn't look at. Inside: a piece of mercury-thread, old and cold, coiled in a silk wrap. She doesn't touch it. She closes the box. Elara is coming home from school soon, and Maren needs to make dinner.
+
+### Foreshadowing Plants
+
+- Dova Salter mentioned → The Arithmetician's role in the coming conflict
+- The dead Void Clerk → Covenant message/consequence
+- The mercury-thread → Power source for Covenant magic
+- Dova's longevity → She's been running things "still"—what's the secret?
+
+### Payoffs
+*Establishes Dova as antagonist presence*
+
+### Character Movement
+Maren's relationship with safety is revealed as provisional. The investigator's questions don't threaten her directly, but they remind her that her past has witnesses.
+
+### Word Count Target
+3,800 words
+
+---
+
+## Chapter 3: What the River Carries
+
+**POV:** Maren Cole
+**Location:** The Hollow (industrial district) → Docks
+**Save the Cat Beat:** Setup / Catalyst
+**Position Marker:** 12%
+
+### Emotional Arc
+Maren investigates the dead Void Clerk's apartment, seeking answers. She finds evidence of what she was—and discovers that the Covenant is already watching her. The chapter culminates in her first genuine fear in fifteen years.
+
+### Try-Fail Cycle
+**No-And:** She finds information, but the information confirms her worst fears. The Covenant hasn't forgotten.
+
+### Scene Beats
+
+1. **Opening image:** The Hollow at dusk. Maren moves through the condemned buildings with the ease of someone who learned to navigate dangerous spaces young. The buildings smell of pigeon droppings and rust. The murmuration rises and falls against the darkening sky.
+
+2. **The dead man's apartment:** A room that speaks of careful preparation—he knew he was being hunted. Maren finds notes, fragments of a pattern: the Covenant is cleaning house. Several former Void Clerks have died in the past year. Accidents. Disappearances. Her name is on a list, crossed through with a date that is today's date.
+
+3. **The Void Clerk Incident (hinted):** In his notes, she finds a reference to "the Voss account"—Mira Voss, the founder. A notation: "she knows too much. She always did." The connection is unclear, but it frightens Maren more than anything else.
+
+4. **The Covenant enforcer:** Maren realizes she's being followed. She leads the tail through the Hollow's labyrinth, loses him temporarily—but finds his partner waiting at the building's exit. A woman she trained with, decades ago. The woman says nothing. She simply watches Maren, then turns and walks away.
+
+5. **Closing image:** Maren returns home to find Elara asleep on the couch, homework scattered around her. On the kitchen table: a business card, heavy cardstock, with a single word embossed in silver: *Due*. No address. No signature. Just the message and a phone number.
+
+### Foreshadowing Plants
+
+- "The Voss account" → Connection to founder, to Maren's parents
+- The Covenant cleaning house → Systemic action against former Clerks
+- The trained-with woman → Former colleague, possible complex allegiance
+- The business card → Formal demand incoming
+
+### Payoffs
+*Establishes the Covenant's systematic pursuit*
+
+### Character Movement
+Maren's isolation deepens. She has no one to call, no allies from her past she can trust. The woman she trained with represents the complicated loyalty of people who share a past they can't discuss.
+
+### Word Count Target
+3,600 words
+
+---
+
+## Chapter 4: The Shape of Owed Things
+
+**POV:** Maren Cole
+**Location:** Maren's apartment → Neutral ground café
+**Save the Cat Beat:** Debate / Break into Two
+**Position Marker:** 16%
+
+### Emotional Arc
+Maren must decide whether to contact the Covenant or run. She chooses to make contact—buying time, gathering information, refusing to believe that Elara is already at risk. The chapter ends with her agreeing to a meeting.
+
+### Try-Fail Cycle
+**No-But:** She contacts the Covenant (fails to avoid), but she maintains the illusion of control by choosing the terms.
+
+### Scene Beats
+
+1. **Opening image:** Maren standing at her bedroom window at 3 AM, watching the street below. A car has been parked there for six hours. She's counted its movements, its passengers. Two people, rotating in eight-hour shifts.
+
+2. **Elara wakes:** Her daughter appears in the doorway, seventeen and perceptive in ways Maren has tried not to cultivate. "The car," Elara says. "Is that about your friend?" Maren lies smoothly—she's a debt collector, someone from before, nothing to worry about. Elara accepts this with the resigned patience of someone who has accepted lies before.
+
+3. **The latent ability (planted):** As Elara turns to go back to bed, she pauses. "Mom. That guy in the car. He's afraid." Maren goes still. "How do you know that?" "I don't know. I just—" Elara shrugs, unable to articulate. "He feels like he's waiting for something bad to happen."
+
+4. **The phone call:** Maren dials the number. A voice she doesn't recognize answers—younger, efficient, the voice of an administrator rather than an enforcer. She is invited to a meeting. Neutral ground. A café in the Compact district. Tomorrow at noon. She can bring no weapons, no evidence of her readiness. She agrees.
+
+5. **Closing image:** After the call, Maren opens the floorboard again. She takes out the box, opens the silk wrap. The mercury-thread inside is cold, old, the skill it once carried long since faded. But holding it, she feels something: her hands stop fidgeting for the first time in fifteen years.
+
+### Foreshadowing Plants
+
+- Elara's ability → Latent Reader talent, inherited or developed
+- The watching car → Covenant surveillance intensified
+- The cold mercury-thread → Skill transfer, but degraded over time
+- Maren's hands steadying → Violence as her true self
+
+### Payoffs
+*Elara's awareness of fear planted earlier*
+
+### Character Movement
+Maren acknowledges, internally, that her daughter may be more than ordinary. This terrifies her more than the Covenant's attention.
+
+### Word Count Target
+3,400 words
+
+---
+
+## Chapter 5: The Accountant's Terms
+
+**POV:** Maren Cole
+**Location:** Neutral café, Ashworth Heights edge
+**Save the Cat Beat:** Break into Two
+**Position Marker:** 20%
+
+### Emotional Arc
+Maren meets with a Covenant representative and learns the price of her continued freedom—and her daughter's safety. The terms are specific, the deadline immediate. She has seventy-two hours.
+
+### Try-Fail Cycle
+**No-And:** The meeting confirms her fears. There is no negotiation.
+
+### Scene Beats
+
+1. **Opening image:** The café is the kind of establishment that serves expensive coffee to people who want to feel sophisticated. Maren sits with her back to the wall, sightlines to the door. She has left her apartment early, walked the long way, checked for tails. She found three.
+
+2. **The Covenant Quartile:** The representative is a man named Coyle, who manages the Provision division. She remembers him—younger when she served, a number-runner rather than a field operative. He has risen. She has fallen. The dynamic is established immediately.
+
+3. **The terms:** Elara is not mentioned by name, but Coyle produces a photograph—Elara leaving school yesterday, clearly taken from a distance, clearly surveillance. The message is implicit. The job: retrieve a ledger from a Compact Council member's private study. The deadline: seventy-two hours. The alternative: Coyle does not specify, but his pause speaks clearly.
+
+4. **Covenant politics (planted):** Coyle mentions the Arithmetician only once, and with a careful respect that borders on fear. He also mentions that "the Quarters have concerns" about the current situation. Not all of them support bringing Maren back. She files this away.
+
+5. **Closing image:** Maren accepts the terms. She has no choice. As she leaves, Coyle says one more thing: "She asked me to tell you something. The debt was never closed, Maren. It was only on hold." Dova Salter. Fifteen years, and the Arithmetician still speaks to her through intermediaries.
+
+### Foreshadowing Plants
+
+- The Quarters' internal conflict → Political structure matters
+- "The debt was never closed" → Maren's retirement was provisional
+- Coyle's fear of Dova → The Arithmetician's absolute power
+- The surveillance photograph → Elara has been watched for some time
+
+### Payoffs
+*Establishes timeline and stakes*
+
+### Character Movement
+Maren crosses a threshold: she has agreed to work for the Covenant again. The fifteen years of building a clean life are now officially over.
+
+### Word Count Target
+3,700 words
+
+---
+
+## Chapter 6: The Old Arithmetic
+
+**POV:** Maren Cole
+**Location:** Maren's apartment → The Hollow
+**Save the Cat Beat:** Fun & Games Begins
+**Position Marker:** 23%
+
+### Emotional Arc
+Maren prepares for the job, revisiting her old skills and contacts. The chapter establishes what she's capable of—and what she's lost. She begins to understand that the job may be a trap.
+
+### Try-Fail Cycle
+**Yes-But:** She can still do this work (yes), but she's forgotten how much she enjoyed it (but).
+
+### Scene Beats
+
+1. **Opening image:** Maren in her apartment at midnight, alone. She has moved the furniture to create space. She stretches—muscles remembering movements they haven't made in years. The body knows what the mind tried to forget.
+
+2. **Skill assessment:** She tests herself against old benchmarks. She can still read the angles of a room, still predict movement three steps ahead. But she's slower. Her reaction time has degraded. Fifteen years of ordinary life have cost her something.
+
+3. **The job site:** She visits the Compact Council member's residence—a townhouse in the boundary between Ashworth Heights and the Hollow. The security is better than expected. She identifies three guard rotations, two camera systems, one private investigator who works the night shift. The ledger is in a study on the second floor, behind a wall safe she doesn't have the combination to.
+
+4. **Old contacts (hinted):** She considers reaching out to someone from her past—then discards the idea. Everyone she knew is either dead, compromised, or better off forgetting her. The Covenant trained her to work alone. They trained her too well.
+
+5. **Closing image:** She returns home to find Elara waiting up. Her daughter looks at her—at the clothes she's wearing for stealth, at the set of her shoulders—and says: "You're going to do something dangerous." It's not a question. Maren doesn't lie this time. "I don't know yet." Elara nods, accepting this non-answer. "Just don't die, okay?" Maren agrees. She has no intention of dying.
+
+### Foreshadowing Plants
+
+- Degraded skills → The cost of retirement
+- The wall safe → The job requires more than extraction
+- Elara's perceptiveness → Mother and daughter understand each other
+- "Don't die" → The stakes are literally life and death
+
+### Payoffs
+*Maren's competence still exists but has costs*
+
+### Character Movement
+Maren confronts the gap between who she was and who she is. The work is still in her, but it doesn't fit the way it used to.
+
+### Word Count Target
+3,500 words
+
+---
+
+# ACT II PART 1: FUN & GAMES
+
+## Chapters 7-12 (23-50%)
+
+**Core Question Explored:** Can Maren complete the job without becoming what the Covenant wants her to be?
+
+---
+
+## Chapter 7: The Weight of Skill
+
+**POV:** Maren Cole
+**Location:** Compact Council district → Target residence
+**Save the Cat Beat:** Fun & Games
+**Position Marker:** 27%
+
+### Emotional Arc
+Maren executes the first phase of the job—breaking into the Council member's residence and accessing the study. She encounters an unexpected complication: the Council member is home, and she must make a choice about killing him.
+
+### Try-Fail Cycle
+**Yes-But:** She completes the infiltration (yes), but encounters the Council member and must choose violence or failure (but).
+
+### Scene Beats
+
+1. **Opening image:** Night, 2 AM. Maren on the roof of the adjacent building, watching the target residence through a scope. The Council member—Aldric Morse, sixty-two, seventeen years on the Compact, collector of debts of his own—is awake. Working late. In the study where the ledger supposedly is.
+
+2. **The infiltration:** She crosses to the residence via fire escape, enters through a third-floor window. The house is quiet, mostly. Two guards on the ground floor. The private investigator on the second floor, in a bedroom near the front. The study at the end of the hall, door closed.
+
+3. **The Council member:** She enters the study to find Morse at his desk, working. He sees her immediately—turns from his papers, meets her eyes. For a long moment, neither moves. He is not afraid. He is unsurprised. He says: "I wondered when they'd send someone."
+
+4. **The complication:** Morse knows the Covenant. Morse knows who she is. He has been expecting this—and he has prepared. A gun on the desk between them. Guards in the hallway. But he raises his hands, showing empty palms. "I'm not your enemy," he says. "I'm trying to help."
+
+5. **The choice:** Kill him and take the ledger. Listen to him and risk the deadline. Maren's hand finds the knife at her belt. The weight of it is familiar, comfortable. Morse watches her with eyes that have seen too much to be afraid now. "The Arithmetician isn't the power you think she is," he says. "And you're not the only piece on this board."
+
+### Foreshadowing Plants
+
+- Morse's preparedness → He knows about the Covenant's plans
+- "The only piece on this board" → Multiple factions at work
+- The guards in position → Covenant anticipated this extraction
+
+### Payoffs
+*First test of Maren's violence vs. restraint*
+
+### Character Movement
+Maren faces the fundamental question of who she is now: still capable of killing, but no longer certain she wants to be.
+
+### Word Count Target
+3,800 words
+
+---
+
+## Chapter 8: What the Dead Know
+
+**POV:** Maren Cole
+**Location:** Morse's residence → Safe house in the Hollow
+**Save the Cat Beat:** Fun & Games
+**Position Marker:** 31%
+
+### Emotional Arc
+Maren listens to Morse's offer. He provides information about the Covenant's true purpose—and about Elara. She leaves with the ledger but must decide whether to trust what she's been told.
+
+### Try-Fail Cycle
+**Yes-But:** She gets the ledger (yes), but Morse's information complicates everything (but).
+
+### Scene Beats
+
+1. **Opening image:** Morse at his desk, relaxed in a way that suggests either confidence or resignation. He knows she's not going to kill him—not yet. He has that read on her, probably from the moment she didn't attack.
+
+2. **The information:** Morse tells her about the Void Clerk Incident—the death that created her debt. He tells her she killed someone the Covenant was using as a witness against its own leadership. He tells her the dead man's name: Orrin Vale. And he tells her that Orrin Vale had a daughter.
+
+3. **The connection:** The dead man's daughter was recruited by the Covenant after her father's death. She is now one of Dova Salter's most trusted Quarters. Her name is Mira Salter—the Arithmetician's niece, adopted after her parents' death. (The Covenant arranged the adoption.)
+
+4. **The ledger:** Morse gives her the ledger. It's not what she expected—a personal journal rather than accounts. Pages of observations, dates, names. Names of Covenant members who died in the past decade. Names of former Void Clerks. Names of children born to Covenant operatives. Names like Elara's.
+
+5. **Closing image:** Maren leaves the residence with the ledger and a new terror. If Morse is telling the truth, Elara's kidnapping is not punishment for Maren's past. It's recruitment. The Covenant has been watching her daughter since birth, waiting for the talent to emerge. And now it has.
+
+### Foreshadowing Plants
+
+- Orrin Vale's daughter → The political dimension of the Incident
+- "Recruitment" → The Covenant's systematic cultivation of talent
+- The personal ledger → Someone has been tracking Covenant activities
+- Elara's name in the ledger → She's been marked since childhood
+
+### Payoffs
+*The Void Clerk Incident gains complexity*
+
+### Character Movement
+Maren's understanding of her situation shifts. This is not a simple demand for service—it is a long-term manipulation, and Elara has been its object since before she was born.
+
+### Word Count Target
+3,600 words
+
+---
+
+## Chapter 9: The Accountant's Books
+
+**POV:** Maren Cole
+**Location:** Safe house → Covenant Drop
+**Save the Cat Beat:** Fun & Games
+**Position Marker:** 35%
+
+### Emotional Arc
+Maren delivers the ledger to the Covenant and meets with Coyle to receive her next instructions. She must decide whether to reveal what she's learned—and whether Morse's information is trustworthy.
+
+### Try-Fail Cycle
+**No-But:** The Covenant takes the ledger but gives her no freedom (no), but the next job offer provides an opportunity to get close to Dova (but).
+
+### Scene Beats
+
+1. **Opening image:** The drop is a dead letterbox—a bookshop in the Tide Quarter, run by a woman who doesn't know what she stores. Maren leaves the ledger in a hollowed-out copy of *The Final Account*, a religious text. She waits two hours in a café across the street before Coyle appears.
+
+2. **The debrief:** Coyle takes the ledger without opening it. He thanks her, which feels wrong—he has never thanked her for anything, even when she earned it. He tells her the deadline has been extended. The Arithmetician is pleased with her work.
+
+3. **The second job:** Coyle explains that there is a complication. Someone within the Covenant has been leaking information to the Compact—providing exactly the kind of intelligence Morse used to prepare for Maren's visit. They need Maren to identify the traitor. She will have access to Covenant facilities. She will be, for the first time in fifteen years, inside the organization.
+
+4. **The price of return:** Maren asks about Elara. Coyle produces a photograph—Elara in her school hallway, surrounded by students. She is safe. She is being watched. "The Arithmetician values family," Coyle says, which is the most ominous thing he has ever said to her.
+
+5. **Closing image:** Maren walks home through the early morning fog. The city is waking up. Workers heading to the docks. Tourists who don't know what sleeps beneath the surface. She thinks about Morse's information. She thinks about Elara's ability to sense fear. She thinks about the Arithmetician's ledger of children. She thinks about the Covenant's long game, and she realizes: she is still a piece on the board. But she is beginning to see the shape of the game.
+
+### Foreshadowing Plants
+
+- The leak → Covenant internal politics intensify
+- Elara photographed → Surveillance continues
+- "The Arithmetician values family" → Dova's manipulation revealed
+- Inside access → Maren will enter Covenant headquarters
+
+### Payoffs
+*Morse's information proves partially accurate*
+
+### Character Movement
+Maren accepts the second job. She has moved from reluctant compliance to strategic participation. She is no longer simply reacting—she is planning.
+
+### Word Count Target
+3,500 words
+
+---
+
+## Chapter 10: Inside the Ledger
+
+**POV:** Maren Cole
+**Location:** Covenant compound, Ashworth Heights
+**Save the Cat Cat Beat:** Fun & Games / Midpoint
+**Position Marker:** 40%
+
+### Emotional Arc
+Maren enters the Covenant's inner sanctum for the first time in fifteen years. The compound is both familiar and strange—memories layered over changes she doesn't understand. She begins her search for the traitor.
+
+### Try-Fail Cycle
+**Yes-But:** She accesses the compound (yes), but her presence draws attention she didn't anticipate (but).
+
+### Scene Beats
+
+1. **Opening image:** The Covenant compound occupies an estate that was old when Mira Voss founded the organization. Maren walks through gates she remembers from her youth, past gardens maintained by people who don't look up, into a building that smells of old money and older violence.
+
+2. **The Arithmetician's office (exterior):** Maren is not granted an audience, but she sees the door—a massive oak panel at the end of a hallway, flanked by guards who watch her pass. Behind that door: Dova Salter. The woman who has been pulling strings since before Maren was born.
+
+3. **The Quartiles:** She meets all four managers. Coyle (Provision), whom she knows. A woman named Thorne (Collection), whose eyes narrow when Maren is mentioned. An older man called Graves (Settlement), who seems amused by something. And Mira Salter (Maintenance)—Dova's niece, Orrin Vale's daughter—and Maren's first clear view of the consequences of the Void Clerk Incident.
+
+4. **The leak investigation:** Maren is given access to recent communications, shipment records, personnel files. She begins her search, but she is distracted—by the changes in the organization, by the presence of people who see her as a threat, by Mira Salter's steady gaze. Mira knows. She has read the old files. She knows what Maren did to her father.
+
+5. **Closing image:** Maren in her assigned quarters that night, reviewing documents she may or may not be allowed to keep. She finds the personnel file for the dead Void Clerk—the man who was killed before he could warn her. His name: Edric Coyle. Coyle's brother. The brother whose body washed up in the Tide Quarter. And she understands: the leak is not a stranger. It is someone trying to save her.
+
+### Foreshadowing Plants
+
+- Mira Salter → The personal dimension of old debts
+- Dova's door → The final confrontation awaits
+- Edric Coyle's file → The brother's connection to Maren
+- "Someone trying to save her" → An ally emerges
+
+### Payoffs
+*Covenant structure fully established*
+
+### Character Movement
+Maren realizes she is not alone in this. Someone within the Covenant has been working against Dova—and that someone is now dead, murdered to protect the secret Maren was meant to discover.
+
+### Word Count Target
+3,800 words
+
+---
+
+## Chapter 11: The Geometry of Trust
+
+**POV:** Maren Cole
+**Location:** Covenant compound → Safe house network
+**Save the Cat Beat:** Bad Guys Close In (Prelude)
+**Position Marker:** 44%
+
+### Emotional Arc
+Maren investigates Edric Coyle's death and discovers the extent of his information network. She also learns about Dova Salter's illness—the Arithmetician is dying, and the question of succession is tearing the Covenant apart.
+
+### Try-Fail Cycle
+**Yes-But:** She uncovers crucial information (yes), but the information makes her a target (but).
+
+### Scene Beats
+
+1. **Opening image:** Maren searching Edric's apartment—a different location than she visited before, a secondary safe house. He was more careful than she expected. The apartment is swept clean of Covenant surveillance, but full of personal effects: photographs of his brother, notes about Covenant operations, a list of names that includes Maren's.
+
+2. **The illness:** Mira Salter approaches Maren in the compound's garden. They talk—carefully, circling each other with information. Mira tells Maren about Dova's condition: the mercury-thread rejection, the body failing after fifty years of accumulation. Dova is dying. She has months, perhaps weeks. The Covenant does not know this, but Mira does. "She wants to choose her successor," Mira says. "She wants to control what happens after."
+
+3. **The succession:** Four Quartiles, and only one has Dova's full trust: Graves (Settlement), the older man who seemed amused. The others are jockeying for position. Thorne (Collection) is building alliances among the younger Debt-Collectors. Coyle (Provision) controls the supply lines and the money. Mira (Maintenance) maintains the infrastructure and the records. Any of them could win. Any of them could tear the Covenant apart.
+
+4. **The connection:** Edric's notes reveal that he was not working alone. He had a network—people within the Covenant who shared his concerns about Dova's leadership. The network identified three Quartiles who were "compromised by age and accumulated debt." Thorne. Coyle. Mira. Only Graves was clean. Edric was planning to bring his evidence to Graves when he was killed.
+
+5. **Closing image:** Maren returns to her quarters to find them searched. Someone knows what she's looking for. Someone has decided she knows too much. She sits on the bed in the dark, assembling the pieces: Dova is dying. The succession is contested. Edric died trying to control the outcome. And now Maren—Maren, who was brought back specifically for this moment—is being positioned as either a weapon or a sacrifice.
+
+### Foreshadowing Plants
+
+- Dova's illness → Time pressure introduced
+- The succession struggle → Multiple antagonists
+- Edric's network → Maren may have allies
+- The searched quarters → Covenant watching Maren closely
+
+### Payoffs
+*Edric Coyle's role clarified*
+
+### Character Movement
+Maren understands the political landscape for the first time. The Covenant is not monolithic—it is fractured, and the fracture lines are widening.
+
+### Word Count Target
+3,600 words
+
+---
+
+## Chapter 12: The Midpoint Reversal
+
+**POV:** Maren Cole
+**Location:** Covenant compound → The river
+**Save the Cat Beat:** Midpoint / Bad Guys Close In
+**Position Marker:** 50%
+
+### Emotional Arc
+Maren is summoned to meet Dova Salter for the first time in fifteen years. The Arithmetician offers Maren a deal: become her instrument for controlling the succession, or watch Elara become a casualty of the coming war. The chapter ends with Maren's commitment to a path that terrifies her.
+
+### Try-Fail Cycle
+**No-And:** The Arithmetician makes clear that there is no escape (no), and the deal she's offering will cost Maren everything she thought she was building (and).
+
+### Scene Beats
+
+1. **Opening image:** The door to Dova Salter's office opens.

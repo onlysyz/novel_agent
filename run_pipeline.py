@@ -779,6 +779,7 @@ Examples:
             results = run_export(state)
             state["export"] = results
             state["completed_phases"].append("export")
+            state["phase"] = "complete"
 
         phase_duration = time.time() - phase_start
         state[f"{phase}_duration"] = phase_duration

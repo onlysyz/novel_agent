@@ -1,0 +1,88 @@
+# The Continuity Hunter's Report: "WHAT REMAINS"
+
+## 1. WHAT WORKS
+
+This chapter establishes solid continuity bones. The **box of objects** is excellent structural work—a physical repository of past deeds that creates an instant tracking system. The photograph of Kellan, the knife, the mercury-colored vial: these are artifacts I can follow forward. When Maren says "She'd killed Kellan" and then immediately "She hadn't thought about Kellan in years," that's a clean contradiction to hold in my mind, which is exactly what you want as a thriller reader.
+
+The sensory grounding is consistent. The harbor is grey and patient. The rain stops. The house settles. These small details anchor the world without contradicting themselves.
+
+The **Arithmetician symbol** on the river stone is a solid breadcrumb. It connects to Dova (who gave Maren the box), to the Covenant, and to this mysterious new claimant. Setup, meet potential payoff.
+
+---
+
+## 2. WHAT DOESN'T WORK
+
+### A. The River Name Drop
+
+Here's a real problem:
+
+> "a small stone, dark and smooth, the kind that came from the bottom of the Verantum River"
+
+But the World Bible says the city sits "where the river **Verath** forks—two brown arms embracing the city's heart." The Verantum River is never mentioned in the geography section. This reads like either a typo (meant to write Verath) or a worldbuilding inconsistency. If the Verantum is a separate river, that's fine—but it's not established. I shouldn't have to wonder if the stone came from a river that doesn't exist in this city's geography.
+
+**Verantum or Verath? Pick one and be consistent.**
+
+### B. The Door Problem
+
+This is sloppy:
+
+> "The bell above the shop door hadn't rung yet, but someone was inside."
+
+How did Idris get in? He didn't break in—the scene doesn't suggest forced entry. He didn't use a key—Maren never mentioned giving him one. He's just *there*, inside a locked shop, drinking tea like he lives there.
+
+This is a thriller. People break into places for reasons. You can't just materialize your character inside a secured building without explanation. Either:
+
+- Establish that Idris has a key
+- Establish that Maren left the door unlocked
+- Establish that he picked the lock (even briefly: "she noticed the lock had been worked, recently")
+- Make clear he's been inside before, has standing access
+
+A door is a barrier. You have to acknowledge it.
+
+### C. Maren's Knowledge of Dova's Death
+
+> "Dova's dead," Maren said. "Has been for—"
+
+> "Six months. Yes. I know." Idris's voice was quiet.
+
+Maren trails off, and Idris completes the timeline. But *how does Maren know this?* She's been in Stillwater for fifteen years, apparently living a quiet life. She hasn't been part of the Covenant network ("someone from your old network"). Has she been attending funerals? Receiving letters? Did Dova send her a postcard from beyond the grave?
+
+This knowledge gap matters because Dova *gave her the box*, and the box seems to contain evidence of Covenant work. If Dova was Maren's mentor and now dead, we need to know how Maren received this information—and whether she attended the funeral or was deliberately excluded.
+
+---
+
+## 3. THE PASSAGES IN QUESTION
+
+**The geography glitch:**
+> "a small stone, dark and smooth, the kind that came from the bottom of the Verantum River"
+
+*Versus the World Bible:*
+> "Stillwater sits where the river **Verath** forks"
+
+**The door that doesn't exist:**
+> "The bell above the shop door hadn't rung yet, but someone was inside."
+
+No entrance. No explanation. Just presence.
+
+**The unearned timeline:**
+> "Dova's dead... Has been for—"
+
+No source for this knowledge. No grief, no explanation, no context for how a supposedly disconnected former operative knows the exact timing of her mentor's death.
+
+---
+
+## 4. SUGGESTIONS
+
+**Fix the river name.** If Verantum is a tributary, a bend, or an older name for the Verath system, establish that in a single phrase: "the kind that came from the bottom of the Verantum, where the Verath ran slow and deep." One line fixes the worldbuilding.
+
+**Acknowledge the door.** Add one sentence before "Idris sat on the stool": "He'd let himself in—she'd given him a key years ago, back when giving keys meant something different." Or have her *notice* the lock was picked. Small acknowledgment, big continuity fix.
+
+**Justify Maren's knowledge.** Either she received news somehow, or the timeline should be vaguer: "Dova's been dead a while now." Let Idris confirm the six months. This lets Maren's certainty come from anywhere—the Covenant sent word, or she's been tracking time since she heard. Either works.
+
+---
+
+## VERDICT
+
+Solid foundation, minor cracks. The *structure* is there—the box, the objects, the symbols, the old debts—but three small inconsistencies break the seal. Fix the river name, explain the door, and justify how Maren tracks time on her dead mentor. Then this chapter holds water.
+
+And for God's sake, finish the last line. "The water moved below her, car" doesn't count as closure.

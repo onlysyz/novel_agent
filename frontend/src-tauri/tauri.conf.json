@@ -43,7 +43,7 @@
       "scope": [
         {
           "name": "python",
-          "cmd": "python",
+          "cmd": "python3",
           "args": true
         }
       ]

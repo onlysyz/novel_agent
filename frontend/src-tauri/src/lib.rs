@@ -111,16 +111,26 @@ fn read_state() -> Result<PipelineState, String> {
 
     // Parse chapter scores
     let chapter_scores = state.get("chapter_scores").cloned().unwrap_or_default();
+    let chapters_dir = PathBuf::from("chapters");
     let mut chapters: Vec<ChapterSummary> = Vec::new();
     if let Some(obj) = chapter_scores.as_object() {
         for (key, value) in obj {
             if key.starts_with("ch_") {
                 let num_str = key.strip_prefix("ch_").unwrap_or("0");
                 if let (Ok(num), Some(score)) = (num_str.parse::<u32>(), value.as_f64()) {
+                    // Try to get word count from chapter file
+                    let word_count = if chapters_dir.exists() {
+                        let chapter_path = chapters_dir.join(format!("ch_{:02}.md", num));
+                        fs::read_to_string(&chapter_path)
+                            .map(|c| c.split_whitespace().count() as u32)
+                            .unwrap_or(0)
+                    } else {
+                        0
+                    };
                     chapters.push(ChapterSummary {
                         number: num,
                         title: format!("Chapter {}", num),
-                        word_count: 0,
+                        word_count,
                         score: Some(score as f32),
                     });
                 }
@@ -192,7 +202,8 @@ fn extract_title(content: &str) -> Option<String> {
 // Run pipeline command
 #[tauri::command]
 async fn run_pipeline_phase(phase: String, cwd: String) -> Result<String, String> {
-    let output = Command::new("python")
+    let output = Command::new("python3")
+        .env("PYTHONPATH", ".")
         .args(["run_pipeline.py", "--phase", &phase])
         .current_dir(&cwd)
         .output()
@@ -211,7 +222,8 @@ async fn run_pipeline_phase(phase: String, cwd: String) -> Result<String, String
 // Run full pipeline
 #[tauri::command]
 async fn run_full_pipeline(cwd: String) -> Result<String, String> {
-    let output = Command::new("python")
+    let output = Command::new("python3")
+        .env("PYTHONPATH", ".")
         .args(["run_pipeline.py", "--full"])
         .current_dir(&cwd)
         .output()

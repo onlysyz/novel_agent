@@ -572,35 +572,35 @@ She ate because she needed to. Bread and ch—
 
 Vera counted the steps as she walked. Forty-seven. Forty-eight. Forty-nine.
 
-The cobblestones were uneven here, worn smooth by generations of feet, and she found herself watching them instead of the tower ahead.
+She watched the cobblestones instead of the tower ahead. Old habit—her mother had taught her that, look at the ground, look at the faces you pass, look at the windows and doorways where someone could be waiting. Her mother had taught her many things that had kept her alive.
 
-The tide was going out. The Meridian Sea retreating for a few hours, revealing the mudflats where the old pilings stood like the bones of something long dead. You learned not to look at certain things in this city. Important things had happened there once.
-
-The Pale Tower grew larger against the sky.
+The tide was going out. She could smell it beneath the other smells of the city—the coal smoke, the fish, the particular sweetness of the meat-packing district upstream.  The Pale Tower grew larger against the sky.
 
 ---
 
-The Pale Tower was full of light.
+Inside, Mira walked through rooms she did not recognize.
 
-The windows were tall and arched, set deep into walls that seemed to glow from within, and the light that came through them was not grey but something softer, something that had been filtered through glass that was not quite glass. It fell across the floors in patterns she could almost trace, in shapes that reminded her of—
+This was not what she had expected. She had imagined corridors—narrow, torch-lit, the kind of architecture that pressed in from both sides. She had imagined stone. Cold. The smell of secrets kept too long in the dark. Instead, the Pale Tower was full of light.
 
-Water. It reminded her of water. The way light looked when you were beneath the surface and looking up.
+ The light that came through them was not grey but something softer, something that had been filtered through glass that was not quite glass. It fell across the floors in patterns she could almost trace, in shapes that reminded her of—
 
-Kael walked a few steps ahead of her, his hands clasped behind his back, his voice a low murmur that she stopped trying to follow. He was saying something about the architecture. The history. The way the tower had been built to catch the light in a particular season, to hold it in the upper chambers like something precious. She had stopped listening after the third sentence.
+ She had grown up near the river.
+
+Kael walked a few steps ahead of her, his hands clasped behind his back, his voice a low murmur that she stopped trying to follow. He was saying something about the architecture. The history. The way the tower had been built to catch the light in a particular season, to hold it in the upper chambers like something precious.
+
+She had stopped listening after the third sentence.
 
 She was counting doors. Fourteen on this level. Two open. Twelve closed. Of the twelve closed, she could see light beneath four of them—warm light, candle-light, the kind that meant occupation. The other eight were dark.
 
 She was noting which way the hinges faced—left-swinging, which meant right-handed approach was disadvantageous. She was cataloging the distance between windows, the angle at which they caught the light, the hours of the day when shadows would fall longest across the corridor floor.
 
+She did not know why she was doing this. She had never been taught to do this.
+
 ---
 
 Vera stopped at a corner and pressed her back against the wall.
 
-There was a checkpoint ahead. Two men in the grey coats of the Compact Watch, though the uniforms were wrong—newer cut, higher collars, brass buttons that caught the thin light. She had seen their kind before. The Covenant did not employ the Watch, officially, but the Covenant employed everyone eventually.
-
-She did not recognize either man. Good. That meant either they were new, or she had been gone long enough that her face had faded from whatever files they kept.
-
-The checkpoint was checking papers. She had one—good papers, forged by someone who had owed her a favor and would not be owing her anything after this.
+There was a checkpoint ahead. Two men in the grey coats of the Compact Watch, though the uniforms were wrong—newer cut, higher collars, brass buttons that caught the thin light.  Good. That meant either they were new, or she had been gone long enough that her face had faded from whatever files they kept.
 
 She watched the checkpoint for three minutes. Counted the people ahead. Estimated the wait time. Mapped the alternative routes.
 
@@ -624,29 +624,25 @@ Mira looked up. Kael had stopped walking. They were standing in a room that was 
 
 "You will," he said. "In time. The gift passes through blood. Your mother had it. You have it too."
 
-Mira said nothing.
+She was looking at the river. It moved slowly here, thick with silt, catching the light in a way that made it look almost golden. She had grown up near the river. She had played in it as a child, before she understood what the water carried, what it remembered.
 
-She was looking at the river. It moved slowly here, thick with silt, catching the light in a way that made it look almost golden.
+Her mother had bathed her in it. Had given her water from the river every morning, a few drops in her tea, a ritual that Mira had thought was just something mothers did. She understood now that it had been something else. A preparation. An inoculation against what was to come.
 
 "Would you like to see her room?" Kael asked.
 
-Mira turned to look at him. His face was open, pleasant, the face of a man who had never wanted for anything. She wondered what it would take to change that face. What expression would crack through that pleasantness like ice through water.
-
-"Yes," she said. "I would."
+Mira turned to look at him.  "Yes," she said. "I would."
 
 ---
 
 The alley smelled of fish and copper and something chemical that Vera did not want to name.
 
-She moved through it anyway, keeping close to the walls, her feet finding the places where the cobblestones were still dry. The buildings here were old—Merchant Compact, she could tell by the external staircases, black iron wound around the facades like the tendrils of some climbing plant. Now they were rusting, and the rust bled down the walls in patterns that looked deliberate.
+She moved through it anyway, keeping close to the walls, her feet finding the places where the cobblestones were still dry. The buildings here were old— She had seen their kind before.
 
-She passed a doorway that was nothing more than a dark rectangle, and something shifted inside it. She did not slow down. She did not speed up.
+She passed a doorway that was nothing more than a dark rectangle, and something moved inside it—not toward her, not away, just a shifting of shadows that her eyes caught and her mind filed away. She did not slow down. She did not speed up. She had learned, long ago, that the body that ran was the body that got noticed.
 
-Behind her, the shadow settled back into its place. Nothing followed.
+ Nothing followed.
 
 The alley widened into a small courtyard, and Vera paused at the edge of it, taking stock. Three exits. A well in the center, the kind with a wooden frame and a bucket on a rope, the kind that had not been used for drinking water in decades. A cat sitting on the edge of the well, watching her with eyes that caught the light and held it.
-
-She crossed the courtyard without looking at the cat. When she reached the far side, she allowed herself a glance back.
 
 The cat was still watching. Its eyes were not cat eyes anymore. They were too still, too patient, too knowing.
 
@@ -656,27 +652,27 @@ Vera turned away and did not look back again.
 
 The room was smaller than Mira had expected.
 
-Instead, the room was small and cold and mostly empty.
-
-There was a bed. Narrow, with a frame of dark wood and sheets that had been folded with military precision. There was a desk beneath the window, and on the desk there was a lamp and a stack of papers and a cup that had been empty for a very long time.
-
-And there was a mirror.
+There was a  desk beneath the window,  And there was a mirror.
 
 Mira stood in front of it and looked at her own face.
 
 She did not look like her mother. She knew this because her mother had shown her pictures once—pictures from before, from the time when Vera Drowned had still been Vera Voss and had lived in this tower and had done whatever it was that she had done here. In the pictures, Vera had been young and sharp-featured and smiling, and the smile had not reached her eyes.
 
-Mira's face was softer. Rounder.
+Mira's face was softer. Rounder. She had her father's eyes, her father's mouth, the same tendency to hold words behind her teeth that her mother had always laughed about.
 
-But there was something else in the mirror. Something behind her face.
+But there was something else. Something in the set of her jaw. Something in the way she stood, weight balanced on the balls of her feet, shoulders positioned for movement.  Now she looked at her reflection and saw her mother standing behind her.
 
 ---
 
-Mira turned then, and something in her face made Kael step back half a pace. She had not known she could do that—make someone step back with just her expression. But she had done it. And the strange thing was that it felt familiar. It felt like something she had done a thousand times before, in dreams she could not quite remember.
+Mira did not turn around. She was still looking at the mirror, at her mother's ghost, at the shape of someone she was only beginning to understand.
 
 "How did she die?" she asked.
 
+The silence stretched. Vera could feel it in the room like a change in pressure, a door closing somewhere in a distant part of the tower.
+
 "Who told you she was dead?"
+
+Mira turned then,  and something in her face made Kael step back half a pace.
 
 "My mother told me," she said. "Before she died. She said—" The words caught in her throat, but she forced them out. "She said she had been running for a long time. That she wanted to stop. That she hoped I would be able to stop too."
 
@@ -694,13 +690,11 @@ But Kael did not answer. He was looking past her now, toward the window, toward 
 
 Vera reached the base of the Pale Tower as the light began to fail.
 
-The tower rose above her, pale stone catching the last of the sun, and she stood in its shadow and felt the weight of it pressing down on her shoulders. She had been here before. Twenty-three years ago, when she had been young and afraid and running toward something she did not understand.
+ She had been here before,  Now she was older and still afraid and still running. The only thing that had changed was the direction.
 
-The door was guarded. Two men, different from the ones at the checkpoint—older, harder-looking, their faces worn smooth by years. Vera recognized the type. She had been the type, once. She might still be.
+The door was guarded. Two men—  
 
-She had papers. But papers could be questioned, and she did not have time for questions. She did not have time for anything except the door, and the stairs behind it, and the room where her daughter was waiting.
-
-There was another way in. She knew this because she had used it before, and because the things she had done in this tower had not all been witnessed by the men at the front door. There was a passage that ran beneath the foundations, that emerged in a cellar two floors below the main level, that had been built for purposes that the current
+There was another way in. She knew this because she had used it before,  There was a passage that ran beneath the foundations, that emerged in a cellar two floors below the main level, that had been built for purposes that the current
 
 
 # Chapter 3
@@ -711,35 +705,35 @@ There was another way in. She knew this because she had used it before, and beca
 
 Vera counted the steps as she walked. Forty-seven. Forty-eight. Forty-nine.
 
-The cobblestones were uneven here, worn smooth by generations of feet, and she found herself watching them instead of the tower ahead.
+She watched the cobblestones instead of the tower ahead. Old habit—her mother had taught her that, look at the ground, look at the faces you pass, look at the windows and doorways where someone could be waiting. Her mother had taught her many things that had kept her alive.
 
-The tide was going out. The Meridian Sea retreating for a few hours, revealing the mudflats where the old pilings stood like the bones of something long dead. You learned not to look at certain things in this city. Important things had happened there once.
-
-The Pale Tower grew larger against the sky.
+The tide was going out. She could smell it beneath the other smells of the city—the coal smoke, the fish, the particular sweetness of the meat-packing district upstream.  The Pale Tower grew larger against the sky.
 
 ---
 
-The Pale Tower was full of light.
+Inside, Mira walked through rooms she did not recognize.
 
-The windows were tall and arched, set deep into walls that seemed to glow from within, and the light that came through them was not grey but something softer, something that had been filtered through glass that was not quite glass. It fell across the floors in patterns she could almost trace, in shapes that reminded her of—
+This was not what she had expected. She had imagined corridors—narrow, torch-lit, the kind of architecture that pressed in from both sides. She had imagined stone. Cold. The smell of secrets kept too long in the dark. Instead, the Pale Tower was full of light.
 
-Water. It reminded her of water. The way light looked when you were beneath the surface and looking up.
+ The light that came through them was not grey but something softer, something that had been filtered through glass that was not quite glass. It fell across the floors in patterns she could almost trace, in shapes that reminded her of—
 
-Kael walked a few steps ahead of her, his hands clasped behind his back, his voice a low murmur that she stopped trying to follow. He was saying something about the architecture. The history. The way the tower had been built to catch the light in a particular season, to hold it in the upper chambers like something precious. She had stopped listening after the third sentence.
+ She had grown up near the river.
+
+Kael walked a few steps ahead of her, his hands clasped behind his back, his voice a low murmur that she stopped trying to follow. He was saying something about the architecture. The history. The way the tower had been built to catch the light in a particular season, to hold it in the upper chambers like something precious.
+
+She had stopped listening after the third sentence.
 
 She was counting doors. Fourteen on this level. Two open. Twelve closed. Of the twelve closed, she could see light beneath four of them—warm light, candle-light, the kind that meant occupation. The other eight were dark.
 
 She was noting which way the hinges faced—left-swinging, which meant right-handed approach was disadvantageous. She was cataloging the distance between windows, the angle at which they caught the light, the hours of the day when shadows would fall longest across the corridor floor.
 
+She did not know why she was doing this. She had never been taught to do this.
+
 ---
 
 Vera stopped at a corner and pressed her back against the wall.
 
-There was a checkpoint ahead. Two men in the grey coats of the Compact Watch, though the uniforms were wrong—newer cut, higher collars, brass buttons that caught the thin light. She had seen their kind before. The Covenant did not employ the Watch, officially, but the Covenant employed everyone eventually.
-
-She did not recognize either man. Good. That meant either they were new, or she had been gone long enough that her face had faded from whatever files they kept.
-
-The checkpoint was checking papers. She had one—good papers, forged by someone who had owed her a favor and would not be owing her anything after this.
+There was a checkpoint ahead. Two men in the grey coats of the Compact Watch, though the uniforms were wrong—newer cut, higher collars, brass buttons that caught the thin light.  Good. That meant either they were new, or she had been gone long enough that her face had faded from whatever files they kept.
 
 She watched the checkpoint for three minutes. Counted the people ahead. Estimated the wait time. Mapped the alternative routes.
 
@@ -763,29 +757,25 @@ Mira looked up. Kael had stopped walking. They were standing in a room that was 
 
 "You will," he said. "In time. The gift passes through blood. Your mother had it. You have it too."
 
-Mira said nothing.
+She was looking at the river. It moved slowly here, thick with silt, catching the light in a way that made it look almost golden. She had grown up near the river. She had played in it as a child, before she understood what the water carried, what it remembered.
 
-She was looking at the river. It moved slowly here, thick with silt, catching the light in a way that made it look almost golden.
+Her mother had bathed her in it. Had given her water from the river every morning, a few drops in her tea, a ritual that Mira had thought was just something mothers did. She understood now that it had been something else. A preparation. An inoculation against what was to come.
 
 "Would you like to see her room?" Kael asked.
 
-Mira turned to look at him. His face was open, pleasant, the face of a man who had never wanted for anything. She wondered what it would take to change that face. What expression would crack through that pleasantness like ice through water.
-
-"Yes," she said. "I would."
+Mira turned to look at him.  "Yes," she said. "I would."
 
 ---
 
 The alley smelled of fish and copper and something chemical that Vera did not want to name.
 
-She moved through it anyway, keeping close to the walls, her feet finding the places where the cobblestones were still dry. The buildings here were old—Merchant Compact, she could tell by the external staircases, black iron wound around the facades like the tendrils of some climbing plant. Now they were rusting, and the rust bled down the walls in patterns that looked deliberate.
+She moved through it anyway, keeping close to the walls, her feet finding the places where the cobblestones were still dry. The buildings here were old— She had seen their kind before.
 
-She passed a doorway that was nothing more than a dark rectangle, and something shifted inside it. She did not slow down. She did not speed up.
+She passed a doorway that was nothing more than a dark rectangle, and something moved inside it—not toward her, not away, just a shifting of shadows that her eyes caught and her mind filed away. She did not slow down. She did not speed up. She had learned, long ago, that the body that ran was the body that got noticed.
 
-Behind her, the shadow settled back into its place. Nothing followed.
+ Nothing followed.
 
 The alley widened into a small courtyard, and Vera paused at the edge of it, taking stock. Three exits. A well in the center, the kind with a wooden frame and a bucket on a rope, the kind that had not been used for drinking water in decades. A cat sitting on the edge of the well, watching her with eyes that caught the light and held it.
-
-She crossed the courtyard without looking at the cat. When she reached the far side, she allowed herself a glance back.
 
 The cat was still watching. Its eyes were not cat eyes anymore. They were too still, too patient, too knowing.
 
@@ -795,27 +785,27 @@ Vera turned away and did not look back again.
 
 The room was smaller than Mira had expected.
 
-Instead, the room was small and cold and mostly empty.
-
-There was a bed. Narrow, with a frame of dark wood and sheets that had been folded with military precision. There was a desk beneath the window, and on the desk there was a lamp and a stack of papers and a cup that had been empty for a very long time.
-
-And there was a mirror.
+There was a  desk beneath the window,  And there was a mirror.
 
 Mira stood in front of it and looked at her own face.
 
 She did not look like her mother. She knew this because her mother had shown her pictures once—pictures from before, from the time when Vera Drowned had still been Vera Voss and had lived in this tower and had done whatever it was that she had done here. In the pictures, Vera had been young and sharp-featured and smiling, and the smile had not reached her eyes.
 
-Mira's face was softer. Rounder.
+Mira's face was softer. Rounder. She had her father's eyes, her father's mouth, the same tendency to hold words behind her teeth that her mother had always laughed about.
 
-But there was something else in the mirror. Something behind her face.
+But there was something else. Something in the set of her jaw. Something in the way she stood, weight balanced on the balls of her feet, shoulders positioned for movement.  Now she looked at her reflection and saw her mother standing behind her.
 
 ---
 
-Mira turned then, and something in her face made Kael step back half a pace. She had not known she could do that—make someone step back with just her expression. But she had done it. And the strange thing was that it felt familiar. It felt like something she had done a thousand times before, in dreams she could not quite remember.
+Mira did not turn around. She was still looking at the mirror, at her mother's ghost, at the shape of someone she was only beginning to understand.
 
 "How did she die?" she asked.
 
+The silence stretched. Vera could feel it in the room like a change in pressure, a door closing somewhere in a distant part of the tower.
+
 "Who told you she was dead?"
+
+Mira turned then,  and something in her face made Kael step back half a pace.
 
 "My mother told me," she said. "Before she died. She said—" The words caught in her throat, but she forced them out. "She said she had been running for a long time. That she wanted to stop. That she hoped I would be able to stop too."
 
@@ -833,13 +823,11 @@ But Kael did not answer. He was looking past her now, toward the window, toward 
 
 Vera reached the base of the Pale Tower as the light began to fail.
 
-The tower rose above her, pale stone catching the last of the sun, and she stood in its shadow and felt the weight of it pressing down on her shoulders. She had been here before. Twenty-three years ago, when she had been young and afraid and running toward something she did not understand.
+ She had been here before,  Now she was older and still afraid and still running. The only thing that had changed was the direction.
 
-The door was guarded. Two men, different from the ones at the checkpoint—older, harder-looking, their faces worn smooth by years. Vera recognized the type. She had been the type, once. She might still be.
+The door was guarded. Two men—  
 
-She had papers. But papers could be questioned, and she did not have time for questions. She did not have time for anything except the door, and the stairs behind it, and the room where her daughter was waiting.
-
-There was another way in. She knew this because she had used it before, and because the things she had done in this tower had not all been witnessed by the men at the front door. There was a passage that ran beneath the foundations, that emerged in a cellar two floors below the main level, that had been built for purposes that the current
+There was another way in. She knew this because she had used it before,  There was a passage that ran beneath the foundations, that emerged in a cellar two floors below the main level, that had been built for purposes that the current
 
 
 # Chapter 4

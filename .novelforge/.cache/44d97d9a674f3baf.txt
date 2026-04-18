@@ -1,0 +1,374 @@
+# THE CRIMSON COVENANT CHRONICLES
+
+## Complete Story Outline
+
+---
+
+# STRUCTURAL OVERVIEW
+
+**Target Word Count**: 80,000 words
+**Chapter Count**: 24 chapters
+**Average Chapter Length**: 3,333 words
+
+## Act Distribution
+
+| Act | Range | Chapters | Word Target | Percentage |
+|-----|-------|----------|-------------|------------|
+| Act I | 0-23% | 1-5 | 18,400 | 23% |
+| Act II Part 1 | 23-50% | 6-11 | 21,600 | 27% |
+| Act II Part 2 | 50-77% | 12-19 | 21,600 | 27% |
+| Act III | 77-100% | 20-24 | 18,400 | 23% |
+
+## Quiet Chapters (Low Tension, Character Development)
+
+- **Chapter 3**: "Salt and Water" — Vera's solitary morning routine in the Flotilla
+- **Chapter 11**: "The Price of Information" — Thane Greysalt's perspective, deal-making
+- **Chapter 19**: "The Unmoved" — Mira alone in her cell, memories of her mother
+
+---
+
+# ACT I: THE BREAKING
+
+## Setup (0-5%) — Chapters 1-2
+
+---
+
+### CHAPTER 1: "The Released"
+
+**Position**: 0-2%
+**POV**: Vera Drowned
+**Location**: The Salt Flotilla — Vera's single room on a repurposed cargo barge
+**Save the Cat Beat**: Setup / Opening Image
+**Word Count Target**: 3,500
+
+**Emotional Arc**: Vera exists in a state of hollow peace. She performs normalcy for the Flotilla community while feeling the weight of her own emptiness. The chapter establishes her physical deterioration (bloodforge damage) and her emotional self-erasure.
+
+**Try-Fail Cycle**: N/A (setup chapter)
+
+**Scene Beats**:
+
+1. **Morning routine** — Vera wakes before dawn to the creak of the barge, performs exercises that have become rote. Her body moves through defensive forms while her mind floats elsewhere. She notes her hands shaking slightly—signs of the Thirst she's been suppressing.
+
+2. **The Flotilla exchange** — Vera rows her small dinghy to the Verath mainland to trade. She interacts with vendors who know her only as "the quiet one" or "Salt's woman" (having adopted the surname "Salt" to distance herself from her Drowned name). She passes a group of children; one stares at her with an intensity that unsettles her. She wonders if any of them could sense what she is.
+
+3. **The memorial stones** — On her way back, Vera stops at a floating shrine where Flotilla residents leave offerings for the lost. She doesn't leave anything, but she reads the names. *Greysalt's daughter. The Drowned Fisherman. Seven of the Cedarhold refugees.* She's adding names to her mental tally when she realizes she's doing it—her old habit of counting deaths.
+
+4. **The message bottle** — Back in her room, Vera finds a message she didn't expect: a salt-wax sealed container left during her absence. Inside, a single salt-crown and a scrap of paper with three words in Thane Greysalt's handwriting: *"They know about."* She doesn't know what it means yet. She will.
+
+5. **Night and the Thirst** — Vera tries to sleep. The barge rocks. Her hand finds the scar on her left palm (from the blood-burn, from years ago). She thinks of Mira—deliberately, for the first time in three days. She allows herself this: picturing her daughter's face, counting the weeks until her next "accidental" encounter at the market. The counting is how she survives.
+
+**Foreshadowing Plants**:
+
+- Vera's counting habit (payoff in Act III when she confronts her violence)
+- The Thirst symptoms (payoff when she must use blood magic)
+- Greysalt's cryptic message (payoff, Chapter 4)
+- The child who stares (foreshadows Vessel-class awareness among children)
+
+**Payoffs**: None yet (planting chapter)
+
+**Character Movement**: Vera remains static, but readers see her internal fracture—the woman she's constructed versus the woman she was.
+
+---
+
+### CHAPTER 2: "The Taking"
+
+**Position**: 2-5%
+**POV**: Vera Drowned / Mira Drowned (intercut)
+**Location**: Verath lower quarters — Mira's foster home / The Salt Flotilla — Vera's barge
+**Save the Cat Beat**: Theme Stated / Setup
+**Word Count Target**: 3,500
+
+**Emotional Arc**: The inciting incident. Vera's careful distance shatters. Mira experiences the violence of her removal, and Vera receives the news that will pull her back into the life she fled.
+
+**Try-Fail Cycle**: N/A (inciting incident)
+
+**Scene Beats**:
+
+1. **Mira's morning** — Intercut: Seven-year-old Mira wakes in the cramped room she shares with three other children in Greysalt's informal foster arrangement. She's nervous—today is the day she's supposed to see her mother "by accident" at the Gutter Market. She practices what she'll say: *"You could just stay. You could stay and then I wouldn't have to miss you."* She holds her stuffed seabird, talking to it.
+
+2. **The knock** — Intercut: Vera is preparing to go to market when she hears the distinctive pattern of oars against hull—three quick, one slow. Greysalt's signal. Her hand moves to the iron sap before she consciously thinks about it. She's reaching for the door when the barge rocks from a second vessel landing.
+
+3. **The Covenant arrives** — Greysalt's door opens. Two figures enter: a man with the crimson teardrop tattoo behind his left ear (Blooded rank), and a woman whose presence makes Vera's blood run cold. *Vex's daughter.* The woman—**Kael Morreth**, Vex's adopted heir—smiles without warmth. *"Salt-Hand. The Primarch requires a consultation."* Behind them, Vera sees Mira through the doorway, held by a third figure. Mira's eyes find Vera's through the crowd. The look asks: *Are you going to run again?*
+
+4. **The impossible choice** — Vera could fight. Two Blooded against a retired Salt-Hand. Difficult but possible—*if* she's willing to kill Greysalt's people, destroy his foster arrangement, traumatize the other children. She could run. She could dive into the water and disappear, try to find Mira later. She chooses the only thing she can: surrender. She raises her hands. Kael nods, satisfied. *"Wise. The Primarch said you'd see reason eventually."*
+
+5. **The exchange** — Kael releases Mira with a casual push. Mira runs to Vera, small arms wrapping around her mother's waist. For three seconds, Vera holds her daughter—this is the first time in four years she's held her without a time limit, without an escape planned. Then Kael produces a salt-wax sealed contract. *"The Primarch's terms. Your cooperation for the child's safety. We'll collect you at dawn."* They leave. Vera stands in the doorway holding Mira, watching the Covenant boat disappear into the evening mist.
+
+6. **The night after** — Vera and Mira share her small bunk on the barge. Mira falls asleep quickly—exhaustion, probably, or the emotional shutdown that Vera recognizes as her own defense mechanism. Vera doesn't sleep. She holds her daughter and plans. She's done with running. The Covenant wants a consultation? They'll get one.
+
+**Foreshadowing Plants**:
+
+- Kael Morreth's introduction (primary antagonist alongside Vex)
+- Greysalt's "foster arrangement" (sets up his later betrayal/motivation)
+- The bloodforge contract (terms to be revealed later)
+- Mira's emotional shutdown (mirror of Vera's psychology)
+- Vera's choice to surrender instead of fight (contrasts with Act III decision to burn it all)
+
+**Payoffs**:
+
+- Greysalt's message from Chapter 1 ("They know about") — meaning revealed: the Covenant has always known where Mira was, using Greysalt to maintain watch
+
+**Character Movement**: Vera moves from passive survival to active planning. Mira moves from guarded hope to exhausted collapse in her mother's arms.
+
+---
+
+## Break into Two (5-23%) — Chapters 3-5
+
+---
+
+### CHAPTER 3: "Salt and Water"
+
+**Position**: 5-9%
+**POV**: Vera Drowned
+**Location**: The Salt Flotilla — Vera's barge
+**Save the Cat Beat**: Fun & Games / Catalyst
+**Word Count Target**: 3,200 (QUIET CHAPTER)
+
+**Emotional Arc**: A breathing space before the storm. Vera spends twelve hours with her daughter, doing ordinary things that feel impossible. She confronts the distance she's created and the smallness of the time she has left.
+
+**Try-Fail Cycle**: N/A (quiet chapter)
+
+**Scene Beats**:
+
+1. **Morning lessons** — Before dawn, Vera teaches Mira the Flotilla morning routine: checking the mooring lines, testing the bilge pump, reading the weather in the cloud formations. These are practical skills, but Vera makes them into a game, a secret language between mother and daughter. Mira catches on quickly—she has her mother's capacity for observation.
+
+2. **The salt-vault** — Vera shows Mira the family's salt-vault: a wax-sealed chest containing preserved fish, dried fruit, and a small pouch of tideglass-notes. If they had to run—if they had to disappear—this would sustain them for two months. Mira asks what happens if they run. Vera's silence is answer enough.
+
+3. **Swimming** — They take the dinghy to a quiet channel where the water is still. Vera teaches Mira how to float, how to breathe when water fills the nose, how to trust the body to stay buoyant. Mira panics once, grasps Vera's arm too hard, nearly pulls them both under. Vera doesn't flinch. She holds steady until Mira finds her balance. *"There. You've got it. You'll always have it now."*
+
+4. **Stories** — In the evening, Mira asks Vera to tell her about when she was a baby. Vera resists, but Mira has learned to wait. Eventually, Vera tells the story of Mira's birth: the storm, the monastery, the priestesses who helped when no one else would. She doesn't tell Mira about the blood magic, about the choice she made, about the oath she swore. Some stories are for later.
+
+5. **The last night** — Mira falls asleep in Vera's arms. Vera watches her face in the lamplight, memorizing. The shape of her nose. The freckles. The way her breathing catches when she's dreaming. She whispers promises she knows she might not be able to keep: *"I'll find you. Wherever they take you. Whatever it costs."* The clock counts down. Dawn will come. The chapter ends with Vera standing at the prow of her barge, watching the city lights of Verath flicker across the water, already planning her approach.
+
+**Foreshadowing Plants**:
+
+- The swimming lesson (Mira will need this skill in Chapter 15)
+- The salt-vault contents (will be relevant in Act II Part 2 when Vera trades everything for information)
+- The monastery story (introduces Elder Salthorn and the Tidewell connection)
+- Vera's promises (raising the stakes for her eventual choice about the breeding program)
+
+**Payoffs**: None yet
+
+**Character Movement**: Vera allows herself a single day of motherhood before she returns to being Salt-Hand. Mira experiences what it might have been like to have a real mother—and learns that the day ending means the loss beginning again.
+
+---
+
+### CHAPTER 4: "The Primarch's Terms"
+
+**Position**: 9-13%
+**POV**: Vera Drowned
+**Location**: The Undercroft — en route to the Pale Tower / The Gutter Market
+**Save the Cat Beat**: Debate / Break into Two
+**Word Count Target**: 3,500
+
+**Emotional Arc**: Vera must face her past and the organization she fled. She discovers the partial truth of why she was taken—she's being tested. The chapter reveals her blood-contract status and forces her to choose between letter and spirit of her oath.
+
+**Try-Fail Cycle**: Yes-But (she agrees to cooperate, but discovers the scope of what they're asking)
+
+**Scene Beats**:
+
+1. **The collection** — Dawn. Kael arrives with a small escort. Vera has made herself ready: knives strapped, iron sap in her pocket, her body coiled for violence she won't commit yet. Kael notes the preparations with amusement. *"You could try something. I'd rather you didn't."* They travel by tunnel—the Undercroft—while the city sleeps above. Vera notes the changes in four years: new shoring, new access points, new traps. The Covenant has been busy.
+
+2. **The Gutter Market** — A brief stop. Kael needs to collect something—a payment, a message. Vera waits at the edge of the crowd while Covenant soldiers conduct business. She sees faces: old contacts, former colleagues, children who've grown into killers. No one approaches her. No one acknowledges her. She's a ghost.
+
+3. **The Pale Tower approach** — The final leg: a boat ride to the rocky outcrop where the Covenant maintains its headquarters. The lighthouse beam sweeps the water. Vera counts the guard positions, notes the new watchtowers, files away the layout for later use. She's been here before. She's killed here before. The memories surface unbidden.
+
+4. **The Primarch's audience chamber** — Vex Morreth receives her in a room that was once the lighthouse keeper's quarters. He's larger than she remembers—fat, not strong—and his bloodforge tattoos cover so much of his face that his expression is hard to read. But his voice is the same: low, cultured, patient. *"Salt-Hand. You've aged."* He gestures to a chair. She doesn't sit. *"The Primarch wanted to see me. Here I am."* He smiles. *"I wanted to see if you still had the steel. You do. Good. Because I need you for something specific."*
+
+5. **The terms revealed** — Vex explains: there's a Vessel-class child in the breeding program who's becoming unresponsive. The child—**a girl named Sera, age nine**—has stopped eating, stopped speaking, stopped manifesting her power. She needs activation training, but the trainers can't get close enough without triggering her defensive responses. Vera was the Covenant's best close-combat specialist before she retired. She has Vessel-class blood herself. She might be able to reach the girl where others couldn't. *"Do this one job. Train our Sera. Then you and your daughter can go. Permanently. I'll sign the blood-release myself."*
+
+6. **The lie Vera sees** — Vera knows this offer is poisoned. If she enters the program, she'll learn things she can't unlearn. If she helps train Vessel-class children, she's complicit in their abuse. If she refuses, Mira suffers. Vex knows this. He's not offering her a choice—he's revealing his control. She leaves the audience chamber with Mira's location in her pocket (a map coordinate, meaningless without context) and a decision she hasn't yet made: cooperate and survive, or refuse and destroy everything.
+
+**Foreshadowing Plants**:
+
+- The map coordinate (will lead to the facility location in Chapter 8)
+- Sera's character (she will be the child Vera must choose between in Chapter 16)
+- The breeding program exposure (Vera will learn the full scope in Chapter 12)
+- The audience chamber details (Vex's power display, foreshadows the final confrontation)
+
+**Payoffs**:
+
+- Greysalt's betrayal revealed: he was monitoring Mira for the Covenant all along
+- Vera's counting habit: she recognizes the children in the Gutter Market as former kills' children (foreshadows the breeding program)
+
+**Character Movement**: Vera is no longer passive. She's operating inside the enemy's territory, gathering information. Her relationship with Vex is established as tactical, not personal—he's the enemy, and she knows it.
+
+---
+
+### CHAPTER 5: "The First Cut"
+
+**Position**: 13-18%
+**POV**: Vera Drowned
+**Location**: The Pale Tower — training halls
+**Save the Cat Beat**: Fun & Games
+**Word Count Target**: 3,500
+
+**Emotional Arc**: Vera enters the Covenant's world as an operative for the first time in four years. She must navigate the internal politics, avoid old enemies, and begin assessing the breeding program without revealing her intentions. The chapter ends with her first encounter with Sera—and the first evidence of the program's horror.
+
+**Try-Fail Cycle**: Yes-But (she gains access to the program but witnesses its cruelty)
+
+**Scene Beats**:
+
+1. **The Bloodlords' reception** — Before Vera can begin work, she must be introduced to the current power structure. The five Bloodlords review her in a formal assembly: **Brekk Saltblood** (Verath operations), **The Silent Drowned** (the Flotilla network), **Ash Weaver** (poisons), **Corvin** (tideglass harvesting), and **Kael Morreth** (the breeding program). Each gives her a test—a comment, a challenge, a veiled threat. Vera passes by showing nothing. Her face is a mask. Her bloodforge aura is dormant. She is a blade in its sheath.
+
+2. **The tour** — Kael shows her the Pale Tower's facilities. The training halls: where Blooded members learn their craft. The blood-temples: where rituals are conducted. The archives: where records are kept. Vera counts guards, memorizes schedules, identifies the gaps in security. She notes the locked doors, the restricted sections. One door is marked with a symbol she's never seen: a child surrounded by thorns. *"What's in there?"* she asks. Kael doesn't answer. She's not ready to know.
+
+3. **The first meeting with Sera** — The child is kept in a sealed room at the edge of the Tower. When Vera enters, she sees a girl curled in the corner, arms wrapped around herself, eyes closed. Nine years old. Vessel-class, according to Kael, but the power has gone wrong—she attacks anyone who approaches, bleeds from her nose, screams without sound. Vera recognizes the symptoms: the child has pushed too hard too fast, damaged her own essence pathways. The training broke her. *"Can you fix her?"* Kael asks. *"I can try,"* Vera says, and means: *I can stop her suffering. I can end what your program has done.*
+
+4. **The blood memory** — Vera approaches slowly, extending her senses the way she hasn't in four years. She feels Sera's blood calling to hers—*Vessel recognizes Vessel*—and she speaks softly: *"I know what it's like. To have the power and not understand it. To hurt because you don't know how else to be."* Sera's eyes open. The girl's blood slows its frantic movement. For a moment, there's recognition. Then Sera whispers: *"They're going to make me forget. They said if I can't learn, they'll take my memories and give me to someone else."* Vera's hands shake. *The Memory Drop.* The Covenant's technique for controlling children who become unmanageable.
+
+5. **The choice crystallizes** — Back in her assigned quarters, Vera examines what she knows: the breeding program exists, it creates Vessel-class children through artificial activation, it destroys children who fail, and Mira is next if she doesn't comply. She has two options: take Mira and run (and spend her life looking over her shoulder, knowing the Covenant will hunt them forever), or destroy the program (and accept that her fight with the Covenant will never end). She sleeps poorly. She dreams of counting bodies.
+
+**Foreshadowing Plants**:
+
+- The Thorn symbol (will appear on Mira's cell door in Chapter 15)
+- The Memory Drop technique (Mira will be threatened with this in Chapter 18)
+- The five Bloodlords (each will appear in the climactic sequence)
+- The sealed room door (Sera's cell, which Vera will return to with Sera inside)
+
+**Payoffs**:
+
+- The bloodforge abilities dormant for four years begin to awaken (Chapter 1 planting)
+- Vera's counting habit surfaces in dreams (Chapter 1 planting)
+
+**Character Movement**: Vera crosses the threshold from retired operative to active threat. She now knows the scope of what she's fighting, and the cost of what she's considering. The Covenant's cruelty is no longer abstract—it's a nine-year-old girl in a locked room.
+
+---
+
+### CHAPTER 6: "The Handler's Shadow"
+
+**Position**: 18-23%
+**POV**: Vera Drowned / Kael Morreth (intercut)
+**Location**: The Pale Tower — training facilities / Kael's private quarters
+**Save the Cat Beat**: Fun & Games / Midpoint Setup
+**Word Count Target**: 3,400
+
+**Emotional Arc**: Vera begins her work with Sera, but the relationship is complicated by Kael's surveillance. The chapter introduces the internal politics of the breeding program and establishes Kael as a more complex antagonist than expected.
+
+**Try-Fail Cycle**: Yes-But (Sera responds to Vera, but Kael is always watching)
+
+**Scene Beats**:
+
+1. **Morning training** — Vera works with Sera in a secured room. The child is barely responsive, but when Vera uses blood-sensing—extending her essence to feel the girl's blood moving—the girl opens her eyes. *"You're like me,"* Sera says. It's not a question. Vera nods. *"I'm like you. And I got better. You can too."* This is a lie, but it's a necessary one. She doesn't know how to tell a nine-year-old that she'll never be free.
+
+2. **Kael's observation** — The sessions are watched through a one-way mirror. Vera knows this; she can feel the blood magic being used to observe, sense the essence flowing toward the watching eyes. She adjusts her approach: less healer, more trainer. She teaches Sera basic breathing exercises, how to sense her own blood flow, how to find calm in the chaos of her power. Sera learns quickly. She's been designed to learn quickly.
+
+3. **The feeding schedule** — Intercut with Kael's perspective: Kael watches the feeds, makes notes on Sera's progress, reports to Vex. Kael has her own questions about the program—questions she can't ask without appearing disloyal. She was raised in the Covenant, trained by Vex himself, and she believes in the organization's purpose: creating the most powerful Bloodwrights in history. But watching Sera, watching the other children in the facility, she's starting to wonder if the purpose justifies the cost.
+
+4. **The other children** — During a break, Vera requests access to the general population. Kael denies it, but Vera insists: *"If I'm supposed to activate Mira someday, I need to understand the process."* Kael relents enough to show her the observation gallery. Below, in a sunken garden designed to look like a normal schoolyard, children play under guard. Vera counts: seventeen visible. She doesn't know how many total. *"They're healthy,"* Kael says. *"They're cared for."* Vera sees bruises that children are trained to hide. She sees eyes that have learned not to ask questions.
+
+5. **The first failure** — One of the children—a boy, perhaps twelve—collapses during exercise. The guards rush to his side, and Vera sees his blood forcing itself out through his skin, uncontrolled. *"Too much,"* Kael says flatly. *"Failed activation. We'll have him processed tonight."* *Processed.* The word hangs in the air. Vera knows what it means. The child will be disposed of quietly, his body drowned in the Drowning Pools, his file marked "unresponsive." Mira was supposed to be here. Mira would have been here, if Vera hadn't run.
+
+**Foreshadowing Plants**:
+
+- Kael's questioning (payoff in Chapter 20 when Kael makes her choice)
+- The "processed" terminology (will be used for Mira in Chapter 18)
+- The seventeen visible children (Vera will try to save all of them)
+- The observation gallery (foreshadows Vera's eventual infiltration in Chapter 16)
+
+**Payoffs**: None yet
+
+**Character Movement**: Vera's commitment hardens. She's no longer considering whether to destroy the program—she's planning how. Kael begins to show cracks in her loyalty, sensing that Vera's presence will change things.
+
+---
+
+# ACT II PART 1: FUN & GAMES
+
+## Chapters 7-11 (23-50%)
+
+---
+
+### CHAPTER 7: "The Broker's Price"
+
+**Position**: 23-28%
+**POV**: Vera Drowned
+**Location**: The Undercroft — Thane Greysalt's information network
+**Save the Cat Beat**: Fun & Games
+**Word Count Target**: 3,500
+
+**Emotional Arc**: Vera seeks outside help for the first time, reaching out to Thane Greysalt. She must navigate his information network, pay his price, and determine whether he can be trusted—or whether he's still working for the Covenant.
+
+**Try-Fail Cycle**: No-But (she gets partial information but at a devastating personal cost)
+
+**Scene Beats**:
+
+1. **The approach** — Vera slips away from the Pale Tower during a guard shift change, using skills she hasn't employed in four years. The Undercroft is familiar territory—she knows its shortcuts, its hiding places, its dangers. She travels light: a knife, her iron sap, a pouch of tideglass-notes. The Gutter Market is ahead.
+
+2. **The meeting place** — Greysalt operates from a series of floating platforms connected by rope bridges. He never stays in one location; he moves his operation every few days, staying ahead of those who might want to silence him. Vera has to hunt for him, following the breadcrumbs: a mark on a wall, a symbol scratched into stone, a child who gestures toward a distant platform.
+
+3. **Greysalt's welcome** — Thane Greysalt is a thin man, old for the Flotilla—his hair has gone completely white, and his hands shake from age or bloodforge damage or both. He remembers Vera as Salt-Hand, and he remembers the favor he did for her: watching Mira for four years, sending regular reports, keeping the Covenant informed of her location. He doesn't apologize for it. *"You knew they'd come eventually. We all knew. I gave you four years. That's more than most people get."*
+
+4. **The price** — Greysalt has information: the location of the main breeding facility, the guard rotation schedules, the names of the key personnel. He'll give it to Vera—for a price. Not money. A favor. *"Someday I'll call on you. When I need someone dead. You won't ask questions. You won't hesitate. You'll do it."* Vera knows this is a blood-contract in all but name. She knows what happens to people who break contracts with information brokers. She agrees anyway.
+
+5. **The partial truth** — Greysalt gives her what he can: a map to the facility, three days' worth of guard rotations, and a warning. *"The facility isn't just for breeding. There's something else down there. Something old. The Covenant found it when they built the facility, and they've been using it ever since. I don't know what it is. But the people who come out of that sub-level... they're not the same."* He can't tell her more. He doesn't know. Vera thanks him and leaves.
+
+**Foreshadowing Plants**:
+
+- The favor to be called in (will be called in Chapter 14, causing Vera to choose between her mission and her debt)
+- The "something old" beneath the facility (will be revealed in Chapter 17 as the source of the Tideglass)
+- The sub-level survivors (foreshadows the human experiments)
+- Greysalt's shaking hands (bloodforge damage, mirrors Vera's future deterioration)
+
+**Payoffs**:
+
+- The map coordinate from Chapter 4 becomes useful
+- The tideglass-notes Vera carries (Chapter 3 planting) are spent on bribes in the Undercroft
+
+**Character Movement**: Vera crosses another line—she's now bound by a favor-contract with Greysalt, adding another layer of obligation to her already complicated situation. Her relationship with Greysalt is transactional but not antagonistic; he provided her four years of warning, and she accepted that price.
+
+---
+
+### CHAPTER 8: "The Deep Cells"
+
+**Position**: 28-33%
+**POV**: Vera Drowned
+**Location**: The breeding facility — exterior reconnaissance
+**Save the Cat Beat**: Fun & Games
+**Word Count Target**: 3,500
+
+**Emotional Arc**: Vera conducts her first reconnaissance of the main breeding facility, using her skills to map the defenses. She sees the place where Mira will be held if the program continues—and begins planning the infiltration that will become Chapter 16.
+
+**Try-Fail Cycle**: Yes-But (she gets valuable intel but is spotted by a patrol)
+
+**Scene Beats**:
+
+1. **The approach by water** — The facility is on a tidal island northeast of Verath, accessible only at low tide. Vera times her approach to the receding water, parking her small boat in a hidden cove and approaching on foot through the marshes. The landscape is hostile: soft ground, limited cover, exposed salt-marshes where anyone approaching will be visible for hundreds of meters.
+
+2. **The outer perimeter** — The facility sits behind a wall of piled stone, older than the Covenant's occupation. The stones bear carved symbols—tide-marks, Vera realizes, but older than any she's seen. The Covenant has simply built over the old site, incorporated its defenses. She notes the guard towers, the boat docks, the single road leading to the mainland.
+
+3. **The hidden entrance** — Following Greysalt's map, Vera locates a secondary entrance: a flooded tunnel that connects to the Undercroft system. The tunnel is guarded by two Blooded soldiers, but they're playing cards and not watching the water. Vera slips past them by holding her breath and letting the current carry her, surfacing in a drainage basin inside the facility's perimeter.
+
+4. **The inner compound** — Once inside, Vera maps the layout from memory: residential quarters, training halls, medical facilities, and at the center, a locked sub-level marked with the Thorn symbol. She notes the children moving between buildings—escorted, but allowed to walk freely. She notes the guards' patterns, the shift changes, the locations of the blood-temples where Bloodwrights refresh their power.
+
+5. **The sighting** — Near the residential quarters, Vera sees something that stops her cold: a girl being led to the medical building. Dark hair, sharp cheekbones, a nervous habit of picking at her cuticles. *Mira.* The child she's been sent to rescue. But Mira is supposed to be kept separate until Vera "cooperates." Why is she here? Why is she being taken to the medical building? Vera tracks them, but loses the group near a locked door. She has to retreat empty-handed, the answer to her question tantalizingly out of reach.
+
+**Foreshadowing Plants**:
+
+- The old tide-marks (will be revealed as pre-Sinking architecture in Chapter 17)
+- The Thorn symbol on the sub-level (Chapter 5 planting, Chapter 15 payoff)
+- Mira's nervous habit (Chapter 2 planting, confirms her identity)
+- The locked medical door (will be the location of Mira's "processing" in Chapter 18)
+
+**Payoffs**: None yet
+
+**Character Movement**: Vera's reconnaissance confirms her worst suspicions. The facility is real, it's operational, and Mira is already inside. The timeline has accelerated—the Covenant isn't waiting for Vera's cooperation.
+
+---
+
+### CHAPTER 9: "The Memory House"
+
+**Position**: 33-38%
+**POV**: Vera Drowned
+**Location**: The Pale Tower — Vera's quarters / training rooms
+**Save the Cat Beat**: Midpoint
+**Word Count Target**: 3,500
+
+**Emotional Arc**: The midpoint. Vera is pulled back to the Pale Tower where Sera shows unexpected progress—but the celebration is a trap. Vera discovers the true purpose of her "training" mission: not to help Sera, but to have a Bloodwright present when the Covenant performs the Memory Drop on Sera to extract information they've hidden from her.
+
+**Try-Fail Cycle**: No-And (Sera improves but the Covenant uses this as a cover for their real operation)
+
+**Scene Beats**:
+
+1. **Sera's breakthrough** — After two weeks of training, Sera begins showing real progress. She can sense her own blood flow, control her breathing, reduce the uncontrolled bleeding that plagued her. Vera reports this to Kael, expecting praise—instead, she sees Kael's expression flicker. Something's wrong. *"That's excellent progress,"* Kael says. *"The Primarch will want to see for himself."*
+
+2

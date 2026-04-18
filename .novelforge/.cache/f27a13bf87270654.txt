@@ -1,0 +1,30 @@
+## Character Distinctiveness Evaluation
+
+**Score: 7/10**
+
+Vera Drowned demonstrates strong distinctiveness in voice and psychological architecture, with enough specific detail to differentiate her from genre archetypes. However, the profile format creates clinical distance, and the character relies on familiar patterns (retired assassin, absent-parent-revelation) that slightly diminish her uniqueness. She reads more as a well-designed character than a fully inhabited one.
+
+---
+
+### Supporting Passages
+
+**1. Voice Distinctiveness (strongest element):**
+> "She speaks in fragments. Years of silence have made her comfortable with pauses; she doesn't rush to fill them... She almost never swears by the Drowned God; it feels like drawing attention from something she doesn't want to acknowledge."
+
+The "almost never" qualifier is particularly effective—it reveals character through what the character *almost* does rather than what she definitively does.
+
+**2. Specific Physical Detail (anchors authenticity):**
+> "Her feet are bare most of the time; shoes are a luxury she couldn't afford for the first decade of her life, and she still feels wrong in them."
+
+This is the kind of specific sensory detail that makes a character feel lived-in rather than designed. The psychology and the physical are linked through economic trauma.
+
+**3. Psychological Depth (competent but clinical):**
+> "The kidnapping reveals that her past follows whether she runs or stays—and that her attempts at isolation may have made her daughter more vulnerable, not less."
+
+This represents genuine character insight, but the structure of "Core Wound," "Lie She Believes," "What She Needs" creates a checklist quality that distances readers from organic discovery.
+
+---
+
+### Improvement Suggestion
+
+**Integrate Vera's voice into the profile itself rather than describing it.** Currently, the profile *tells* us Vera speaks in fragments and uses death-references casually, but shows almost no actual Vera dialogue. Include a scene or two of Vera in conversation—ideally one where she's being interrogated and one where she's with someone who knows her well. This would simultaneously demonstrate voice, deepen psychological authenticity, and showcase relationship dynamics. The "she cracks like a stone when emotion shows" metaphor would land harder after readers have heard her flatness.

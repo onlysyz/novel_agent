@@ -55,7 +55,7 @@ Provide:
 2. 2-3 specific quoted passages that support this score
 3. One concrete improvement suggestion
 """
-    response = client.generate(system_prompt, user_prompt, max_tokens=1024)
+    response = client.generate(system_prompt, user_prompt, max_tokens=2048)
 
     # Parse score from response
     score_match = re.search(r'(?:score|rating)[:\s]*(\d+\.?\d*)', response, re.IGNORECASE)

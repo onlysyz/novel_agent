@@ -1,0 +1,239 @@
+# CANON REFERENCE DOCUMENT
+
+## The Drowned God's Child — The Crimson Covenant Chronicles
+
+---
+
+## SECTION 1: CHARACTER FACTS
+
+### 1.1 Vera Drowned (Codename: Salt-Hand)
+
+**Full Name:** Vera Drowned  
+**Codename:** Salt-Hand  
+**Current Age:** 37 (appears late 40s)  
+**Birth Year:** Year 258  
+
+**Physical Description:**
+- Frame: Wiry and compact, built for efficiency
+- Hair: Silver-streaked (accelerated graying from blood magic use)
+- Skin: Lined, weathered
+- Eyes: Pale gray (lost color from blood magic)
+- Distinguishing Mark: Ritual scar across left palm from first Bloodwright working (Year 271, age 13)
+- Tattoo: Crimson drop behind left ear (Blooded mark); keeps hair longer to conceal it
+- Feet: Bare (uncomfortable wearing shoes)
+- Weapons: Short blade in belt, iron dagger in left boot
+- Blood Magic Visual: Veins become temporarily visible beneath skin when using abilities
+
+**Personality Traits Affecting Plot:**
+- Speaks in fragments; comfortable with silence
+- Short, direct sentences; no flourishes
+- Controlled voice; emotions rarely shown
+- Uses Covenant death references instead of swearing by the Drowned God ("When I'm dead," "before you drown")
+- Asks precise questions: who, where, when. Answers how/why herself.
+- Compartmentalizes; doesn't process what she feels until later
+- Trained to notice everything; old instincts prevent showing awareness
+
+**Knowledge Boundaries:**
+- DOES know: Covenant operations, assassination tradecraft, blood magic
+- DOES NOT know: Where she hid the evidence of the breeding program (blood-stained document in salt-vault)
+- DOES know: Covenant cannot access what she hid
+- DOES NOT know: Full extent of breeding program scope (only saw part of it)
+
+**Relationships:**
+- Mother: Drowned in Saltwaste flooding when Vera was 7 (Year 265)
+- Father: Not mentioned
+- Kael Drowned-Voss: Former blood-oath sibling, former partner, possibly more; complicated history
+- Mira: Daughter, age 5; entire axis of motivation
+
+**Background Milestones:**
+- Year 265 (age 7): Mother drowned during Saltwaste flooding
+- Year 271 (age 13): Covenant discovered Vessel-class potential; recruited from refugee camps; first Bloodwright working scar
+- Year 276-291 (ages 18-33): Active service as Covenant assassin; accumulated 37 confirmed kills
+- Year 291 (age 33): Retired after Mira's birth; secured blood-contract waiving service in exchange for exile
+
+---
+
+### 1.2 Mira
+
+**Full Name:** Mira (surname not established)  
+**Current Age:** 5  
+**Birth Year:** Year 290  
+
+**Physical Description:**
+- Vessel-class bloodforge potential demonstrated spontaneously at age 4
+- Can feel own blood moving when submerged
+- Can hold breath without chest burning (compared to other children)
+- Possesses small polished shell gift from Sister Brine (kept after kidnapping)
+
+**Personality Traits Affecting Plot:**
+- Curious and brave
+- Questioning; asks many questions
+- Knows something is wrong with mother's past
+- Could always tell when Vera had nightmares
+
+**Knowledge Boundaries:**
+- DOES know: Something is wrong/hidden about mother
+- DOES NOT know: What mother was; what Covenant is; what she herself is (Vessel-class)
+- Left shell deliberately on pillow (Chapter 11 significance)
+
+---
+
+### 1.3 Kael Drowned-Voss
+
+**Full Name:** Kael Drowned-Voss  
+**Age:** Not specified; similar age to Vera  
+
+**Physical Description:**
+- Distinguished by old scar on chin
+- Ferry operator; works dock in Lower Arches
+
+**Personality Traits Affecting Plot:**
+- Morally compromised but not villainous
+- Tries to warn Vera; fails due to circumstances
+- Guilt-ridden; carries burden of coercion
+
+**Knowledge Boundaries:**
+- DOES know: Covenant surveillance of Vera; family is hostage; information about Covenant operations
+- DOES NOT know: Full scope of what Vera took/smuggled out
+- Was coerced into betraying Vera four years ago (family held hostage by Covenant)
+
+**Relationships:**
+- Sister: Has children; does not know children are hostages
+- Vera: Blood-oath sibling, former partner; current reluctant ally
+- Bond with Vera: Blood-oath allows Vera to sense his general location and physical state
+
+**Background:**
+- Used safehouse with Vera in Undercroft (currently using it alone)
+- Wrote unsent letter to Vera explaining coercion; kept in salt-vault
+- Recognized Vera in Chapter 1 but said nothing
+
+---
+
+### 1.4 Vex Morreth
+
+**Full Name:** Vex Morreth  
+**Title:** Primarch of the Crimson Covenant  
+
+**Background:**
+- Former dockworker who rose through ranks
+- Considered most ruthless killer in Covenant history
+- Junior Bloodlord during Pale Tower Incident (Year 289)
+- Killed previous Primarch Cressa Voidhand in single combat
+- Took control establishing current leadership structure
+
+**Current Role:**
+- Rules absolutely
+- Selected by council of five Bloodlords
+- Driving cell consolidation (merging all cells into single command)
+- Removing rivals
+
+---
+
+### 1.5 Elder Salthorn
+
+**Full Name:** Elder Salthorn  
+**Title:** Keeper of the Well (current)  
+
+**Affiliation:** Tidewell Monastery  
+**Role:** Spiritual authority; controls temple excommunication (death sentence in this world)
+
+**Personality:**
+- Maintains strict neutrality
+- Young priestesses under him show increasing sympathy for Flotilla refugees
+
+**Family:** Niece is Sister Brine
+
+---
+
+### 1.6 Sister Brine
+
+**Full Name:** Not provided  
+**Title:** Sister Brine  
+**Role:** Young priestess at Tidewell Monastery  
+
+**Affiliations:**
+- Tidewell Monastery (Elder Salthorn is uncle)
+- Sympathizes with refugees
+
+**Knowledge Boundaries:**
+- Gave Mira shell gift from monastery stores
+- Said "For the child who loves the water" to Mira
+
+---
+
+### 1.7 Vellum
+
+**Title:** Blood-broker  
+**Location:** Gutter Market, oldest stall  
+
+**Description:**
+- Wizened (survived six Primarchs)
+- Has seen everything
+
+**Knowledge Boundaries:**
+- DOES know: Covenant operations, where Mira is held, contract terms
+- Provided contracts to Vera
+- Offered Vera choice: three Bloodwright contracts or Mira becomes Vessel
+- Blood-signed contract produced; Vera cut palm and signed in blood
+
+---
+
+### 1.8 Salt
+
+**Title:** Apothecary  
+**Location:** Undercroft apothecary district  
+
+**Background:**
+- Has operated apothecary for years
+- Looks older but unchanged from Vera's memory
+- Daughter's life saved by Vera during Saltwaste crisis
+
+**Knowledge Boundaries:**
+- DOES know: Vera's past; that Vera was always going to be a mother
+- Remembers Vera "used to practice" being a mother
+- Provided herbs for Mira's fever plus small vial; refused payment
+
+---
+
+### 1.9 Saltwell
+
+**Title:** Bloodlord  
+**Affiliation:** Crimson Covenant  
+
+**Background:**
+- Old enemy of Vera from her active years
+- Oversees Vessel transfers (movement of children from breeding facility to Pale Tower)
+- Controls secondary facility where Mira is held
+- Scheduled Mira's transfer to Pale Tower
+- Subject of Covenant consolidation (Covenant wants him eliminated)
+- Subject of Chapter 6 contract (Vera must kill him)
+
+**Current Status:**
+- Was at Pale Tower secondary entrance
+- Encounter with Vera ends in his death
+
+---
+
+### 1.10 Other Named Characters
+
+| Name | Title/Role | Notes |
+|------|-----------|-------|
+| Cressa Voidhand | Previous Primarch | Assassinated Year 289; tried to monopolize tideglass |
+| Morreth the First | Covenant Founder | Dockworker who discovered blood manipulation; Year 47 |
+| Harlan Moss | Cedarhold timber merchant | Contract target (Chapter 6); selling tideglass-location intel to Dockward |
+| Aldric Voss | Dockward Council member | Contract target (Chapter 9); genuinely trying to clean up corruption |
+| Fen | Boy at monastery | Lost breath-holding contest to Mira |
+
+---
+
+## SECTION 2: POLITICAL FACTS
+
+### 2.1 Power Structure
+
+**The Tripartite Power (Drowned Reaches):**
+
+1. **Dockward Council**
+   - Governs: Surface affairs (taxation, public works, disputes)
+   - Structure: Elected by property owners (oligarchic)
+   - Controls: Harbor Authority (only legal port), fees from all shipping
+   - Vulnerable to:

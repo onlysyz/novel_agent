@@ -1,3 +1,9 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -7,24 +13,36 @@ build/
 dist/
 *.egg-info/
 .eggs/
-.env
 .venv/
 venv/
-*.md.txt
+uv.lock
+
+# Novel content (generated)
+seed.txt
 chapters/
+manuscript.md
+*.md.txt
 world.md
 characters.md
 outline.md
 canon.md
 voice.md
 anti_patterns.md
+
+# Pipeline state
+.novelforge/
 state.json
 results.tsv
+
+# Logs
 *.log
+
+# macOS
 .DS_Store
+*.swp
+*.swo
 
 # Frontend
 frontend/node_modules/
 frontend/dist/
 frontend/src-tauri/target/
-.novelforge/.cache/

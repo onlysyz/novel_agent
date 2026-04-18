@@ -65,14 +65,14 @@ class AnthropicClient:
 
                 # Handle different content block types (TextBlock, ThinkingBlock)
                 text_parts = []
+                thinking_parts = []
                 for block in response.content:
                     if hasattr(block, 'type') and block.type == 'text':
                         text_parts.append(block.text)
                     elif hasattr(block, 'thinking') and block.thinking:
-                        # Fallback: extract thinking content if text is empty
-                        # (edge case when API still returns thinking despite disable)
-                        pass
-                text = "\n".join(text_parts)
+                        # Extract thinking content as fallback
+                        thinking_parts.append(block.thinking)
+                text = "\n".join(text_parts) if text_parts else "\n".join(thinking_parts)
 
                 if not text:
                     raise ValueError(f"No text content in response. Content: {response.content}")

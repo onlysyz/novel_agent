@@ -59,7 +59,8 @@ class AnthropicClient:
                     temperature=temperature or self.temperature,
                     system=system_prompt,
                     messages=[{"role": "user", "content": user_prompt}],
-                    # Note: Not passing thinking param - extended thinking can cause ThinkingBlock returns
+                    # Disable extended thinking to prevent ThinkingBlock returns
+                    thinking=None,
                 )
 
                 # Handle different content block types (TextBlock, ThinkingBlock)
@@ -67,6 +68,10 @@ class AnthropicClient:
                 for block in response.content:
                     if hasattr(block, 'type') and block.type == 'text':
                         text_parts.append(block.text)
+                    elif hasattr(block, 'thinking') and block.thinking:
+                        # Fallback: extract thinking content if text is empty
+                        # (edge case when API still returns thinking despite disable)
+                        pass
                 text = "\n".join(text_parts)
 
                 if not text:

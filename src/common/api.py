@@ -48,12 +48,22 @@ class AnthropicClient:
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         use_cache: bool = True,
+        stream: bool = False,
     ) -> str:
-        """Generate text with optional caching and retry logic."""
+        """Generate text with optional caching and retry logic.
+
+        Args:
+            system_prompt: System prompt
+            user_prompt: User prompt
+            max_tokens: Max tokens to generate
+            temperature: Temperature for generation
+            use_cache: Whether to use cached responses
+            stream: Whether to use streaming (required for long operations >10min)
+        """
         import hashlib
 
         cache_key = hashlib.sha256(
-            f"{self.model}:{system_prompt}:{user_prompt}:{max_tokens}:{temperature}".encode()
+            f"{self.model}:{system_prompt}:{user_prompt}:{max_tokens}:{temperature}:{stream}".encode()
         ).hexdigest()[:16]
         cache_file = CACHE_DIR / f"{cache_key}.txt"
 
@@ -66,88 +76,51 @@ class AnthropicClient:
 
         for attempt in range(3):
             try:
-                response = self.client.messages.create(
-                    model=self.model,
-                    max_tokens=int(effective_max_tokens * tokens_multiplier),
-                    temperature=temperature or self.temperature,
-                    system=system_prompt,
-                    messages=[{"role": "user", "content": user_prompt}],
-                    # Disable extended thinking to prevent ThinkingBlock returns
-                    thinking=None,
-                )
+                if stream:
+                    # Use streaming for long requests
+                    response = self.client.messages.create(
+                        model=self.model,
+                        max_tokens=int(effective_max_tokens * tokens_multiplier),
+                        temperature=temperature or self.temperature,
+                        system=system_prompt,
+                        messages=[{"role": "user", "content": user_prompt}],
+                        thinking=None,
+                        stream=True,
+                    )
+                    # Handle streaming response
+                    text = self._handle_streaming_response(response)
+                else:
+                    response = self.client.messages.create(
+                        model=self.model,
+                        max_tokens=int(effective_max_tokens * tokens_multiplier),
+                        temperature=temperature or self.temperature,
+                        system=system_prompt,
+                        messages=[{"role": "user", "content": user_prompt}],
+                        thinking=None,
+                    )
+                    # Analyze response content blocks (non-streaming)
+                    text = self._extract_text_from_response(response)
 
-                # Analyze response content blocks
-                text_parts = []
-                thinking_blocks = []
-                has_text_block = False
-                has_thinking_block = False
-
-                for block in response.content:
-                    if hasattr(block, 'type'):
-                        if block.type == 'text':
-                            has_text_block = True
-                            text_parts.append(block.text)
-                        elif block.type == 'thinking':
-                            has_thinking_block = True
-                            # ThinkingBlock has a 'thinking' attribute with the content
-                            thinking_blocks.append(getattr(block, 'thinking', ''))
-
-                text = "\n".join(text_parts) if text_parts else ""
-
-                # Detect ThinkingBlock-only response (model ran out of tokens for actual response)
-                if has_thinking_block and not has_text_block and text_parts:
-                    # This shouldn't happen with thinking=None, but handle it
-                    text = "\n".join(thinking_blocks)
-
-                # Check for ThinkingBlock-only response where we fell back to thinking content
-                thinking_only_response = has_thinking_block and not has_text_block and not text_parts
-
-                if not text or thinking_only_response:
-                    # Response contains only ThinkingBlock - model ran out of space
+                if not text:
                     if attempt < 2:
                         old_tokens = int(effective_max_tokens * tokens_multiplier)
-                        tokens_multiplier *= 2  # Double tokens for next attempt
-                        backoff = (2 ** attempt) + (hash(cache_key) % 10) * 0.1  # Exponential + jitter
+                        tokens_multiplier *= 2
+                        backoff = (2 ** attempt) + (hash(cache_key) % 10) * 0.1
                         logger.warning(
-                            "ThinkingBlock-only response | "
-                            f"attempt={attempt + 1}/3 | "
-                            f"tokens={int(effective_max_tokens * tokens_multiplier)} "
-                            f"(was {old_tokens}) | "
-                            f"backoff={backoff:.1f}s | "
-                            f"cache_key={cache_key[:8]}"
+                            f"Empty response | attempt={attempt + 1}/3 | "
+                            f"tokens={int(effective_max_tokens * tokens_multiplier)} (was {old_tokens})"
                         )
-                        print(f"  [API] ThinkingBlock-only response, retrying with {int(effective_max_tokens * tokens_multiplier)} tokens (was {old_tokens}), backoff: {backoff:.1f}s")
                         time.sleep(backoff)
                         continue
-                    else:
-                        # Last attempt: extract what we can from thinking blocks
-                        thinking_content = "\n".join(thinking_blocks) if thinking_blocks else ""
-                        if thinking_content:
-                            logger.warning(
-                                f"Using thinking content as fallback | "
-                                f"chars={len(thinking_content)} | "
-                                f"cache_key={cache_key[:8]}"
-                            )
-                            print(f"  [API] Warning: Returning thinking content as fallback ({len(thinking_content)} chars)")
-                            if use_cache:
-                                cache_file.write_text(thinking_content)
-                            return thinking_content
-                        logger.error(
-                            f"No text content in response | "
-                            f"cache_key={cache_key[:8]} | "
-                            f"content_blocks={len(response.content)}"
-                        )
-                        raise ValueError(f"No text content in response. Content: {response.content}")
+                    raise ValueError("Empty response after all retries")
 
                 if use_cache:
                     cache_file.write_text(text)
 
                 logger.info(
-                    f"API response success | "
-                    f"model={self.model} | "
+                    f"API response success | model={self.model} | "
                     f"tokens={int(effective_max_tokens * tokens_multiplier)} | "
-                    f"response_chars={len(text)} | "
-                    f"cache_key={cache_key[:8]}"
+                    f"response_chars={len(text)} | cache_key={cache_key[:8]}"
                 )
                 return text
 
@@ -156,26 +129,63 @@ class AnthropicClient:
             except Exception as e:
                 if attempt == 2:
                     logger.error(
-                        f"API exhausted retries | "
-                        f"attempt={attempt + 1}/3 | "
-                        f"error_type={type(e).__name__} | "
-                        f"error={str(e)[:100]} | "
-                        f"cache_key={cache_key[:8]}"
+                        f"API exhausted retries | attempt={attempt + 1}/3 | "
+                        f"error_type={type(e).__name__} | error={str(e)[:100]}"
                     )
                     raise
-                backoff = (2 ** attempt) + (hash(cache_key) % 10) * 0.1  # Exponential + jitter
+                backoff = (2 ** attempt) + (hash(cache_key) % 10) * 0.1
                 logger.warning(
-                    f"API attempt failed | "
-                    f"attempt={attempt + 1}/3 | "
-                    f"error_type={type(e).__name__} | "
-                    f"error={str(e)[:100]} | "
-                    f"backoff={backoff:.1f}s | "
-                    f"cache_key={cache_key[:8]}"
+                    f"API attempt failed | attempt={attempt + 1}/3 | "
+                    f"error_type={type(e).__name__} | error={str(e)[:100]} | "
+                    f"backoff={backoff:.1f}s"
                 )
                 print(f"API attempt {attempt + 1} failed: {e}, retrying in {backoff:.1f}s...")
                 time.sleep(backoff)
 
         raise RuntimeError("Should not reach here")
+
+    def _extract_text_from_response(self, response) -> str:
+        """Extract text from non-streaming API response."""
+        text_parts = []
+        thinking_parts = []
+        has_text = False
+
+        for block in response.content:
+            if hasattr(block, 'type'):
+                if block.type == 'text':
+                    has_text = True
+                    text_parts.append(block.text)
+                elif block.type == 'thinking':
+                    thinking_parts.append(getattr(block, 'thinking', ''))
+
+        if text_parts:
+            return "\n".join(text_parts)
+        elif thinking_parts:
+            # Fallback to thinking content if no text
+            return "\n".join(thinking_parts)
+        return ""
+
+    def _handle_streaming_response(self, response) -> str:
+        """Extract text from streaming API response."""
+        text_parts = []
+        thinking_parts = []
+
+        for event in response:
+            # Handle content block delta events
+            if hasattr(event, 'type') and event.type == 'content_block_delta':
+                delta = getattr(event, 'delta', None)
+                if delta:
+                    if hasattr(delta, 'type'):
+                        if delta.type == 'text_delta':
+                            text_parts.append(getattr(delta, 'text', ''))
+                        elif delta.type == 'thinking_delta':
+                            thinking_parts.append(getattr(delta, 'thinking', ''))
+
+        if text_parts:
+            return "\n".join(text_parts)
+        elif thinking_parts:
+            return "\n".join(thinking_parts)
+        return ""
 
     def generate_with_opus(
         self,

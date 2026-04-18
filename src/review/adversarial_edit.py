@@ -191,7 +191,7 @@ Total: X words to cut
 [Full revised chapter text with [CUT: ...] markers]"""
 
     try:
-        response = client.generate(system_prompt, user_prompt, max_tokens=16384)
+        response = client.generate(system_prompt, user_prompt, max_tokens=16384, stream=True)
     except Exception as e:
         print(f"Adversarial edit API error: {e}")
         return {

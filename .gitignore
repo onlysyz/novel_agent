@@ -22,3 +22,8 @@ state.json
 results.tsv
 *.log
 .DS_Store
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/src-tauri/target/

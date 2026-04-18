@@ -27,3 +27,4 @@ results.tsv
 frontend/node_modules/
 frontend/dist/
 frontend/src-tauri/target/
+.novelforge/.cache/

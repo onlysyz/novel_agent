@@ -39,14 +39,7 @@
   },
   "plugins": {
     "shell": {
-      "open": true,
-      "scope": [
-        {
-          "name": "python",
-          "cmd": "python3",
-          "args": true
-        }
-      ]
+      "open": true
     }
   }
 }

@@ -100,11 +100,8 @@ def git_branch_name(seed: str) -> str:
 # =============================================================================
 
 def load_state() -> dict:
-    """Load pipeline state from state.json."""
-    if STATE_FILE.exists():
-        with open(STATE_FILE) as f:
-            return json.load(f)
-    return {
+    """Load pipeline state from state.json with all required keys."""
+    defaults = {
         "phase": "foundation",
         "started_at": None,
         "completed_phases": [],
@@ -121,6 +118,15 @@ def load_state() -> dict:
         },
         "export": {},
     }
+    if STATE_FILE.exists():
+        with open(STATE_FILE) as f:
+            loaded = json.load(f)
+            # Merge with defaults to ensure all keys exist
+            for key, value in defaults.items():
+                if key not in loaded:
+                    loaded[key] = value
+            return loaded
+    return defaults
 
 
 def save_state(state: dict):

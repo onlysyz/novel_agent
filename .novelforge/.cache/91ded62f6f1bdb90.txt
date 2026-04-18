@@ -1,0 +1,32 @@
+## World Coherence Score: **8/10**
+
+### Justification
+
+This world bible demonstrates strong internal logic where all major systems—the Conclave's political structure, the economy of stolen years, the religious response to time-theft, and the decaying geography—interconnect causally and reinforce each other. The Conclave's slow infiltration of the city's infrastructure through Verin Holdings is particularly well-constructed, making the organization's power feel inevitable rather than imposed. The magic system (time-taking) operates on clear enough principles to enable consistent storytelling while retaining mystery. The specificity is consistently high, with no generic fantasy elements diluting the setting's distinctive identity.
+
+The score falls short of a 9 because the mechanics of year transfer remain underdeveloped—particularly the Inheritance clause, which is introduced as "the Conclave's most closely guarded secret" but offered only fragmentary explanation. Additionally, some cultural observations (the "culture of restraint") read more as atmospheric description than as interconnected world-logic.
+
+---
+
+### Supporting Passages
+
+**1.** On the interconnection of systems:
+> "The Conclave operates through Verin the way water operates through stone—by finding the channels that already exist, by shaping without appearing to shape."
+
+This metaphor elegantly captures how the organization's power is infrastructural rather than dictatorial—rooted in pre-existing systems rather than imposed upon them.
+
+**2.** On specific, non-generic world-building:
+> "What it claims is older and, in its way, more absolute: the right to name who dies... The Conclave offers order. The Conclave offers control. The Conclave offers, for a price, the certainty of knowing when and how and by whose hand."
+
+This philosophical justification for an assassination guild elevates it beyond generic "evil organization" territory into something with its own internal logic and appeal.
+
+**3.** On plot-relevant world mechanics:
+> "**The Pattern.** Every death must fit a pattern. The Conclave does not permit chaos, even in its own work. Killings must be explainable by ordinary means—a heart attack, an accident, a suicide that could have been."
+
+This single rule generates immediate narrative tension: it explains why assassinations require planning, creates potential failure points for protagonists, and provides justification for why the world doesn't collapse into chaos.
+
+---
+
+### Improvement Suggestion
+
+The **Inheritance** mechanic—the transfer of stolen years at the moment of death—is introduced as the Conclave's "most valuable currency" but remains the least developed element. Specify the rules governing who can receive transferred years, what the "terrible price" entails beyond vague allusion, and whether this mechanism creates exploitable loopholes in the Compact. This is likely where your protagonist's central conflict will operate, and the current opacity limits its narrative utility.

@@ -1,0 +1,35 @@
+## Character Distinctiveness Evaluation
+
+### Score: 6/10
+
+The text demonstrates strong psychological architecture and genuine emotional complexity, earning its score through well-constructed internal logic and a standout relationship passage. However, it reads as an exceptionally polished character bible rather than a demonstration of character work in motion. The prose *describes* distinction rather than enacting it—psychological profiles are thorough, but the truncated Thanne sections and absence of scene-level material prevent the full emergence of voice distinction that would elevate this to publishable excellence.
+
+---
+
+### Supporting Passages
+
+**1. Voice Distinction and Psychological Depth:**
+
+> "She asks questions she already knows the answers to. Not to manipulate—though she could—but because silence feels dangerous, and questions are a form of staying engaged. She fills space with inquiry the way others fill it with statements."
+
+This passage does double work: it establishes Aveline's characteristic speech behavior while simultaneously revealing her psychological architecture. The distinction emerges through specificity—*not to manipulate* signals a self-awareness that separates Aveline from a merely tactical character.
+
+**2. Relationship Dynamics (the text's finest moment):**
+
+> "Thanne took Aveline's departure as a wound, then transformed that wound into a blade. Theirs is not a love story that went wrong. It is a love story that was never allowed to begin, and what remained calcified into something harder. Aveline does not know if Thanne wants her dead or wants her back. She suspects Thanne doesn't know either."
+
+This is the kind of line that justifies the score. The recognition that unresolved love can calcify into harder substances than hatred—and that neither party knows their own motivation—is psychologically sophisticated and sets up genuine dramatic tension.
+
+**3. Physical Presence and Authenticity:**
+
+> "She notices other women's hands."
+
+A single sentence that does extraordinary work: it suggests past training (operative awareness), current wound (noticing competence or the absence of scars), and thematic resonance (the Vethari's relationship to violence and care). This is characterization through accumulation of precise detail.
+
+---
+
+### Areas for Improvement
+
+**Thanne's truncated speech patterns section** is the text's most significant structural weakness. The section ends mid-sentence—"Their sentences are measured"—leaving readers with an assertion rather than demonstration. Compare the richness of Aveline's verbal tics ("That's fair," "Tell me about—") to Thanne's implied but unrealized patterns. 
+
+**Recommendation:** Complete Thanne's speech section with 2-3 specific example phrases that would be recognizable as theirs without attribution. Consider: What words does Thanne *never* say? What grammatical structures reflect their doctrinal rigidity? For instance, Thanne might overuse the passive voice ("corrections are made," "balances are restored") to distance themselves from direct agency—or might have a signature phrase that reveals their belief in systemic rather than personal justice. This would also create productive contrast with Aveline's precise, present-tense honesty.

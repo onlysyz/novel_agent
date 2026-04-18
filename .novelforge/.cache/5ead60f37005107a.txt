@@ -1,0 +1,192 @@
+## CUTS IDENTIFIED
+
+1. **"The rain had stopped sometime in the night. Maren knew this without looking because the quality of silence had changed—the particular absence of sound that meant the roof was no longer holding its weight. She lay still for a moment longer, listening to the house think about itself. Pipes cooling. Wood settling. The small negotiations of a structure that had outlived the people who'd built it."**
+   - Throat-clearing that delays the story. The house "thinking about itself" is a poetic delay we don't need. - **57 words**
+
+2. **"The window showed her the harbor, grey and patient, the water holding the first pale suggestion of morning without committing to it. Fishing boats sat low in their moorings. One of them had a light on—someone waking early, or someone who hadn't slept."**
+   - Boat detail never returns; redundant with later harbor scenes. - **43 words**
+
+3. **"Not because she wanted it but because the ritual was useful. Grounds measured by habit. Water brought to temperature by touch. The cup warming her hands while she stood at the window and looked at nothing. These were the habits that held her life together, small anchors against the current that never stopped pulling."**
+   - "These were the habits" is redundant explanation after showing the ritual. Cut the philosophical wrap-up. - **41 words**
+
+4. **"Maren had learned long ago that the things you needed to keep but didn't need to see should be buried deep, made difficult to reach. The mind worked the same way. You put the past somewhere you could forget, and then you were free."**
+   - Telling what we can show. The action of putting the box behind winter coats speaks for itself. - **44 words**
+
+5. **"The lid had no latch. She'd never locked it. The point wasn't to keep others out—it was to create the feeling of containment. As long as the lid was closed, the contents were separate from the living world."**
+   - First two sentences redundant; the containment explanation is redundant after showing. - **39 words**
+
+6. **"She hadn't needed to remember in a long time. That was the point. That was the lie she told herself—the idea that forgetting was the same as moving forward."**
+   - "That was the point. That was the lie" is redundant throat-clearing before opening the box. - **28 words**
+
+7. **"She'd killed Kellan. That was what the Covenant did—it took people and it used them and then it disposed of them when they became inconvenient. Kellan had been inconvenient. Or rather, Kellan had known something he shouldn't have known, and Maren had been the solution to that problem."**
+   - Over-explanation of the Covenant. Let the action speak. - **50 words**
+
+8. **"Not afraid. That was the thing she couldn't forget. He'd known what was coming, and he hadn't been afraid. He'd looked almost grateful."**
+   - "Not afraid" repeated twice. Cut redundancy. - **23 words**
+
+9. **"You're up early," she said.**
+   - **"You're home late." He didn't look up from his tea. "Thought you'd be at the harbor. Watching the boats. The way you do when you're trying to avoid something."**
+   - "Watching the boats" adds nothing; boats detail already established elsewhere. - **14 words**
+
+10. **"The words landed where he intended them. She didn't let him see that."**
+    - "She didn't let him see that" is redundant filtering—we know she's not showing. - **10 words**
+
+11. **"'I had a daughter to think about.'**
+    **"And now you have a daughter who needs you more than she ever has, and you're still thinking about what you had for breakfast." He stood, moving with the careful slowness of a man whose body had started making promises his joints couldn't keep. "You can't protect her by being still, Maren. You never could. That's the lie you told yourself."**
+    - "That's the lie you told yourself" is redundant with earlier box scene. Cut. - **48 words**
+
+12. **"Fewer boats every year. The fish are moving deeper, or there aren't as many left. The industry moved downstream. Everything moves downstream eventually."**
+    - Extended metaphor that delays payoff. One line of it is enough. - **21 words**
+
+13. **"The Stillwater Crossing. She'd hoped never to hear those words again. That was where the Void Clerk Incident had happened—where she'd done something that couldn't be undone, something that had changed the shape of the Covenant forever. She'd been young. She'd been certain. She'd been wrong about most of the things that mattered."**
+    - Over-explanation of what we can infer. Cut the retrospective. - **45 words**
+
+14. **"The stone was cold in her hand. She could feel the memory of the water in it—the river's slow pull, the weight of everything it had carried. Water held memory here. That was the nature of the place, the Covenant, the magic that threaded through everything. And this stone had been in the river long enough to remember things she'd forgotten on purpose."**
+    - "Water held memory here. That was the nature of the place" is over-explaining the world's rules. Let the stone's effect speak. - **51 words**
+
+15. **"She thought about her daughter waking up in the apartment upstairs, making her own coffee, starting her own day. She thought about the box in the closet, the photograph face-down on the floor. She thought about Kellan's face, and the way he'd looked at her like she was doing him a favor."**
+    - Repetitive "she thought about" structure; already shown earlier. Cut the recap. - **43 words**
+
+**Total: 557 words to cut**
+
+---
+
+## REVISED CHAPTER
+
+Title: WHAT REMAINS
+
+POV: 
+
+---
+
+The rain had stopped sometime in the night. Maren knew this without looking because the quality of silence had changed—the particular absence of sound that meant the roof was no longer holding its weight. She lay still for a moment longer, listening to the house think about itself. Pipes cooling. Wood settling. The small negotiations of a structure that had outlived the people who'd built it.
+
+She got up before the light came in earnest. The window showed her the harbor, grey and patient, the water holding the first pale suggestion of morning without committing to it.
+
+She made coffee. Grounds measured by habit. Water brought to temperature by touch. The cup warming her hands while she stood at the window and looked at nothing.
+
+The shop wouldn't open for another two hours. She had time.
+
+---
+
+There was a box in the back of her closet, behind the winter coats she never wore. The box was wooden, about the size of a shoebox, made from a wood so dark it looked like it had been stained with its own shadow. As long as the lid was closed, the contents were separate from the living world.
+
+She sat on the floor with the box in her lap. The wood was cold against her thighs. She didn't open it immediately. Instead, she sat with her hands resting on the lid, feeling the grain under her fingertips, remembering the last time she'd opened it. Six months ago. Maybe longer. A year, possibly. Time moved strangely when you were trying not to count it.
+
+The box had been a gift. Dova Salter had given it to her, years ago, when Maren was still learning how the Covenant worked. "Everything you are now," Dova had said, "came from what came before. Keep the evidence somewhere you can find it when you need to remember."
+
+[CUT: "She hadn't needed to remember in a long time. That was the point. That was the lie she told herself—the idea that forgetting was the same as moving forward."]
+
+Maren opened the lid.
+
+---
+
+Inside, there were three objects.
+
+The first was a photograph, creased down the middle, the colors faded to the blue-grey of old smoke. Two figures stood in front of a building she didn't recognize—a warehouse, maybe, or a church. One of the figures was younger Maren, her hair still dark, her face carrying a weight that was physical rather than habitual. The other was a man she hadn't thought about in years. Kellan. His name came back to her like a door opening in a wall she'd thought was solid.
+
+She'd killed Kellan. Kellan had been inconvenient. Or rather, Kellan had known something he shouldn't have known, and Maren had been the solution to that problem.
+
+She remembered the way he'd looked at her at the end. He'd known what was coming, and he hadn't been afraid. He'd looked almost grateful.
+
+She put the photograph face-down on the floor.
+
+The second object was a knife. Not the one she used now—this was older, the handle wrapped in leather that had gone dark with sweat and time. She didn't touch it. Some things were better left at a distance.
+
+The third object was a small glass vial, half full of liquid the color of mercury. She'd forgotten this was here. The sight of it brought back a memory so vivid she could taste it—copper on her tongue, the smell of the harbor at night, the sound of someone saying her name like it was the last word they would ever speak.
+
+The vial was empty now, or nearly so. The contents had transferred to her years ago, the way all transfers worked. She was what remained of a dozen people who'd come before. Their skills lived in her hands. Their memories lived in the corners of her mind that she didn't visit.
+
+She hadn't thought about Kellan in years. Now she couldn't stop.
+
+---
+
+The bell above the shop door hadn't rung yet, but someone was inside. Maren knew this because she heard the floorboard near the register—that particular creak that meant weight had settled there, the wood acknowledging a presence.
+
+She set the box down on her bed and walked downstairs without making any particular effort to be quiet. If someone had gotten in, they already knew she was home. Silence wouldn't change anything.
+
+Idris sat on the stool behind the counter, his back to the wall, his hands wrapped around a cup of tea that steamed in the thin morning light. He was older than the last time she'd seen him—the lines around his eyes had deepened, and his hair had gone fully white rather than grey. But he sat the same way, like a man who'd learned to make himself comfortable in uncomfortable places.
+
+"You're home late." He didn't look up from his tea. "Thought you'd be at the harbor. The way you do when you're trying to avoid something."
+
+"I'm not avoiding anything."
+
+"Then you wouldn't mind telling me why Dova's people have been asking about you." He took a sip of tea, watching her over the rim. "Specifically, they want to know if you've been in contact with anyone from your old network. They want names."
+
+Maren leaned against the doorframe. The posture looked casual. It wasn't. "What did you tell them?"
+
+"Nothing yet. But they'll come back, Maren. They always come back."
+
+"I know."
+
+"Do you?" He set the cup down, finally meeting her eyes. "Because it seems to me like you've been pretending this wouldn't happen for fifteen years. Building your little shop. Playing house. And now here we are, and you're still not ready."
+
+She didn't answer. There wasn't anything to say that he didn't already know.
+
+---
+
+They walked to the harbor in silence. The rain had come back—a thin drizzle that didn't bother to commit to anything, just hung in the air like a question. The boats sat patient in their moorings. Gulls wheeled above, crying at nothing.
+
+Idris had been with the Covenant longer than Maren had been alive. He'd been a Void Clerk before her, and before that something else she never asked about. He'd survived by knowing when to move and when to stay still. The fact that he was here, now, telling her these things, meant something. She wasn't sure yet what.
+
+"Everything moves downstream eventually," he said. They stood at the edge of the pier, looking out at the water. "That's the nature of things."
+
+"You're not here to talk about fish."
+
+"No." He reached into his coat and pulled out a small object wrapped in cloth. He didn't unwrap it—just held it, the cloth dark with old stains. "Someone came to the tavern last night. Left this for you."
+
+Maren didn't take it. "Who?"
+
+"Someone who used to know you. Someone who remembers what you did at the Stillwater Crossing." He turned to look at her, his face unreadable in the grey light. "Someone who wants you to know that the debt isn't paid. Not yet."
+
+The Stillwater Crossing. She'd hoped never to hear those words again.
+
+"What debt?" Her voice came out flat. The voice she used when she didn't want anyone to hear what she was feeling.
+
+"That's the question, isn't it?" He held the wrapped object out to her. "Maybe you should open it. See what's inside."
+
+She took it. The cloth was old, soft with age, and when she unwrapped it, she found a small stone, dark and smooth, the kind that came from the bottom of the Verantum River. There was something etched into its surface—a symbol she recognized. The symbol of the Arithmetician.
+
+"Dova's dead," Maren said. "Has been for—"
+
+"Six months. Yes. I know." Idris's voice was quiet. "But the symbol isn't Dova. It's what Dova was. What the position represented. Someone's claiming that title now. Someone who wants to settle old accounts."
+
+The stone was cold in her hand. She could feel the memory of the water in it—the river's slow pull, the weight of everything it had carried. And this stone had been in the river long enough to remember things she'd forgotten on purpose.
+
+"What do they want?"
+
+"I don't know yet. But I thought you should know that the question was being asked." He turned back toward the tavern, his shoulders hunched against the drizzle. "Be careful, Maren. The network you thought you'd left behind—it wasn't a place you visited. It was a place you became. You can't un-become something. You can only bury it deeper."
+
+She stood at the edge of the pier for a long time after he left. The water moved below her, carrying its cargo of memory and silt, heading toward the sea. She thought about Kellan's face, and the way he'd looked at her like she was doing him a favor.
+
+The drizzle kept falling. The water kept moving. Somewhere in the city, someone was asking questions about debts that were supposed to be paid.
+
+---
+
+Elara found her in the shop at noon, still standing by the window, watching the harbor like it might give her answers.
+
+"You didn't open today." Her daughter's voice was careful, the way voices got when they were trying not to say something larger. "I saw the sign. Closed for personal reasons."
+
+Maren turned. Elara was dressed for work—her nurse's scrubs, her hair pulled back, the small earrings she wore despite the dress code. She looked so much like her father that it hurt sometimes. The same eyes. The same way of standing like she was waiting for someone to tell her what to do next.
+
+"I was distracted."
+
+"I can see that." Elara came closer, her footsteps quiet on the wooden floor. "What's going on, Mom? You look like you haven't slept."
+
+"I've slept."
+
+"You look like you've seen something." The words came out careful, like Elara was testing them. "Or remembered something. The way you get sometimes, when you're somewhere else."
+
+Maren didn't answer. She was looking at her daughter's hands—the way they hung at her sides, the fingers slightly curled, the faint tremor in the left one that had started a few months ago. A nervous habit, Elara said. But Maren had seen tremors like that before. She'd seen what happened when the mercury-threads woke up in someone who didn't know how to control them.
+
+"What is it?" Elara asked. "You're looking at me like—"
+
+"Like what?"
+
+"Like you're seeing someone else. Someone who isn't me." Elara's voice hardened. "You do that sometimes. You look right through me."
+
+"I'm not—"
+
+"You are." Elara stepped back. "Whatever you're remembering, whatever you're thinking about—you need to decide if it's more important than what's standing in front of you."
+
+Maren watched her daughter walk out. The bell rang once, sharp and final, and then there was only the sound of footsteps fading down the street.

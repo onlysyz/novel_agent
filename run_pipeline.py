@@ -556,7 +556,7 @@ def run_export(state: dict) -> dict:
 
     # Import export module
     sys.path.insert(0, str(NOVEL_DIR))
-    from src.export import export_all
+    from src.export.export import export_all
 
     # Check that we have chapters
     chapters_dir = NOVEL_DIR / "chapters"

@@ -1,0 +1,113 @@
+# World Bible: The Stillwater Doctrine
+
+---
+
+## I. Geography & Climate
+
+### The City of Stillwater
+
+Stillwater sits where the river Verath forks—two brown arms embracing the city's heart before reuniting downstream. The split creates the Drowned Quarter, a marshy district of stilted buildings and canal-roads that floods without warning. During the rainy season, the streets run knee-deep with silted water, and the poor learn early to keep their belongings wrapped in oilcloth.
+
+The city sprawls across three distinct elevations. The Upper Quarter occupies the original hilltop, where stone buildings retain the sun's warmth into evening and the air carries the clean smell of open sky. The mid-levels—called the Shelves—follow the natural terraces carved by centuries of flood. Here, the architecture is a palimpsest of mudbrick, reclaimed timber, and copper-sheathed additions, each layer representing a generation that rebuilt after the waters receded. The Torrents occupy the lowest ground, where the river's former channels run through cellars and ground floors alike, and residents learn to navigate by water as easily as by street.
+
+Beyond the walls, the Ashfields stretch east toward mountains that bleed fine white powder into the prevailing wind. The ash falls constant and thin, coating everything with a taste like burnt bone. Crops struggle in the Fields; most cultivation happens in the Shelves, where vertical gardens cling to terraced walls and the soil has been amended with centuries of compost and river silt. The Ashfields are home to the old quarries, the glassworks, and those who prefer distance from Stillwater's particular form of civilization.
+
+### Climate
+
+Three seasons mark the year. The Flood Season—spring and early summer—brings water that transforms the Torrents into a Venice of muddy channels. The Dry Season follows, when the river shrinks to a brown ribbon and the Ashfields crack with heat. Winter brings the Ashwind, when the mountains exhale and everything in Stillwater wears a fine gray coating by morning.
+
+The ash defines the city more than rain or sun. It accumulates in corners, gathers in the creases of eyelids, finds its way into lungs and soup alike. Stillwater cuisine carries a permanent mineral undertone that visitors never quite acclimate to. Residents describe the taste as "the price of the mountains"—a tax paid in silica and patience.
+
+### Key Locations
+
+**The Hanging Gardens of the Upper Quarter**: A series of terraced estates where wealthy merchants maintain improbable green spaces, fed by an ancient aqueduct system that predates the city's current rulers. The Gardens are visible for miles—a splash of green against the gray-brown sprawl.
+
+**The Vethari Compound**: Hidden in plain sight within the Torrents, a converted warehouse complex unmarked by any sign. The compound's walls are thick with flowering vines that bloom white in darkness, the only variety that thrives without direct light. Former operatives know to look for the white flowers at night. They mark the door.
+
+**The Sybil's Pool**: A flooded chamber beneath the city's original temple, where the Verath's two forks nearly meet underground. The Pool is considered sacred by Stillwater's old faith—water from both branches mingles there, and petitioners believe the Pool sees all that passes through either arm of the river. The Syndicate maintains a sanitized shrine above it, but the Pool itself remains unadorned, its waters black and still.
+
+**The Ashfields Glassworks**: A cluster of furnace- chimneys that glow orange even at midday, producing Stillwater's signature blown-glass products—vessels, lenses, decorative spheres that catch and hold the ash-light. The glassworks employ three hundred workers and answer only to the Syndicate, which controls the primary ash trade.
+
+---
+
+## II. Political Structures
+
+### The Merchant Compact
+
+Stillwater is officially governed by the Merchant Compact—a council of eleven trade-lords who control the city's river commerce, warehouse districts, and the precious-glass monopoly. The Compact emerged three centuries ago when the original noble families either died out or mercantile'd their way into irrelevance. Today, a seat on the Compact is purchased through wealth, not blood.
+
+The Compact's power derives from the Warehouse System: all goods entering Stillwater must be stored in Compact-licensed facilities, taxed, and brokered through Compact middlemen. The system is inefficient, labyrinthine, and utterly profitable. A shipment of silk from the eastern kingdoms might pass through fourteen hands and four separate licensing agreements before reaching a consumer. Every hand takes a percentage. The Compact takes the largest.
+
+The Compact maintains a small but well-equipped city guard—called the Receivers—whose primary duties involve checking warehouse manifests and collecting import duties. They wear brown leather armor and carry weighted truncheons. They are not soldiers. They have never had to be.
+
+### The Syndicate
+
+The Syndicate operates in Stillwater's shadow economy—the trade that doesn't appear on manifests, the services that can't be licensed, the problems that the Receivers prefer not to acknowledge. The Syndicate's portfolio includes: smuggling, usury, gambling, information brokerage, and, when required, the permanent resolution of problems.
+
+The Syndicate is not a single organization with a clear hierarchy. It is a federation of specialized cells, each with its own leadership, territory, and expertise. What unifies them is a shared doctrine (the Stillwater Doctrine, named for the city where it was formalized) and a shared ledger of debts. Every Syndicate member owes their cell something; every cell owes the whole something. The ledger tracks who has given and who has taken. In theory, perfect balance can be achieved. In practice, the ledger is perpetually unsettled, which is perhaps the point.
+
+The Syndicate's internal politics are Byzantine. Cells compete for contracts, poach each other's clients, and occasionally wage territorial conflicts. The central council—called the Balance—arbitrates disputes and maintains the ledger, but its authority derives from respect rather than force. A cell that ignores the Balance faces isolation: no shared contracts, no mutual protection, no access to the Syndicate's network of safe houses and supply lines. In the Syndicate's economy of debts, isolation is a death worse than violence.
+
+### The Crown's Shadow
+
+Stillwater maintains nominal allegiance to a distant kingdom whose king has never visited. A royal governor occupies a mansion in the Upper Quarter, attends ceremonies, and dispatches reports that are read with polite disinterest in the capital. The governor has a guard of forty soldiers, a salary that is always months in arrears, and absolutely no influence over Stillwater's actual governance.
+
+The Syndicate prefers it this way. A distant, irrelevant monarchy is preferable to a local one with ambitions. Every few decades, the Compact grows bold enough to suggest that Stillwater might benefit from formal independence; every time, the Syndicate finds a way to remind the Compact of the arrangement's mutual benefits. The current governor is a man named Aldric Vorne, elderly and gout-ridden, who has learned to appreciate Stillwater's pleasures and ask no questions. His presence serves everyone's interests.
+
+### The Vethari Order
+
+The assassins belong to no faction and serve no government. They are the Vethari—an order that predates the Compact, survived the kingdom's founding, and has maintained its independence through the simple expedient of being too useful and too dangerous to eliminate.
+
+The Order accepts contracts from anyone: Compact lords, Syndicate cells, foreign merchants, grieving families, ambitious rivals. They do not judge the justice of a contract. They judge only whether the price has been paid and the target accurately identified. This neutrality is the Vethari's most valuable asset. They have killed Compact lords and Syndicate leaders alike, and neither faction has moved against them, because neither faction can afford to lose access to the Order's services.
+
+The Vethari maintain a compound in the Torrents, a training facility in the Ashfields, and a network of safe houses throughout the city. They are small—perhaps forty active operatives at any given time—but their reach extends beyond Stillwater. The Order maintains cells in six other cities, and their reputation has made "Vethari" synonymous with "that which cannot be stopped, only paid."
+
+---
+
+## III. Economic Systems
+
+### The River Trade
+
+The Verath is Stillwater's circulatory system. Goods flow downstream from the eastern kingdoms—spices, textiles, metalwork, rare books—and upstream from the coastal ports—fish, salt, imported wines. The river forks create a natural chokepoint; every ship passing through Stillwater must navigate both branches or offload and portage. The Compact controls the docks, the warehouses, and the boatmen's guild. They tax the river's flow as surely as they tax the water itself.
+
+The Ashfields contribute their own trade: glass products, quarry stone, and the ash that Stillwater exports in small quantities for industrial purposes elsewhere. The glassworks are Syndicate-controlled, which means the Compact receives only the officially licensed portion of glass trade—a source of constant low-grade friction between the two powers.
+
+### The Shadow Economy
+
+The Syndicate's economy operates on different principles: cash, credit, and barter. Most transactions happen in private, recorded in ledgers that never see official eyes. The Syndicate's currency is information as much as coin—they maintain files on every significant figure in Stillwater, documenting debts, secrets, and vulnerabilities. A well-placed secret can be worth more than a warehouse full of silk.
+
+Usury is the Syndicate's most reliable income stream. The Compact prohibits interest on loans, citing ancient ordinances; the Syndicate offers identical services without the paperwork, at rates that reflect the risk of operating outside the law. Defaulters discover that the Syndicate's collection methods are more effective than the Receivers'.
+
+The Vethari Order exists partly outside this economy. They accept payment in traditional forms—gold, silver, trade goods—but they prefer payment in kind. An operative might request a favor rather than a fee: an introduction, a piece of information, the use of a facility. This system creates webs of obligation that outlast any single contract and makes enemies of the Vethari a complicated proposition. You might owe nothing today, but your grandfather owed much, and debts have a way of surfacing.
+
+### The Cost of Living
+
+Stillwater's class structure is rigid but not impermeable. Wealth can purchase membership in the Shelves' professional class—merchants, craftsmen, licensed practitioners. The Torrents, however, are hereditary. A family born there dies there; the damp, the disease, the constant proximity to the river's edge create a population that is literally shaped by its environment. The Torrents' residents are shorter on average, their lungs adapted to the mineral taste of the air, their joints stiffened by years of wading through floodwater.
+
+The Upper Quarter maintains itself through deliberate exclusion. The streets are paved with river-stone. The buildings are stone, not mudbrick. The air smells of flowers rather than ash. Children in the Upper Quarter grow tall, their skin clear, their lungs uncompromised. The distance between the Upper Quarter and the Torrents is three hundred yards of elevation. It might as well be three hundred years.
+
+---
+
+## IV. Religion & Culture
+
+### The Old Faith
+
+Stillwater's indigenous religion centers on the Verath—the river seen not as water but as presence. The Verath is not worshiped as a god in the traditional sense. It is acknowledged as a force older than humanity, indifferent to mortal concerns, sustained by the cycle of upstream and downstream. The river takes what it wants and gives what it will. To petition the Verath is to accept this exchange.
+
+The faith's central practice is the Blood Offering: a cut palm, a gift of blood to the water. Offerings are made at shrines along the riverbank, where the current carries the blood downstream toward the sea. The faithful believe that the river receives their essence and carries it to wherever it is needed—sustenance to the hungry, healing to the sick, passage to the dead. The offering is not transactional; it is relational. You give because you are part of the river's flow, and to withhold is to deny your place in it.
+
+### The Doctrine of Equivalence
+
+The Vethari Order developed its own theology centuries ago, formalized in a text called the Doctrine of Equivalence. The Doctrine holds that all things exist in balance: violence and mercy, taking and giving, life and death. What is taken must be restored. What is given accumulates as debt. The universe keeps accounts, and the ledgers balance.
+
+This belief shapes Vethari practice in specific ways. They do not kill gratuitously—a death must serve a purpose, must settle something owed. They do not spare enemies who will become threats; mercy that creates future violence is poor economics. They accept payment in equivalent exchange: a life taken might be paid for with a life, a secret, or a portion of one's remaining time. The order tracks these exchanges across generations; a debt unpaid by a client passes to their heirs.
+
+The Doctrine also shapes their internal culture. Vethari operatives form no lasting attachments; attachments create imbalances, debts of the heart that cannot be quantified. They do not marry, raise children, or accumulate property beyond what the Order provides. The work is everything. The work is also temporary; operatives retire when the accumulated imbalance of years spent taking lives grows too heavy to bear. Retirement means withdrawal from the Order, return to ordinary life, and the hope that the universe has forgotten what you owe.
+
+The faith acknowledges that most people cannot live this way. The Doctrine is for those who have chosen a different path—not a better one, merely a different one, with different costs and different debts.
+
+### Cultural Practices
+
+Stillwater's culture carries the river's influence in its speech and custom. Sworn statements are made "on the water"—that is, with the understanding that the Verath witnesses and remembers. Contracts that involve the river are considered especially binding; to break a river-contract is to invite the water's attention, which no one desires.
+
+The city maintains festivals around the Flood Season, when the waters rise high enough to threaten the Torrents. During these weeks, the Shelves host public meals—everyone eats together, rich and poor, the waters being a great equalizer. The Compact funds these meals as a gesture of civic unity; the Syndicate funds them because the Torrents' residents remember who helped

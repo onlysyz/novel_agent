@@ -59,8 +59,7 @@ class AnthropicClient:
                     temperature=temperature or self.temperature,
                     system=system_prompt,
                     messages=[{"role": "user", "content": user_prompt}],
-                    # Explicitly disable extended thinking to prevent ThinkingBlock returns
-                    thinking={"type": "disabled"},
+                    # Note: Not passing thinking param - extended thinking can cause ThinkingBlock returns
                 )
 
                 # Handle different content block types (TextBlock, ThinkingBlock)

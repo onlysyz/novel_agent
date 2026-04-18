@@ -227,14 +227,105 @@ def run_drafting(state: dict):
 
 
 def run_review(state: dict):
-    """Multi-cycle revision."""
+    """Multi-cycle revision with adversarial editing, reader panel, and Opus review."""
     print_header("REVIEW PHASE")
-    print("Review not yet implemented")
-    print("Run: python run_pipeline.py --phase export")
-    # TODO: Implement review cycles
-    # - adversarial_edit.py
-    # - reader_panel.py
-    # - review.py (Opus)
+
+    sys.path.insert(0, str(NOVEL_DIR))
+    from src.review import (
+        run_reader_panel,
+        run_adversarial_loop,
+        run_opus_review_loop,
+    )
+    from src.drafting import build_context_package
+
+    # Get chapter count
+    chapters_dir = NOVEL_DIR / "chapters"
+    chapters = sorted(chapters_dir.glob("ch_*.md")) if chapters_dir.exists() else []
+
+    if not chapters:
+        print("No chapters found. Run drafting phase first.")
+        return
+
+    chapter_count = len(chapters)
+    print(f"Target: {chapter_count} chapters")
+    print()
+
+    # Determine review depth based on chapter scores
+    chapter_scores = state.get("chapter_scores", {})
+    max_cycles = int(os.getenv("MAX_REVIEW_CYCLES", "3"))
+
+    print(f"Max revision cycles: {max_cycles}")
+    print()
+
+    revision_cycles = 0
+
+    for cycle in range(1, max_cycles + 1):
+        print(f"\n{'='*60}")
+        print(f"REVISION CYCLE {cycle}/{max_cycles}")
+        print(f"{'='*60}")
+
+        cycle_improvements = 0
+
+        # Process each chapter
+        for chapter_file in chapters:
+            chapter_num = int(chapter_file.stem.split("_")[1])
+            chapter_text = chapter_file.read_text()
+
+            print(f"\n--- Chapter {chapter_num:02d} ---")
+
+            # Get context for this chapter
+            context = build_context_package(chapter_num)
+
+            # Step 1: Adversarial Edit (cut 500-1000 words)
+            print(f"  [1/3] Adversarial Edit...")
+            edit_result = run_adversarial_loop(
+                chapter_text,
+                context,
+                chapter_num,
+                target_cuts=800,
+                max_iterations=1,
+            )
+
+            if edit_result["total_cuts"] > 200:
+                # Save revised version
+                revised_path = chapters_dir / f"ch_{chapter_num:02d}_revised.md"
+                revised_path.write_text(edit_result["final_text"])
+                chapter_text = edit_result["final_text"]
+                cycle_improvements += 1
+                print(f"  Cut {edit_result['total_cuts']} words")
+
+            # Step 2: Reader Panel
+            print(f"  [2/3] Reader Panel...")
+            panel_result = run_reader_panel(chapter_text, context, chapter_num)
+            print(f"  Reader rating: {panel_result['average_rating']:.2f}/5")
+
+            # Step 3: Opus Deep Review
+            print(f"  [3/3] Opus Deep Review...")
+            opus_result = run_opus_review_loop(
+                chapter_text,
+                context,
+                chapter_num,
+                max_iterations=2,
+            )
+            print(f"  Opus rating: {opus_result['final_rating']}/5")
+            print(f"  Stop reason: {opus_result['final_review']['stop_reason']}")
+
+            # Update state
+            revision_cycles += 1
+
+        # Check if we should continue
+        if cycle_improvements == 0:
+            print(f"\nNo improvements made in cycle {cycle}. Stopping.")
+            break
+
+        print(f"\nCycle {cycle} complete: {cycle_improvements} chapters revised")
+
+    # Save final state
+    state["revision_cycles"] = revision_cycles
+    save_state(state)
+
+    print_header("REVIEW PHASE COMPLETE")
+    print(f"Total revision cycles run: {revision_cycles}")
 
 
 def run_export(state: dict):

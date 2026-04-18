@@ -60,9 +60,32 @@ pub struct ChapterSummary {
 // Get current project directory (cwd)
 #[tauri::command]
 fn get_project_path() -> Result<String, String> {
-    Ok(std::env::current_dir()
+    // Search upward from current directory AND home directory for .novelforge/state.json
+    let mut search_dirs: Vec<std::path::PathBuf> = vec![];
+
+    if let Ok(cwd) = std::env::current_dir() {
+        search_dirs.push(cwd);
+    }
+    if let Some(home) = std::env::var("HOME").ok().map(|h| std::path::PathBuf::from(h)) {
+        search_dirs.push(home);
+    }
+
+    for dir in search_dirs {
+        let mut current = dir;
+        loop {
+            if current.join(".novelforge/state.json").exists() {
+                return Ok(current.to_string_lossy().to_string());
+            }
+            if !current.pop() {
+                break;
+            }
+        }
+    }
+
+    // Fall back to current directory
+    std::env::current_dir()
         .map(|p| p.to_string_lossy().to_string())
-        .map_err(|e| e.to_string())?)
+        .map_err(|e| e.to_string())
 }
 
 // Read seed.txt
@@ -266,10 +289,31 @@ fn save_chapter(cwd: String, chapter_num: u32, content: String) -> Result<(), St
 // List all chapters
 #[tauri::command]
 fn list_chapters(cwd: String) -> Result<Vec<ChapterSummary>, String> {
-    let chapters_dir = PathBuf::from(&cwd).join("chapters");
+    let base = PathBuf::from(&cwd);
+    let chapters_dir = base.join("chapters");
     if !chapters_dir.exists() {
         return Ok(vec![]);
     }
+
+    // Read chapter scores from state.json
+    let chapter_scores: std::collections::HashMap<String, f64> = {
+        let state_path = base.join(".novelforge/state.json");
+        if state_path.exists() {
+            let content = fs::read_to_string(&state_path).unwrap_or_default();
+            let json: serde_json::Value = serde_json::from_str(&content).unwrap_or_default();
+            let drafting = json.get("drafting").unwrap_or(&serde_json::Value::Null);
+            let scores = drafting.get("chapter_scores").unwrap_or(&serde_json::Value::Null);
+            scores.as_object()
+                .map(|obj| {
+                    obj.iter()
+                        .filter_map(|(k, v)| v.as_f64().map(|score| (k.clone(), score)))
+                        .collect()
+                })
+                .unwrap_or_default()
+        } else {
+            std::collections::HashMap::new()
+        }
+    };
 
     let mut chapters: Vec<ChapterSummary> = Vec::new();
 
@@ -283,12 +327,14 @@ fn list_chapters(cwd: String) -> Result<Vec<ChapterSummary>, String> {
                 let content = fs::read_to_string(entry.path()).unwrap_or_default();
                 let word_count = content.split_whitespace().count() as u32;
                 let title = extract_title(&content).unwrap_or_else(|| format!("Chapter {}", num));
+                let score_key = format!("ch_{:02}", num);
+                let score = chapter_scores.get(&score_key).map(|&s| s as f32);
 
                 chapters.push(ChapterSummary {
                     number: num,
                     title,
                     word_count,
-                    score: None,
+                    score,
                 });
             }
         }

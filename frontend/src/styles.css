@@ -495,6 +495,43 @@ body {
   margin: 1rem 0;
 }
 
+.export-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.export-file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.export-file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.export-file-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.export-file-meta {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.export-file-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
 .manuscript-preview {
   background: var(--bg-tertiary);
   border-radius: 8px;

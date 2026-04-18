@@ -3,20 +3,21 @@ import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
 interface Props {
+  cwd: string;
   selectedChapter: number | null;
   onSelectChapter: (num: number) => void;
 }
 
-export default function ChapterList({ selectedChapter, onSelectChapter }: Props) {
+export default function ChapterList({ cwd, selectedChapter, onSelectChapter }: Props) {
   const [chapters, setChapters] = useState<ChapterSummary[]>([]);
 
   useEffect(() => {
     loadChapters();
-  }, []);
+  }, [cwd]);
 
   const loadChapters = async () => {
     try {
-      const chs = await invoke<ChapterSummary[]>("list_chapters");
+      const chs = await invoke<ChapterSummary[]>("list_chapters", { cwd });
       setChapters(chs);
     } catch (e) {
       console.error("Error loading chapters:", e);

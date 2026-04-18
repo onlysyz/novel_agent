@@ -15,17 +15,20 @@ function App() {
   const [state, setState] = useState<PipelineState | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [cwd, setCwd] = useState<string>("");
 
   useEffect(() => {
-    checkProject();
+    initProject();
   }, []);
 
-  const checkProject = async () => {
+  const initProject = async () => {
     try {
-      const exists = await invoke<boolean>("project_exists");
+      const path = await invoke<string>("get_project_path");
+      setCwd(path);
+      const exists = await invoke<boolean>("project_exists", { cwd: path });
       setHasProject(exists);
       if (exists) {
-        await loadState();
+        await loadState(path);
       }
     } catch (e) {
       console.error("Error checking project:", e);
@@ -34,9 +37,10 @@ function App() {
     }
   };
 
-  const loadState = async () => {
+  const loadState = async (path?: string) => {
     try {
-      const s = await invoke<PipelineState>("read_state");
+      const p = path || cwd;
+      const s = await invoke<PipelineState>("read_state", { cwd: p });
       setState(s);
     } catch (e) {
       console.error("Error loading state:", e);
@@ -50,7 +54,7 @@ function App() {
 
   const handleProjectCreated = () => {
     setHasProject(true);
-    loadState();
+    loadState(cwd);
     setView("dashboard");
   };
 
@@ -62,7 +66,7 @@ function App() {
   const handleSaveChapter = async (content: string) => {
     if (selectedChapter === null) return;
     try {
-      await invoke("save_chapter", { chapterNum: selectedChapter, content });
+      await invoke("save_chapter", { cwd, chapterNum: selectedChapter, content });
       await loadState();
     } catch (e) {
       console.error("Error saving chapter:", e);
@@ -71,7 +75,6 @@ function App() {
 
   const handleRunPhase = async (phase: string) => {
     try {
-      const cwd = await invoke<string>("get_project_path");
       await invoke("run_pipeline_phase", { phase, cwd });
       await loadState();
     } catch (e) {
@@ -82,7 +85,6 @@ function App() {
 
   const handleRunFull = async () => {
     try {
-      const cwd = await invoke<string>("get_project_path");
       await invoke("run_full_pipeline", { cwd });
       await loadState();
     } catch (e) {
@@ -147,25 +149,27 @@ function App() {
         )}
         {view === "chapters" && (
           <ChapterList
+            cwd={cwd}
             selectedChapter={selectedChapter}
             onSelectChapter={handleChapterSelect}
           />
         )}
         {view === "chapters" && selectedChapter !== null && (
           <ChapterEditor
+            cwd={cwd}
             chapterNum={selectedChapter}
             onSave={handleSaveChapter}
             onClose={() => setSelectedChapter(null)}
           />
         )}
         {view === "foundation" && (
-          <FoundationView />
+          <FoundationView cwd={cwd} />
         )}
         {view === "export" && state && (
-          <ExportView />
+          <ExportView cwd={cwd} />
         )}
         {view === "settings" && (
-          <SettingsView onNewProject={handleNewProject} />
+          <SettingsView cwd={cwd} onNewProject={handleNewProject} />
         )}
       </main>
     </div>

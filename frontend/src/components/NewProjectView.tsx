@@ -17,8 +17,9 @@ export default function NewProjectView({ onProjectCreated }: Props) {
 
     setCreating(true);
     try {
-      // Write seed file
-      await invoke("write_seed", { seed: seed.trim() });
+      // Get cwd for this operation
+      const cwd = await invoke<string>("get_project_path");
+      await invoke("write_seed", { cwd, seed: seed.trim() });
       onProjectCreated();
     } catch (e) {
       console.error("Error creating project:", e);

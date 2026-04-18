@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "npx tauri build",
+    "clean-dmg": "for f in src-tauri/target/release/bundle/macos/rw.*.dmg src-tauri/target/release/bundle/dmg/rw.*.dmg src-tauri/target/release/bundle/dmg/*.dmg; do rm -f \"$f\" 2>/dev/null; done || true",
+    "patch-dmg": "find src-tauri/target -name 'bundle_dmg.sh' -exec sed -i '' 's/SKIP_JENKINS=0/SKIP_JENKINS=1/' {} \\; || true",
+    "bundle-dmg": "cd src-tauri/target/release/bundle/dmg && create-dmg --volicon icon.icns --skip-jenkins --volname NovelForge NovelForge_0.1.0_aarch64.dmg ../macos/",
+    "tauri:build": "npm run clean-dmg && export PATH=\"$HOME/.cargo/bin:$PATH\" && npx tauri build; npm run bundle-dmg"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.2.0",

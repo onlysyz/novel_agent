@@ -3,12 +3,13 @@ import { invoke } from "@tauri-apps/api/core";
 import { Chapter } from "../types";
 
 interface Props {
+  cwd: string;
   chapterNum: number;
   onSave: (content: string) => Promise<void>;
   onClose: () => void;
 }
 
-export default function ChapterEditor({ chapterNum, onSave, onClose }: Props) {
+export default function ChapterEditor({ cwd, chapterNum, onSave, onClose }: Props) {
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [content, setContent] = useState("");
   const [hasChanges, setHasChanges] = useState(false);
@@ -20,7 +21,7 @@ export default function ChapterEditor({ chapterNum, onSave, onClose }: Props) {
 
   const loadChapter = async () => {
     try {
-      const ch = await invoke<Chapter>("read_chapter", { chapterNum });
+      const ch = await invoke<Chapter>("read_chapter", { cwd, chapterNum });
       setChapter(ch);
       setContent(ch.content);
       setHasChanges(false);

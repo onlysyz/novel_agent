@@ -2,21 +2,22 @@ import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
 interface Props {
+  cwd: string;
   onNewProject: () => void;
 }
 
-export default function SettingsView({ onNewProject }: Props) {
+export default function SettingsView({ cwd, onNewProject }: Props) {
   const [seed, setSeed] = useState("");
   const [projectPath, setProjectPath] = useState("");
 
   useEffect(() => {
     loadSeed();
     loadPath();
-  }, []);
+  }, [cwd]);
 
   const loadSeed = async () => {
     try {
-      const s = await invoke<string>("read_seed");
+      const s = await invoke<string>("read_seed", { cwd });
       setSeed(s);
     } catch (e) {
       console.error("Error loading seed:", e);
@@ -34,7 +35,7 @@ export default function SettingsView({ onNewProject }: Props) {
 
   const handleSaveSeed = async () => {
     try {
-      await invoke("write_seed", { seed });
+      await invoke("write_seed", { cwd, seed });
       alert("Seed saved!");
     } catch (e) {
       console.error("Error saving seed:", e);

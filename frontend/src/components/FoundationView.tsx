@@ -4,7 +4,11 @@ import { FoundationDoc } from "../types";
 
 type DocName = "world" | "characters" | "outline" | "canon" | "voice";
 
-export default function FoundationView() {
+interface Props {
+  cwd: string;
+}
+
+export default function FoundationView({ cwd }: Props) {
   const [selectedDoc, setSelectedDoc] = useState<DocName>("world");
   const [doc, setDoc] = useState<FoundationDoc | null>(null);
   const [loading, setLoading] = useState(false);
@@ -12,7 +16,7 @@ export default function FoundationView() {
   const loadDoc = async (name: DocName) => {
     setLoading(true);
     try {
-      const d = await invoke<FoundationDoc>("read_foundation_doc", { name });
+      const d = await invoke<FoundationDoc>("read_foundation_doc", { cwd, name });
       setDoc(d);
       setSelectedDoc(name);
     } catch (e) {

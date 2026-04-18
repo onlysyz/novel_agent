@@ -554,6 +554,10 @@ def run_export(state: dict) -> dict:
     """Generate final deliverables."""
     print_header("EXPORT PHASE")
 
+    # Import export module
+    sys.path.insert(0, str(NOVEL_DIR))
+    from src.export import export_all
+
     # Check that we have chapters
     chapters_dir = NOVEL_DIR / "chapters"
     chapters = sorted(chapters_dir.glob("ch_*.md"))
@@ -566,7 +570,7 @@ def run_export(state: dict) -> dict:
     print(f"Found {chapter_count} chapters")
     print()
 
-    # Read all chapter content
+    # Assemble manuscript (basic, always done)
     print("Assembling manuscript...")
     manuscript_parts = []
     total_words = 0
@@ -589,18 +593,8 @@ def run_export(state: dict) -> dict:
     manuscript_path.write_text(manuscript)
     print(f"  Saved: manuscript.md ({total_words:,} words)")
 
-    # Generate outline summary
-    outline_path = NOVEL_DIR / "outline.md"
-    if outline_path.exists():
-        outline_summary = outline_path.read_text()[:5000]
-        summary_path = NOVEL_DIR / "outline_summary.txt"
-        summary_path.write_text(outline_summary + f"\n\n[Full outline in outline.md]")
-        print(f"  Saved: outline_summary.txt")
-
     # Build results file
     results_path = DOTNOVEL / "results.tsv"
-    seed = (NOVEL_DIR / "seed.txt").read_text().strip()[:100] if (NOVEL_DIR / "seed.txt").exists() else ""
-
     results_lines = ["chapter\tscore\twords"]
     for chapter_file in chapters:
         chapter_num = int(chapter_file.stem.split("_")[1])
@@ -611,11 +605,42 @@ def run_export(state: dict) -> dict:
     results_path.write_text("\n".join(results_lines))
     print(f"  Saved: results.tsv")
 
+    # Run full export (TXT, ePub, LaTeX/PDF, cover)
+    print("\n" + "=" * 50)
+    print("Generating additional formats...")
+    print("=" * 50)
+
+    export_dir = NOVEL_DIR / "export"
+    export_dir.mkdir(exist_ok=True)
+
+    try:
+        export_results = export_all(
+            formats=["txt", "epub", "cover"],
+            output_dir=export_dir,
+        )
+
+        # Collect output paths
+        output_files = ["manuscript.md", "results.tsv"]
+        if "txt" in export_results and "txt_path" in export_results["txt"]:
+            output_files.append(f"export/{Path(export_results['txt']['txt_path']).name}")
+        if "epub" in export_results and "epub_path" in export_results["epub"]:
+            output_files.append(f"export/{Path(export_results['epub']['epub_path']).name}")
+        if "cover" in export_results and "cover_path" in export_results["cover"]:
+            output_files.append(f"export/{Path(export_results['cover']['cover_path']).name}")
+
+        # Note about PDF (requires pdflatex)
+        if "pdf" not in export_results or "error" in export_results.get("pdf", {}):
+            print("\nNote: PDF generation requires pdflatex (install MacTeX on macOS)")
+
+    except Exception as e:
+        print(f"Export error: {e}")
+        output_files = ["manuscript.md", "results.tsv"]
+
     # Summary
     stats = {
         "chapters": chapter_count,
         "total_words": total_words,
-        "files": ["manuscript.md", "outline_summary.txt", "results.tsv"],
+        "files": output_files,
     }
 
     print_phase_summary("Export", 0, stats)
@@ -632,6 +657,7 @@ def run_export(state: dict) -> dict:
         "completed_at": datetime.now().isoformat(),
         "total_words": total_words,
         "tag": tag_name,
+        "files": output_files,
     }
 
     return stats

@@ -159,12 +159,71 @@ def run_foundation(state: dict) -> dict:
 def run_drafting(state: dict):
     """Sequential chapter writing."""
     print_header("DRAFTING PHASE")
-    print("Chapter drafting not yet implemented")
-    print("Run: python run_pipeline.py --phase review")
-    # TODO: Implement chapter drafting
-    # - draft_chapter.py -> chapters/ch_NN.md
-    # - evaluate.py -> scoring
-    # - retry logic (max 5 attempts)
+
+    sys.path.insert(0, str(NOVEL_DIR))
+    from src.drafting import draft_all_chapters, draft_chapter, build_context_package
+
+    # Determine chapter count
+    outline_path = NOVEL_DIR / "outline.md"
+    chapter_count = int(os.getenv("CHAPTER_TARGET", "22"))
+    if outline_path.exists():
+        import re
+        outline = outline_path.read_text()
+        found = len(re.findall(r"(?:^|\n)(?:Chapter|## Chapter|# Chapter)\s+\d+", outline, re.IGNORECASE))
+        if found > 0:
+            chapter_count = found
+
+    print(f"Target: {chapter_count} chapters")
+    print()
+
+    # Check for resume
+    chapters_dir = NOVEL_DIR / "chapters"
+    existing = sorted(chapters_dir.glob("ch_*.md")) if chapters_dir.exists() else []
+    start_chapter = len(existing) + 1
+
+    if start_chapter > 1:
+        print(f"Resuming from chapter {start_chapter} ({len(existing)} chapters exist)")
+    print()
+
+    total_words = 0
+    total_attempts = 0
+    chapter_scores = []
+
+    # Pre-build context for all chapters
+    print("Pre-building context packages...")
+    context_cache = {}
+    for ch in range(start_chapter, chapter_count + 1):
+        context_cache[ch] = build_context_package(ch)
+        print(f"  Chapter {ch}: {context_cache[ch]['chapter_brief']['title']}")
+
+    print()
+
+    # Draft each chapter
+    for chapter_num in range(start_chapter, chapter_count + 1):
+        print(f"[Chapter {chapter_num}/{chapter_count}]")
+        result = draft_chapter(chapter_num, context_cache[chapter_num])
+        total_words += result["word_count"]
+        total_attempts += result["attempts"]
+        chapter_scores.append(result["score"])
+
+        # Update state
+        state["current_chapter"] = chapter_num
+        state["chapter_scores"] = state.get("chapter_scores", {})
+        state["chapter_scores"][f"ch_{chapter_num:02d}"] = result["score"]
+        save_state(state)
+        print()
+
+    # Summary
+    avg_score = sum(chapter_scores) / len(chapter_scores) if chapter_scores else 0
+    print_header("DRAFTING PHASE COMPLETE")
+    print(f"Chapters written: {chapter_count}")
+    print(f"Total words: {total_words:,}")
+    print(f"Total attempts: {total_attempts}")
+    print(f"Average score: {avg_score:.2f}")
+    print()
+    print("Chapter scores:")
+    for i, score in enumerate(chapter_scores, start=start_chapter):
+        print(f"  Chapter {i:02d}: {score:.1f}")
 
 
 def run_review(state: dict):

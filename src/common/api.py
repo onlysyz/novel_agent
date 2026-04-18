@@ -59,8 +59,18 @@ class AnthropicClient:
                     temperature=temperature or self.temperature,
                     system=system_prompt,
                     messages=[{"role": "user", "content": user_prompt}],
+                    thinking={},  # Disable extended thinking
                 )
-                text = response.content[0].text
+
+                # Handle different content block types (TextBlock, ThinkingBlock)
+                text_parts = []
+                for block in response.content:
+                    if hasattr(block, 'type') and block.type == 'text':
+                        text_parts.append(block.text)
+                text = "\n".join(text_parts)
+
+                if not text:
+                    raise ValueError(f"No text content in response. Content: {response.content}")
 
                 if use_cache:
                     cache_file.write_text(text)

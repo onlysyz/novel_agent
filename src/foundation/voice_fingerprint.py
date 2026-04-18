@@ -16,7 +16,7 @@ from src.common.scoring import score_foundation, iteration_summary
 DOTNOVEL = Path(".novelforge")
 NOVEL_DIR = Path(".")
 MIN_SCORE = float(os.getenv("MIN_FOUNDATION_SCORE", "7.0"))
-MAX_ITERATIONS = 10
+MAX_ITERATIONS = int(os.getenv("MAX_FOUNDATION_ITERATIONS", "10"))
 
 # Default sample texts for when user hasn't provided any
 DEFAULT_SAMPLES = [

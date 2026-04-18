@@ -18,8 +18,8 @@ NOVEL_DIR = Path(".")
 
 # Chapter word count targets
 TARGET_WORDS_PER_CHAPTER = int(os.getenv("TARGET_WORDS_PER_CHAPTER", "3200"))
-MIN_CHAPTER_WORDS = 2500
-MAX_CHAPTER_WORDS = 4500
+MIN_CHAPTER_WORDS = int(os.getenv("MIN_CHAPTER_WORDS", "2500"))
+MAX_CHAPTER_WORDS = int(os.getenv("MAX_CHAPTER_WORDS", "4500"))
 
 # Writing rules to inject into every chapter prompt
 WRITING_RULES = """

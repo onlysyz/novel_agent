@@ -1,0 +1,129 @@
+## EVALUATION
+
+---
+
+### voice_adherence: 8/10
+
+**Weakest passage**: "The bell above the door hadn't rung yet today. It was still early." — This reads as decorative rather than functional. The fragmentism here draws attention to itself being a fragment. The observation about the bell not ringing is sound, but the construction announces itself slightly.
+
+**Strongest passage**: "She stood there for a while, in the dim light of the half-lowered blinds, listening to the rain and the silence and the space where her daughter's voice used to be." — Perfect deployment: the long observational drift, the accumulation of sensory detail, and then the final phrase ("the space where her daughter's voice used to be") detonates with restrained devastation. This is voice working at its best.
+
+**Fix**: Remove "It was still early" from the bell fragment. Let it stand alone as pure observation, or absorb it into the previous sentence: "The bell above the door hadn't rung yet today—still early." Shorter, cleaner, the fragment earns its weight.
+
+---
+
+### beat_coverage: 7/10
+
+**Weakest coverage**: The foreshadow elements are planted skillfully (Elara's calming presence, Maren's hands, water memory, the Covenant's philosophy), but the chapter doesn't *move* anywhere externally. It establishes atmosphere and character psychology extensively, then cuts off mid-sentence at the end. The "dinner offer" beat lands, but the "Elara's something came up" thread is introduced and then abandoned without payoff or escalation.
+
+**Strongest coverage**: The phone call itself is dense with character work—Maren's flat delivery, the careful non-questions, the way Elara's pauses do the speaking. The beat where Maren says "You didn't mention that" in response to the night shift is precise, showing how they relate without explaining it.
+
+**Fix**: The chapter ends mid-wind, literally and figuratively. Either complete the sentence and give the chapter a landing point, or cut the scene break entirely and start fresh. Don't leave the reader suspended in the middle of an action.
+
+---
+
+### pacing: 7/10
+
+**Weakest passage**: The paragraph describing the customers—"A man in a grey coat bought a lamp... A woman with a baby asked..."—moves too quickly after the emotional weight of the phone call. It reads as filler, or like the writer needed to get from point A (phone call) to point B (something else) without knowing what fills the gap.
+
+**Strongest passage**: The opening sequence—lock, blinds, counter, register—unfolds with deliberate pacing that mirrors Maren's psychology. Each small action earns its sentence. The rhythm is internal, meditative, and builds a character through accumulated gesture rather than exposition.
+
+**Fix**: The customer catalog paragraph needs compression or elimination. If it must stay, give one customer a small detail that connects to Maren's larger concerns (her watching for something specific), rather than treating them as a sequence of observed objects.
+
+---
+
+### dialogue: 8/10
+
+**Weakest passage**: "You're good with them. The patients." — This line is slightly too neat, too much a setup for Elara's response. Maren would be more oblique here. A beat of silence, or a question disguised as a statement ("Quiet nights are good for that, aren't they") would feel more in character.
+
+**Strongest passage**: 
+> "They settle when I'm there. I don't know how to explain it. It's like—they stop fighting. Whatever's keeping them awake at night, whatever's making them restless. They just... stop."
+> 
+> "That's a good skill to have."
+> 
+> "It's not a skill, Mom. It just happens."
+
+This exchange earns its emotional weight through restraint. Elara's frustration with the word "just," Maren's deflection into practical language—it does the worldbuilding without exposition, shows the gulf between them, and plants the mercury-thread foreshadow without naming it.
+
+**Fix**: Replace "You're good with them" with something Maren would actually say—perhaps a question that confirms what she already knows, or a silence followed by a practical observation: "Night shift's quieter. Less to manage."
+
+---
+
+### description: 8/10
+
+**Weakest passage**: "The shop smelled of paper and dust and the particular mustiness of objects that had changed hands many times. She liked that smell. It meant things were where they should be. It meant the past was contained." — "The particular mustiness" is slightly generic. The world is about objects carrying memory; "mustiness" doesn't carry enough specificity. Something about *who* those hands belonged to would be more resonant.
+
+**Strongest passage**: "Outside, the rain came down thin and grey, the kind that didn't announce itself. Maren watched it through the front window, the way it moved across the glass in patterns that seemed deliberate. The rain remembered what it touched on the way down." — The shift from weather observation to world-logic is seamless. The sentence about rain remembering does three things at once: establishes setting, plants foreshadow (F-13), and characterizes Maren's way of seeing.
+
+**Fix**: Replace "particular mustiness" with something that implies the object's history more concretely: "the smell of hands," or describe a specific object whose wear suggests its journey.
+
+---
+
+### interiority: 9/10
+
+**Weakest passage**: The paragraph describing her watching people from the apartment window feels slightly observational rather than interior. "Counting the people she recognized. Noting the ones she didn't." This tells us what she does but doesn't dive into the psychological texture of *why*, or what the act feels like to her.
+
+**Strongest passage**: The sequence from "Her hands found the counter again. Tapped twice. Tapped once. The rhythm was unconscious, or it wasn't. Hard to tell anymore." — This is excellent interiority that doesn't announce itself. The self-questioning about whether the tapping is conscious or unconscious shows a woman who has lost track of her own psychological boundaries, who has become her own stranger.
+
+**Fix**: The window-watching paragraph should end with an internal observation rather than an external list: "She had learned to treat all of them as possibly the latter" is fine, but a line about how that watching *felt*—the effort, the exhaustion, the inability to stop—would deepen it.
+
+---
+
+### tension: 6/10
+
+**Weakest passage**: The chapter lacks a primary tension source. The phone call introduces conflict (Elara's something came up, the unfinished dinner invitation), but the chapter ends before that thread can tighten. The customer sequence breaks whatever tension was building.
+
+**Strongest passage**: The phone call creates genuine tension through subtext. The beats that land: "You didn't mention that" (the accusation without accusation), Elara's pause before "Never mind. I just wanted to hear your voice," and the abrupt ending: "The line went dead." These moments pulse with unspoken history.
+
+**Fix**: The chapter needs a clearer tension spine. Consider restructuring so that the opening establishes Maren's routine, the phone call introduces friction, and the middle section (customer observations) is recontextualized as Maren's attempt to *manage* that tension rather than escape it. Her fidgeting becomes coping rather than habit.
+
+---
+
+### prose: 8/10
+
+**Weakest passage**: "A man in a grey coat bought a lamp that had belonged to someone else's grandmother." — The construction is slightly clunky, the relative clause awkward. Also, "someone else's grandmother" is too vague; the world's logic is about objects carrying specific histories.
+
+**Strongest passage**: "The lock on the back door had been replaced three times in fifteen years. Not because it broke, but because Maren needed to know she was the only one with a key." — This is exemplary prose. The first sentence is ordinary, observational. The second detonates. No word wasted. No announcement.
+
+**Fix**: Revise the customer descriptions to either eliminate them or make them more specific to this world's object-logic. "A lamp that had belonged to someone who had died recently" or "a lamp that still held the shape of someone's hands."
+
+---
+
+### theme: 8/10
+
+**Weakest passage**: The final line—"in the dim light of the half-lowered blinds, listening to the rain and the silence and the space where her daughter's voice used to be"—is strong, but thematically it's the same note the chapter has been playing throughout. By the end, the theme (absence, the space things leave behind) has been stated several times.
+
+**Strongest passage**: The water-as-memory motif is the chapter's most resonant thematic thread. "Water carried the imprint of everything it passed through. That was why the Covenant conducted so much of its business in basements, in rooms without windows, in places where the water couldn't listen." This does extraordinary thematic work: it connects Maren's past (Covenant), her present (the shop, containing the past), and her fear (being known, being found). It also foreshadows the stakes of the larger narrative.
+
+**Fix**: Trust the water motif more; let it echo through other descriptions (the rain, her watching through glass). Reduce explicit statements of absence (the space where her daughter's voice used to be). Show the absence through Maren's actions instead.
+
+---
+
+### SLOP CHECK
+
+**Tier 1 banned words detected**: None. No "felt," "seemed," "suddenly," "beautiful," "dark," or other flagged descriptors detected.
+
+**Dialogue tells**: "I just wanted to hear your voice. I don't know why." — This line is slightly too direct in its emotional expression for the voice. Maren wouldn't say this; Elara does, which is somewhat in character, but the line could be made more oblique: "I just wanted to call."
+
+**Other mechanical issues**: 
+- The chapter cuts off mid-sentence: "standing by the wind" — appears to be a transcription/copy error or intentional cliffhanger. If intentional, it needs framing; if error, it must be fixed.
+- "The phone rang. She looked at it for three seconds before answering" — the specificity of "three seconds" is strong, but the following "two seconds longer than she usually waited" is slightly deflating. Better to trust the first number and cut the comparison.
+
+---
+
+### SUMMARY
+
+**Overall score: 7.4/10**
+
+**Major issues (must fix):**
+1. The chapter cuts off mid-sentence. Complete it or restructure the ending.
+2. The customer catalog paragraph is filler. Either eliminate or recontextualize it as Maren managing tension.
+3. The final line restates the chapter's theme too explicitly. Trust the reader.
+
+**Minor issues (can fix later):**
+1. "The particular mustiness" is generic; make it specific to the world's object-logic.
+2. The phone dialogue has one or two lines slightly too direct; make them more oblique.
+3. "It was still early" fragment draws attention; revise or absorb.
+4. The three-second/two-second construction is slightly deflating; trust the first number.
+
+**Assessment**: This chapter establishes voice and character with impressive control. The prose is restrained, the sensory work is precise, and the worldbuilding emerges naturally through Maren's psychology rather than exposition. The phone call sequence is the strongest section—dense with subtext, planted foreshadow, and earned emotion. The chapter's primary weakness is structural: it establishes atmosphere without a clear tension spine, and the customer sequence reads as filler rather than movement. With minor revisions to the opening and closing, and a recontextualization of the middle section, this would be a strong chapter that earns its place.

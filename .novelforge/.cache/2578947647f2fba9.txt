@@ -1,0 +1,75 @@
+# The Continuity Hunter's Report
+
+## 1. WHAT WORKS
+
+The character physicality is locked in tight. Maren's hands—the tapping, the adjusting of objects that don't need adjusting, the thigh-rhythm that "used to signal readiness to a handler across a crowded room"—this is exactly how you build muscle memory into a character. It all tracks. Her positioning habits (near exits, back to walls, sightlines to entrances) are consistent throughout.
+
+The sensory world holds together. Rain from dawn through the chapter. Grey thin light. The alley with its corner and perpetually gathering shadows. These details don't contradict themselves as the scene progresses.
+
+Elara's tells are consistent too—the jaw tightening, the way her voice goes flat when she's not asking directly, the cracking on "want," her hands finding the counter's edge. The "fidgeting inherited from neither of them having asked for it" mirrors Maren's own hand patterns. Good inherited detail.
+
+---
+
+## 2. WHAT DOESN'T WORK
+
+**The time-of-day contradiction is the loudest problem.**
+
+Early in the chapter:
+
+> "The rain had been falling since dawn..."
+
+Customer arrives "at half past eight." Elara shows up sometime after. The man enters after Elara. This is, at most, mid-morning in Verantum.
+
+Then Maren stands at the back window and observes:
+
+> "She could see the place where the alley turned a corner, and she could see that corner, and she could see the way the shadows gathered there **in the late afternoon**."
+
+Late afternoon. From a window she's watching in what should be morning or early afternoon at the latest.
+
+This isn't subtle foreshadowing. Shadows don't gather in late afternoon hours at half past eight in the morning. If it were evening and she'd been watching all day, that would be one thing. But we have a clear sequential timeline: dawn → 8:30 customer → Elara arrives → door chimes. This is morning.
+
+Unless the kettle has been running so long it's somehow... still dawn? No. That's not what's written.
+
+**Second problem: Maren's response is too flat for someone who just identified a fellow trained operative.**
+
+> "Her body knew something her mind hadn't caught up to yet."
+
+Then the man enters. He's clearly Covenant. He has "the quality of something carefully blank—practiced in the same way Maren had practiced her own forgettability." She recognizes his technique. She "had taught it, or learned it from someone who had."
+
+But her reaction is just to turn and pour tea? She's fifty-one, retired from what sounds like a violent profession, and a known Covenant operative just walked into her shop looking for her daughter. Her body supposedly knows something before her mind does—but her body doesn't seem to be doing anything. She's not positioning for a confrontation. She's not signaling Elara. She's pouring tea.
+
+If her training is as deep as you've established, her body knowing something would produce a *physical* response. Adrenaline. Tension. Threat assessment, not just observation.
+
+---
+
+## 3. SPECIFIC PASSAGES
+
+**The contradiction:**
+
+> "The rain had been falling since dawn..." — establishing morning/day
+> 
+> "A customer came in at half past eight..." — confirms morning
+> 
+> "...and she could see the way the shadows gathered there **in the late afternoon**." — directly contradicts the established time
+
+**The muted reaction:**
+
+> "Her body knew something her mind hadn't caught up to yet. She turned before Elara could see the recognition on her face."
+
+This is a great setup. But then:
+
+> "Maren turned. The man who stood in the doorway..."
+
+She turns, sees a clearly trained operative who just said "Is she here" about a corner, and her response is... to pour tea? Tell Elara to sit down? There's no heightened alertness, no physical preparation. Her hands "started moving again—adjusting, tapping"—but those same hands were moving *before* he arrived. So nothing changes.
+
+---
+
+## 4. SUGGESTIONS
+
+**Fix the shadow line.** Either move the scene to late afternoon (change the dawn reference, adjust the 8:30 timing to an afternoon arrival), or cut "in the late afternoon" entirely and just describe the alley and corner. The corner being shadowy is good. The specific time-of-day claim breaks the scene.
+
+**Earn the body-knowledge moment.** If Maren's body knows something before her mind does, show it physically before she consciously processes what she knows. Tension in her shoulders. Her weight shifting. The kettle suddenly feeling like a potential weapon in her hand. Something that demonstrates her body *isn't* idle while her mind catches up.
+
+Also—and this might be addressed in subsequent chapters but felt absent here—give me a hint of what the Covenant "arranged" in terms of Maren's retirement. She inherited a shop because a man's debt was "settled by his death." That's atmospheric, but it raises questions about why *she* specifically got this arrangement. What did she do for them? What did she owe? The World Bible mentions "the weight was becoming unsustainable" but I need more to understand why she'd be called back.
+
+The bones are good. The craft is there. Tighten the clock and let her body respond like the trained instrument it is.

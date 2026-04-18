@@ -1,0 +1,142 @@
+Looking at this chapter against the voice reference, world bible, and character profiles...
+
+---
+
+### voice_adherence: 7/10
+
+**Weakest passage**: "Old sounds. The bones of the building remembering older weights."
+
+This fragment fails the voice test—it doesn't land as an emphasis anchor because there's no preceding context giving it weight. It reads as a voice exercise rather than earned restraint. The repetition of "older" in close proximity also feels accidental rather than deliberate.
+
+**Strongest passage**: "The bell above the door chimed. Maren's hand went to the knife at her hip before she saw who it was, and then she made herself turn the motion into something else—adjusting the collar of her coat, reaching for a price tag she didn't need."
+
+This is the quiet violence voice at its best. The observation of her own body correcting itself, the gesture that becomes disguise. Perfect controlled drift with strategic self-awareness. The "price tag she didn't need" is the kind of small wrongness that says everything.
+
+**Fix**: In the opening paragraph, let "Old sounds" absorb into the preceding sentence: "She hadn't slept. The back room still smelled of the tea she'd let go cold, sitting untouched on the workbench while she listened to the house settling around her—old sounds, the bones of the building remembering older weights."
+
+---
+
+### beat_coverage: 6/10
+
+This chapter establishes the protagonist's situation (retired, haunted, holding something dangerous), introduces the inciting incident (Kellan dead, vault discovered), and moves the characters toward the Hollow. The essential beats land.
+
+**Weakest beat**: The "Arithmetician" reference is dropped without enough context for readers new to the world. "Dova Salter had no interest in the Hollow's secrets unless they could be tallied and owed" helps, but this is the first mention and it should do more work establishing the power structure.
+
+**Strongest beat**: Maren's refusal of the knife-to-price-tag gesture is the chapter's emotional core. It shows everything about who she is without telling us.
+
+**Fix**: Add a brief line of internal context when the Arithmetician is first named. Something like: "The Arithmetician governed what could be measured. The Hollow existed in what couldn't."
+
+---
+
+### pacing: 7/10
+
+The chapter moves from stillness (shop scene) to confrontation (Wen arrives) to motion (drive to Hollow) to investigation (Brennan plant). This rhythm is structurally sound.
+
+**Weakest moment**: "Maren looked at a water tower that had rusted into a shape like a crown. 'Something I don't remember wanting to remember.'" The pacing here lurches—the scenic observation should connect more smoothly to the memory beat.
+
+**Strongest moment**: "They found the stairs at the back of the building, an iron staircase that groaned under their weight. Each step rang with a sound like a bell struck wrong." The pacing does double work here: moves them forward while establishing wrongness.
+
+**Fix**: Combine the water tower and memory: "Maren looked at a water tower that had rusted into a shape like a crown, and tried not to remember what she'd done there."
+
+---
+
+### character_consistency: 8/10
+
+Maren reads as the character described: economical, hypervigilant, holding words behind teeth. The scar goes unmentioned (she never explains it). Her hands are never still.
+
+**Weakest moment**: "Her hands had stopped shaking years ago, but she remembered what it looked like from the outside." This is very good Maren voice, but it arrives in the Wen's POV section, not Maren's. Wen's hands are shaking—we're seeing Maren observing this, but the interiority feels more like Maren reflecting than Maren being observed.
+
+**Strongest moment**: "'I'll need your car,' Maren said." Perfect. She's already calculating logistics while Wen is still asking for help. This is the character who expresses affection through competence.
+
+**Fix**: Revise the "hands had stopped shaking" passage to read as external observation filtered through Maren's perception: "Wen's hands were shaking—not much, a fine tremor. Maren had learned to read that kind of thing in others because she'd learned to hide it in herself."
+
+---
+
+### world_building_integration: 7/10
+
+The world emerges through context rather than exposition. The Covenant, the Arithmetician, the Hollow's legal status—all are established through Maren's knowledge and reactions. The world bible's "death as transaction" premise is implied but not yet explicit, which works for a first chapter.
+
+**Weakest moment**: "The Covenant mark for unverified debt" needs a beat of Maren's knowing recognition immediately before the explanation, not after.
+
+**Strongest moment**: "Dova Salter had no interest in the Hollow's secrets unless they could be tallied and owed. The condemned district existed in a kind of legal limbo—not outside Covenant law but beneath it." This integrates world-building perfectly with character voice.
+
+**Fix**: When Maren sees the symbol, let her react first: "Maren stopped. 'That's not official.' 'I know.' 'Someone's trying to make a claim they can't back up.'"
+
+---
+
+### dialogue_quality: 8/10
+
+The dialogue is sharp and does character work without feeling scripted. Maren's flatness and economy contrast with Wen's more emotional register. The subtext of their shared history ("The safe house on Archer Street") lands without being explained.
+
+**Weakest exchange**: "The sign says open." "It's ten in the morning. You're never closed at ten." This is functional but generic banter.
+
+**Strongest exchange**: "Kellan should know better than to go digging." "Kellan's dead." The flat delivery of the death announcement, followed by Wen's own flat confirmation, carries the weight of how they both process grief.
+
+**Fix**: Give Wen something specific in the banter opening: "The sign says open." "It's ten in the morning. You're never closed at ten." "Early start." "That's not what your regulars say."
+
+---
+
+### sensory_prose: 8/10
+
+The sensory world is vivid and consistent with the "grey and thin" atmosphere established. Tactile, olfactory, and visual details ground the reader without overwhelming.
+
+**Weakest passage**: "the light falling through the broken skylights above in thin columns" — the "above" is redundant and breaks the flow.
+
+**Strongest passage**: "The courtyard smelled like rust and something else—something organic, sweet in a way that had gone past rot." This is the voice reference's "verbs of desperate motion" at work: the sweetness "went past" rot rather than simply being rot.
+
+**Fix**: Cut "above": "Light fell through the broken skylights in thin columns."
+
+---
+
+### tension_and_stakes: 6/10
+
+The chapter establishes stakes clearly: someone Maren cared about (Kellan) is dead, someone wants her help, the vault holds something important. But the chapter ends before the tension fully escalates—the characters are about to investigate, not yet in danger.
+
+**Weakest moment**: The "pigeons on the rooftops" passage interrupts tension-building momentum with description. "The pigeons were visible on the rooftops, a grey mass of unmoving shapes. When they moved, they moved together." This is atmospheric but delays the arrival at Brennan plant.
+
+**Strongest moment**: "'His throat was cut. Whoever did it left him where he'd be found.'" The body disposal as message immediately raises stakes and suggests a killer who wants to be found—or wants the message received.
+
+**Fix**: Cut or compress the pigeon passage: "The pigeons on the rooftops moved together, like a single grey thought."
+
+---
+
+### structural_craft: 7/10
+
+Scene transitions are clean (shop to car to Hollow to Brennan plant). The chapter ends mid-sentence at a discovery moment, which is a solid hook. Exposition is handled through conversation and brief interiority rather than infodumps.
+
+**Weakest structural choice**: The chapter ends abruptly mid-word ("The original ledger. The one t") which feels like the file was cut off rather than a deliberate cliffhanger. This may just be formatting, but if intentional, it's too abrupt—readers need one more beat of recognition.
+
+**Strongest structural choice**: "Maren hadn't slept. The back room still smelled of the tea she'd let go cold" — this opening does triple work: establishes sleeplessness, establishes time (overnight), and establishes her inability to act.
+
+**Fix**: If the chapter is meant to cut off at the ledger discovery, give us one more sentence: "Maren picked up the topmost ledger, felt the weight of it, and understood that some debts compound across generations."
+
+---
+
+### SLOP CHECK
+
+- **Tier 1 banned words**: None detected.
+- **Dialogue tells**: "'I'm not here to collect,' the woman in the doorway said" — "said" is fine, but "the woman in the doorway said" is weak attribution. Use "said" alone or replace with action.
+- **Overwriting**: "accumulated damage early and kept it" — slightly too clever for this voice.
+- **Voice drift**: The opening "grey and thin" and Wen's "hard to tell with the kind of faces that accumulated damage early" both use "early" in a similar position. Could be coincidence, could be the author reaching for the same vocabulary unconsciously.
+- **Repetition**: "the weight of it" appears twice in close proximity: "the weight of it something she'd never quite gotten used to" and "felt the weight of it."
+
+---
+
+### SUMMARY
+
+**Overall score: 6.9/10** — Solid, publishable chapter with strong voice but minor craft inconsistencies.
+
+**Major issues (must fix)**:
+1. The "Old sounds" fragment opening needs absorption or context
+2. The Arithmetician's first appearance needs stronger integration
+3. The ending cuts off too abruptly—readers need one more beat of recognition before the chapter closes
+
+**Minor issues (can fix later)**:
+1. Pigeon passage interrupts tension pacing
+2. "Above" redundancy in skylight sentence
+3. Dialogue attribution ("the woman in the doorway said") is weak
+4. "Accumulated damage" is slightly overwrought
+5. "The weight of it" repetition
+6. "Early" used similarly twice in close proximity
+
+**What works**: The voice is strong and consistent. Maren is immediately embodied. The world emerges organically. The tension builds correctly. This is a chapter that does the hard work of introduction without feeling like an infodump. The prose has weight and the sentences land where they should.

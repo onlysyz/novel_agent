@@ -1,0 +1,138 @@
+## Chapter 10 Evaluation
+
+---
+
+### voice_adherence: 7/10
+
+**Weakest passage**: "A thin smile crossed Sera's face, there and gone like light through clouds."
+
+The simile is serviceable but pulls slightly toward the poetic. The brief asks for dimishment adjectives and prose that "acts even when characters don't" — this reads more decorative than functional.
+
+**Strongest passage**: "She hadn't expected to be watched. She hadn't expected this to be easy. The two facts sat beside each other without resolving."
+
+Masterful rhythm. The fragments carry weight without announcing themselves. "Without resolving" is exactly the kind of small, precise observation the voice calls for.
+
+**Fix**: Replace "like light through clouds" with something more material. "There and gone, like breath on glass." Physical, observed, quiet.
+
+---
+
+### beat_coverage: 6/10
+
+**Beats addressed**: Information extraction ✓, scene establishment ✓, character introduction (Sera) ✓, power structure revelation ✓
+
+**Beats missed**: The chapter brief specifies "extract the information, eliminate the witness, and present the Arithmetician with a fait accompli." The text extracts information and establishes the scene, but "eliminate the witness" hasn't occurred—Sera is still alive and functioning as ally. The fait accompli hasn't been presented to the Arithmetician.
+
+**Fix**: If the brief intends for Sera to die or be neutralized mid-scene, that beat needs to be planted. If the beat means Maren should act against a different witness, that opportunity is missing. Clarify whether these are sequential beats or simultaneous actions Maren takes.
+
+---
+
+### character_consistency: 7/10
+
+**Maren on track**: Her hypervigilance is demonstrated physically ("testing each step," "noted the second-floor window where the curtain moved"), not just stated. Her competence reads through action—"She dressed to disappear" has been demonstrated in her tradecraft. Her emotional restraint holds: "The question came out before she could stop it" signals feeling breaking through control.
+
+**Sera established well**: The description of her—weight to balls of feet, hands positioned, pewter eyes—establishes threat competence without overexplaining. Her "no one" philosophy is earned through backstory.
+
+**Missing**: Elara's presence as motivation. The chapter says Maren's hands went still when Sera mentioned Elara, but Elara never feels present as a person. We know *about* the daughter but don't *feel* her.
+
+**Fix**: Give Maren one physical reaction that connects to Elara specifically—a memory, a gesture toward something Elara gave her, a flicker of something other than tactical stillness.
+
+---
+
+### pacing: 7/10
+
+**Works well**: The revelation structure builds correctly. Each new piece of information arrives just as tension would plateau: Arithmetician dying → Kellan moving → deadline established → Sera's motivation → the philosophical core. The note-burning and transit build tension through restraint.
+
+**Problem**: The ending cuts off mid-sentence. The final paragraph trails into "[something about killing]" with no completion. This reads as a missing final line rather than intentional truncation.
+
+**Fix**: The chapter needs a closing beat that lands. Even a single line: "The belief that violence could be accounted for." Let the sentence complete, even if the philosophy remains unsettling.
+
+---
+
+### worldbuilding_integration: 8/10
+
+**Strongest integration**: The Covenant's ledger system emerges through implication and action, not exposition. "Killing is debt payment" lands through context. The clinic setting carries history organically—the textile merchant's home, the rust, the old wood absorbing fear.
+
+**Slight overreach**: "The belief that violence could be accounted for, balanced, made rational" edges toward telling. The brief establishes this premise; the prose doesn't need to articulate it this cleanly.
+
+**Fix**: Let the final philosophical point land through Maren's understanding, not Sera's statement. Show Maren "understanding what Sera wasn't saying" rather than having Sera explain it.
+
+---
+
+### dialogue_quality: 6/10
+
+**Working**: Sera's voice is distinct—flat, controlled, economical. "I'm no one" as identity statement works. The tension between them reads through subtext.
+
+**Failing**: Several lines explain rather than reveal:
+- "I'm telling you that the Arithmetician is dying, that Kellan's hand is being forced, and that the Covenant is about to tear itself apart..."
+- "I'm telling you what you need to know to keep your daughter alive."
+
+These are plot summaries delivered as dialogue. The information needs to be embedded in exchange, not dumped.
+
+**Fix**: Have Maren interrupt, challenge, or confirm pieces of information. Let her ask questions that reveal what she already knows, so Sera's revelations fill gaps rather than providing introductions.
+
+---
+
+### sensory_craft: 7/10
+
+**Excellent**: "carbolic and something older beneath it—sawdust, maybe, or the particular scent of old wood absorbing years of human fear." This is exactly the kind of layered observation the voice calls for.
+
+**Good**: The cold water over hands during the note-burning. The pipe groaning. The rust spots on iron.
+
+**Weaker**: The pewter eyes are color without texture. Maren's own hands are "never quite still" but the fidgeting lacks specificity.
+
+**Fix**: Give one more tactile detail about the clinic—something Maren touches that tells us about the space.
+
+---
+
+### structural_craft: 7/10
+
+**Structure works**: The chapter moves from note → transit → clinic → meeting → revelations → understanding. Each transition is clean. The interrupted philosophy at the end creates anticipation for the next chapter.
+
+**Problem**: The "Fait accompli" from the brief hasn't appeared. If this chapter ends with Maren forming an intention rather than taking action, the structural payoff is deferred rather than earned.
+
+**Fix**: End with Maren making a decision or taking a first step toward action, not just understanding. "The moment she dies" should be followed by what Maren will do about it.
+
+---
+
+### emotional_resonance: 7/10
+
+**Working**: "wake up a woman who spent fifteen years pretending to be asleep" — this carries weight. The "place where she'd buried everything she'd chosen not to feel" is earned. The absence of "alone" is felt.
+
+**Missing**: Elara remains abstract. The daughter is mentioned, threatened, discussed, but never felt as presence. Maren's parental fear should be the engine of this chapter, but it's intellectual rather than visceral.
+
+**Strongest beat**: "Maren's hands had gone still. She noticed this the way she noticed everything—objectively, from a distance, as if her body were a machine she'd learned to operate with precision." This is the quiet violence of ordinary moments—the prose doing the work the character can't.
+
+**Fix**: One memory or sensory detail that connects Maren to Elara as person, not concept.
+
+---
+
+## SLOP CHECK
+
+**Tier 1 banned words detected**: None.
+
+**Dialogue tells**: Several lines in Sera's dialogue function as summary rather than revelation. See dialogue_quality section.
+
+**Prose tells**: "She miscalculated" — Maren labels what she should demonstrate. Minor.
+
+**Mechanical issues**: The final paragraph is incomplete. The text cuts off mid-thought: "That killi" (appears to be "killing"). This needs completion or deliberate removal.
+
+**Overwriting detected**: "There and gone like light through clouds" — slightly decorative.
+
+---
+
+## SUMMARY
+
+**Overall score: 6.9/10** (rounds to 7)
+
+**Major issues (must fix)**:
+1. The final paragraph cuts off mid-sentence. Complete or remove.
+2. "Eliminate the witness" and "present the Arithmetician with a fait accompli" beats from the brief are not addressed. Clarify and execute.
+3. Dialogue dumps plot information in summary form. Embed revelations in exchange.
+
+**Minor issues (can fix later)**:
+1. Elara never feels present as a character—only as a concept. Add one concrete detail connecting Maren to her daughter.
+2. "Light through clouds" simile is slightly decorative. Replace with something more material.
+3. "She miscalculated" tells what Maren should demonstrate.
+4. Final philosophical revelation is stated rather than shown through Maren's understanding.
+
+**What works**: The voice is controlled and distinct. The pacing builds correctly. Sera is well-introduced. The sensory craft is strong. The setting carries history. Maren's characterization is consistent. The Covenant's nature emerges organically through implication. This is a chapter that demonstrates clear craft and earns its tensions.

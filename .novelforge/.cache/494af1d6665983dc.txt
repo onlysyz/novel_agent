@@ -1,0 +1,187 @@
+## DIMENSION SCORES
+
+---
+
+### voice_adherence: 6/10
+
+**Weakest passage**: 
+> "The gift passes through blood. Your mother had it. You have it too."
+
+This is information delivered via dialogue tag rather than discovered through scene or sensation. It announces rather than reveals. Compare to the opening: "Her mother had taught her many things. Most of them had kept her alive." That earns its weight. This just states it.
+
+**Strongest passage**: 
+> "She had never been taught to do this. The habits had been waiting inside her all along, like seeds that only needed rain."
+
+The seed simile is the only simile in the chapter, which gives it gravity. "Had been waiting inside her" echoes the prose's own patience. This is voice doing what voice should do.
+
+**Fix**: Restructure the blood/gift revelation entirely. Don't have Kael explain it—have Mira discover it through sensation, environment, or a physical detail. The information is important but the delivery breaks the earned-revelation pattern.
+
+---
+
+### beat_coverage: 4/10
+
+The chapter attempts dual POV without establishing why these threads matter together. We have Vera approaching the Tower (suspense/threat) and Mira inside the Tower (revelation/mystery)—but they never interact or illuminate each other within this chapter.
+
+**Weakest passage**: 
+The Mira/Kael section has no functional beats. It moves from room description → river description → dialogue → mother's room reveal without visible transitions. What does Mira *want* in this scene? We don't know.
+
+**Strongest passage**: 
+The checkpoint scene. Vera observes → calculates → decides → acts. This has clear internal logic and stakes.
+
+**Fix**: Establish Mira's goal in the Tower scene before she enters it. What is she after? What would she do if she didn't get it? Without this, the scene floats.
+
+---
+
+### character_consistency: 3/10
+
+**Critical Issue**: The character is introduced as "Vera." The character profile describes "Maren Cole." These are not reconciled. Is Vera a cover identity? A different character entirely? The text refers to her mother and implies she's approaching the Tower for the first time, which doesn't match Maren's history.
+
+**Mira's identity is also unclear.** If Vera is Maren Cole and Mira is her daughter, this should be established or heavily implied. Instead, Mira appears to be a separate character with an absent mother who has some connection to the Tower—parallel structure that reads as confusion rather than design.
+
+**Strongest passage**: 
+> "Mira turned to look at him. His face was open, pleasant, the face of a man who had never wanted for anything. She wondered what it would take to change that face."
+
+This is specific character interior. It tells us Mira thinks in terms of damage, even if she doesn't name it that way.
+
+**Fix**: Clarify character identity before publishing. If Vera = Maren Cole, show why. If Mira is a separate character, establish her independence from Maren's narrative thread—or establish her as Maren's daughter explicitly.
+
+---
+
+### worldbuilding_integration: 6/10
+
+**Weakest passage**: 
+> "The Meridian Sea retreating for a few hours, revealing the mudflats where the old pilings stood like the bones of something long dead."
+
+The bones/pilings simile is serviceable but generic. Fantasy novels are full of bones. What makes *these* pilings specific? The world's architecture (Thornwright, Merchant Compact, current era) appears in the world bible but not in the prose.
+
+**Strongest passage**: 
+> "Merchant Compact, she could tell by the external staircases, black iron wound around the facades like the tendrils of some climbing plant."
+
+This is worldbuilding through character knowledge, not exposition. Vera's ability to read architecture is both worldbuilding and characterization. "Tendrils" adds organic menace without explaining it.
+
+**Fix**: Integrate the stratified history from the world bible (Thornwright granite, Merchant Compact vertical houses, current glass/concrete) into the prose. The city is built in geological layers—show Vera (or Mira) reading those layers.
+
+---
+
+### pacing: 5/10
+
+The chapter runs long for its content. The Mira/Kael section could be 40% shorter and lose nothing. The courtyard scene with the cat could be 30% shorter.
+
+**Weakest passage**: 
+> "She crossed the courtyard without looking at the cat. When she reached the far side, she allowed herself a glance back. The cat was still watching. Its eyes were not cat eyes anymore. They were not cat eyes anymore."
+
+The repetition is intentional but the scene itself overstays. Three paragraphs for a cat that watches is too many.
+
+**Strongest passage**: 
+> "She watched the checkpoint for three minutes. Counted the people ahead. Estimated the wait time. Mapped the alternative routes."
+
+Short, additive sentences that build to a decision. This is efficient.
+
+**Fix**: Cut 25% of the Mira/Kael scene. Cut the cat callback paragraph. Trust readers to remember the unsettling eyes without a second appearance.
+
+---
+
+### tension_management: 5/10
+
+The checkpoint section has genuine tension. The cat section has atmospheric tension that becomes murkiness. The Mira section has no tension because we don't know what she's at risk of.
+
+**Weakest passage**: 
+> "Behind her, the shadow settled back into its place. Nothing followed."
+
+"Nothing followed" is a resolution that satisfies without earning. If something had followed, it would create action. If nothing had followed but the shadow's movement remains unexplained, it creates unease. Right now it's neither.
+
+**Strongest passage**: 
+> "She had one—good papers, forged by someone who had owed her a favor and would not be owing her anything after this—and she had no intention of walking into that checkpoint."
+
+This builds tension through implication. Vera's papers are one-use. She's burning a resource. The checkpoint is a threat. We understand the stakes.
+
+**Fix**: Decide what the cat/shadow is or cut it. Decorative unease is harder to sustain than earned mystery.
+
+---
+
+### scene_craft: 5/10
+
+Scenes without visible transitions:
+- Vera in the alley → suddenly in a courtyard (what happened in between?)
+- Mira in the window room → suddenly in a different room (mother's room)
+
+**Weakest passage**: 
+The Mira scene's final moment cuts mid-sentence: "There was a desk beneath the window, and on" with the paragraph ending. This could be intentional fragmentation or a cutoff error. If intentional, it reads as gimmick. If accidental, it's a serious editorial issue.
+
+**Strongest passage**: 
+> "She was noting which way the hinges faced—left-swinging, which meant right-handed approach was disadvantageous."
+
+This is scene craft as character craft. The physical details reveal someone's training without naming it.
+
+**Fix**: Add transition beats between major location changes. If the courtyard is a separate scene from the alley, show the threshold crossing.
+
+---
+
+### sensory_integration: 7/10
+
+This is the chapter's strength. The sensory world is specific and grounded.
+
+**Weakest passage**: 
+> "the light that came through them was not grey but something softer, something that had been filtered through glass that was not quite glass"
+
+Repetition of "something" is weak. "Not quite glass" is good worldbuilding (implying a material difference in this world) but the sentence structure draws attention to itself.
+
+**Strongest passage**: 
+> "The buildings here were old—Merchant Compact, she could tell by the external staircases, black iron wound around the facades like the tendrils of some climbing plant. They had been beautiful once. Now they were rusting, and the rust bled down the walls in patterns that looked almost deliberate. Almost intentional."
+
+"Bled" transforms rust into wound. "Almost deliberate. Almost intentional." The doubled fragment creates the sense of looking too closely at something and not wanting to see.
+
+**Fix**: Replace "something softer, something" with a specific sensory comparison.
+
+---
+
+### dialogue_quality: 4/10
+
+Kael's dialogue is exposition. Mira's dialogue is minimal. Vera has no dialogue.
+
+**Weakest passage**: 
+> "How much of it do you remember? Your mother's work. The techniques. The—the accounting."
+
+The self-interruption ("The—the") tries to show Kael's discomfort but comes across as authorial stage direction. "The accounting" is also too on-the-nose for this world's vocabulary.
+
+**Strongest passage**: 
+> "Would you like to see her room?" Kael asked. Mira turned to look at him. His face was open, pleasant, the face of a man who had never wanted for anything.
+
+The dialogue is mundane. The interior reaction is not. The contrast carries the scene.
+
+**Fix**: Give Mira more dialogue. Give Kael dialogue that reveals something beyond information transfer—what does he *want* from this conversation?
+
+---
+
+## SLOP CHECK
+
+**Name/Identity Issue (Critical)**: The chapter names the protagonist "Vera" throughout. The provided character profile names her "Maren Cole." This must be reconciled before any editorial pass.
+
+**Cutoff text**: The chapter ends mid-sentence at "and on"—this may be intentional (genre convention for cliffhanger) or accidental (needs completion).
+
+**No Tier 1 banned words detected.**
+
+**No dialogue tells detected** (Kael's dialogue occasionally tells, but doesn't commit the mechanical sin of "said Exposition").
+
+**Simile density**: One simile in the chapter (cat eyes, seed waiting). Appropriate restraint.
+
+---
+
+## SUMMARY
+
+**Overall score: 5.0/10**
+
+**Major issues (must fix):**
+1. **Name reconciliation**: Vera vs. Maren Cole. Choose one and make it consistent.
+2. **Mira's identity**: Is she Maren's daughter? A separate character? Establish or cut the parallel structure.
+3. **Cutoff text**: Complete or clarify the final sentence.
+4. **Mira section lacks beats**: No visible goals, stakes, or tension. Needs structural overhaul.
+
+**Minor issues (can fix later):**
+1. Cat scene over-extended. Cut the return to watching.
+2. "The accounting" is generic. Use world-specific vocabulary.
+3. Kael's dialogue is exposition-heavy. Rewrite for subtext.
+4. Integrate Thornwright/Merchant Compact/current-era architectural layers into sensory prose.
+5. Reduce Mira/Kael section by 25-30%.
+
+**Verdict**: The prose has genuine strength—specificity, restraint, sensory grounding. The structure has genuine weakness—unresolved identity, floating scenes, information via telling. This is a chapter that could be a 7 with editorial revision but is currently a 5. The bones are there. The musculature needs work.

@@ -1,0 +1,116 @@
+### voice_adherence: 8/10
+**Weakest passage**: "The bell above the shop door hadn't rung yet, but someone was inside." — This announces presence rather than discovering it through sensory detail. The following sentence ("Maren knew this because she heard the floorboard near the register") is stronger—it earns the knowledge through mechanism.
+
+**Strongest passage**: "Not afraid. That was the thing she couldn't forget. He'd known what was coming, and he hadn't been afraid. He'd looked almost grateful." — The fragments land with accumulated weight. The repetition of "afraid" builds without announcing. The final phrase—"He'd looked almost grateful"—delivers the blow.
+
+**Fix**: For the shop entrance, let Maren discover the presence through sound before announcing it. Lead with the floorboard creak, then her recognition of what it means, then her response. The knowledge should feel earned through sensory detail, not stated as setup.
+
+---
+
+### beat_coverage: 5/10
+The chapter covers: F-13 (water/memory motif, strong), quiet reflection chapter, establishing Idris and the Covenant network. It does NOT yet establish: F-01 (Elara's latent ability), F-08 (scar backstory), or give Elara any presence at all beyond Idris's single reference to "a daughter." The Void Clerk incident is referenced but not textured—the Stillwater Crossing is named but not revealed.
+
+**Fix**: The brief indicates this is a quiet chapter, so withholding some beats is appropriate. But Elara needs at least one physical presence—her absence is notable. Consider a photograph in the box, or an object Maren handles that belongs to her daughter.
+
+---
+
+### pacing: 7/10
+The box sequence is deliberate and builds well—each object revealed with weight. The Idris confrontation shifts momentum effectively. The harbor walk creates breathing room before the next complication (the wrapped object). The chapter ends mid-sentence, which works as a hook but risks feeling unfinished rather than cliffhanging.
+
+**Weakest**: "Everything moves downstream eventually" — Idris's dialogue here explains what the scene already showed. The metaphor could land harder if it stopped earlier.
+
+**Strongest**: The box discovery. Each object occupies its own beat. The photograph surfaces Kellan; the knife creates distance; the vial triggers the visceral memory. The progression builds.
+
+**Fix**: The cut-off at "his fa" needs completion before this chapter is considered finished. A mid-word cut works as a hook only if what precedes it has landed; here, it feels like a transmission error rather than deliberate withholding.
+
+---
+
+### dialogue_quality: 7/10
+Maren's voice is consistent—short, declarative, controlled. "I'm not avoiding anything." lands flat and defensive, which is correct. Idris speaks in longer sentences that carry exposition, but some lines are too clinical.
+
+**Weakest**: "Specifically, they want to know if you've been in contact with anyone from your old network. They want names." — This is information-dump dialogue. Idris wouldn't speak like a report.
+
+**Strongest**: "You're up early." / "You're home late." — Subtext underneath simple statements. The exchange has tension without announcing it.
+
+**Fix**: Let Idris convey the same information through implication. "Dova's people came asking about you last night. Left without answers. They won't leave without them again." Three beats, same information, more character.
+
+---
+
+### world_building_integration: 7/10
+Covenant mechanics surface naturally through action and memory rather than exposition. The mercury-thread transfer (vial → contents transferred to Maren) is shown rather than explained. The Void Clerk role is established through context. The harbor setting feels specific—fishing boats, low tide, converted warehouses.
+
+**Strongest**: "Everything you are now came from what came before. Keep the evidence somewhere you can find it when you need to remember." — Dova's words explain the box's purpose without explaining the Covenant's mechanics. The reader learns what they need.
+
+**Fix**: The Stillwater Crossing reference ("what you did at the Stillwater Crossing") is mentioned twice but never revealed. This is appropriate for a quiet chapter—it's planted, not paid off. But the first reference should carry slightly more texture so it registers as significant when repeated.
+
+---
+
+### character_interiority: 8/10
+Maren's interiority is rendered through physical habit and sensory detail. The coffee ritual is a "small anchor." The box is "difficult to reach." Her hands are "never still." The prose shows a woman who has learned to contain rather than express.
+
+**Strongest passage**: "Maren opened the lid." — After all that buildup, this single declarative sentence carries enormous weight. No melodrama, just action.
+
+**Weakest**: The passage about Dova explaining the box could be trimmed. The explanation works better if it's slightly shorter; the reader already understands containment.
+
+**Fix**: Consider cutting one sentence from the Dova explanation. Let the line land harder by reducing the architecture around it.
+
+---
+
+### emotional_resonance: 7/10
+The chapter builds dread through restraint. Kellan's death is revealed without drama. His final look—grateful, not afraid—resonates because of what it implies about both of them. The accumulated weight of Maren's past is present without being overwrought.
+
+**Strongest moment**: "He'd looked almost grateful." — This is the emotional center. It implies something the text never states.
+
+**Weakest**: The Idris confrontation tells Maren things she already knows. "You can't protect her by being still" is emotionally true, but it arrives as lecture rather than discovery.
+
+**Fix**: Let Maren's emotional recognition come through action or silence rather than Idris's speech. She doesn't need to be told what she already knows—she needs to choose how to respond.
+
+---
+
+### narrative_efficiency: 7/10
+Every scene has a purpose: box = past surfacing; Idris = present danger; harbor = transition to next beat. No pure atmosphere without function. The sensory details (concrete, wood, water, grey light) anchor the prose without being decorative.
+
+**Weakest**: "The rain had come back—a thin drizzle that didn't bother to commit to anything, just hung in the air like a question." — This is beautiful, but it functions as atmosphere before Idris's final revelation. It could be trimmed to "The rain came back, thin and uncertain" without losing the image.
+
+**Fix**: The harbor weather description is the longest transition in the chapter. Tighten it by 30%.
+
+---
+
+### craft_execution: 8/10
+The observation → distillation rhythm is present and consistent. The "quality of silence" opening is strong. The prose doesn't call attention to itself. Line-level choices support the larger structure. The final cut-off reads as intentional but needs completion.
+
+**Strongest line**: "The water holding the first pale suggestion of morning without committing to it." — This does double work: describes the harbor AND characterizes Maren (someone who holds without committing).
+
+**Fix**: Complete the cut-off sentence. If the wrapped object is significant enough to end on, its description needs to land before the cut.
+
+---
+
+## SLOP CHECK
+
+No Tier 1 banned words detected. No dialogue that "tells" emotion directly. No exclamation marks except in the analysis above. One minor issue: "she hadn't slept" in the harbor passage tells the reader something about the boat's occupant rather than showing it through what Maren observes. Minor.
+
+---
+
+## SUMMARY
+
+**Overall score: 7.3/10**
+
+**Major issues (must fix):**
+- The chapter ends mid-word ("his fa")—this must be completed
+- Elara (the daughter) has no physical presence; at minimum, she needs an object or reference that makes her real to the reader
+- Some Idris dialogue is too expository (the network question)
+
+**Minor issues (can fix later):**
+- The Stillwater Crossing reference could carry slightly more texture on first mention
+- The harbor weather description could be trimmed by ~30%
+- The box-opening passage is slightly overwrought—one sentence can go
+- The shop entrance "announces" presence before discovering it through sound
+
+**What works:**
+- Voice is consistent and strong—this is the chapter's best feature
+- The box sequence builds deliberately
+- "He'd looked almost grateful" is the emotional center and it lands
+- Sensory detail throughout is specific without being decorative
+- Maren's interiority is shown through habit and physical detail, not direct statement
+
+This is strong, publishable work. The voice is controlled and earned. The gaps (Elara, scar) can be addressed in subsequent chapters. The prose would benefit from light trimming in three places but doesn't require structural revision.

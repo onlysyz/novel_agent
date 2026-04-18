@@ -1,0 +1,140 @@
+## DIMENSION EVALUATIONS
+
+### voice_adherence: 7/10
+**Weakest passage**: "Her face has settled into angles that might have been handsome twenty years ago. A strong jaw, deep-set eyes the color of river water—not quite grey, not quite green. Lines around her mouth from years of holding words behind her teeth. A scar runs along her left temple, white and precise, invisible unless you're looking for it."
+
+This passage lists physical descriptors too cleanly—it reads as character profile rather than living observation. The rhythm is catalogued rather than felt.
+
+**Strongest passage**: "Her daughter stood in the doorway shaking rain from her coat, the gesture quick and almost angry, and for a moment Maren saw the girl she had been... and then the girl was gone and there was only the woman, twenty-three years old and too thin, with Maren's jaw and someone else's eyes."
+
+The controlled drift into "and then the girl was gone" followed by the flat present-tense inventory is devastating. This is the voice earning its restraint.
+
+**Fix**: Merge character description into action/observation rather than pausing to inventory. The physical details are in the character bible; in prose, let them emerge through Maren's assessing gaze.
+
+---
+
+### beat_coverage: 7/10
+Standard opening chapter beats are covered: establish routine, introduce world through natural context, raise central tension, plant mystery, deliver cliffhanger.
+
+**Weakest coverage**: The relationship between Maren's past (Void Clerk, Covenant) and her present (shop owner, mother) is only gestured at. "She had learned not to question" appears twice, which is lazy shorthand for depth that isn't yet earned.
+
+**Strongest coverage**: The social contract of the Tide Quarter emerges organically through the older woman's visit—the eyes sliding past, the surface conversations. This is world-building working invisibly.
+
+**Fix**: Weave one more specific detail about what Maren actually did for the Covenant, delivered through her habitual hypervigilance rather than exposition.
+
+---
+
+### character_development: 7/10
+**Weakest passage**: "Elara had her mother's hands, Maren noticed. The fidgeting. It had been there since she was small, the inheritance neither of them had asked for."
+
+The inheritance reveal is handled well, but the moment lacks tension because we've just heard Elara say "I need to borrow money." This should be a loaded observation; instead it feels like a parenthetical.
+
+**Strongest passage**: "She crossed the small space between them and put her hand on the counter near her daughter's—not touching, but close. The gesture of someone who wanted to reach across a distance and couldn't remember how."
+
+This is the emotional center of the chapter. The failed proximity, the muscle memory of connection that can't quite complete—masterful.
+
+**Fix**: Connect the "inheritance" observation to the money request. Elara's fidgeting could be reframed as a response to what she just said, making the observation carry narrative weight.
+
+---
+
+### world_building: 7/10
+**Weakest passage**: "The Covenant arranged things. She had learned not to question."
+
+This is world-building through avoidance—twice. The reader learns the Covenant exists and that Maren is in its debt, but we don't feel the texture of it.
+
+**Strongest passage**: "That was how they preferred it in the Tide Quarter. Eyes sliding past, conversations that stayed on the surface, the quiet agreement that everyone had their reasons for being where they were."
+
+This paragraph does the most important work: it establishes the world's moral ecology without a single expository sentence.
+
+**Fix**: Replace one instance of "learned not to question" with a specific sensory detail that shows the Covenant's presence—how a debt feels, what paying looks like, what Maren sees that tells her the arrangement is active.
+
+---
+
+### pacing: 6/10
+**Weakest passage**: The transition between Elara's "I'm not using that" / "It's not the same" and "I'm sorry, I didn't want to come here, I didn't want you to know."
+
+This is a massive emotional beat compressed into two short paragraphs. The pace collapses rather than lands.
+
+**Strongest passage**: "The bell over the door hadn't chimed. The light didn't change. But Maren felt the room shift."
+
+This acceleration is perfectly timed. Three fragments where we expected a chime, and the world shifts on instinct rather than event.
+
+**Fix**: Add one beat between Elara's apology and the man's arrival—not dialogue, but physical: Maren's breathing, the quality of silence, a small sensory wrongness that builds to the door rather than arriving with it.
+
+---
+
+### dialogue: 6/10
+**Weakest passage**: "'For what.' / 'To who.'"
+
+The clipped dialogue works, but the "To who" construction appears right after "For what" and the rhythm becomes predictable. Both are flat inquiries; we need variation.
+
+**Strongest passage**: "'I can't tell you.' Her voice was steady now, the way it got when she was holding something behind her teeth. 'I'm not being dramatic. I literally can't.'"
+
+The "literally can't" lands perfectly because it refuses the escape hatch of emotional language and demands a different kind of interpretation.
+
+**Fix**: Give Maren one line of dialogue that isn't a question or command. Something observational, something that reveals her reading of the room without demanding information.
+
+---
+
+### atmosphere: 8/10
+**Weakest passage**: "The kettle was on. The display shelf had been straightened. There was nothing else to do until the first customer or the first trouble, and both would arrive when they arrived."
+
+This is competent atmosphere but the "customer or trouble" binary is slightly too neat. It tells us the world is dangerous without showing it.
+
+**Strongest passage**: "She had already unlocked the door, turned the sign, performed the rituals of opening that required no thought."
+
+This is the best single sentence in the chapter. "Rituals of opening" implies both routine and something deeper—Maren's days have the texture of ceremony, which is terrifying when you know what she used to do.
+
+**Fix**: The opening paragraph is strong but could lose "the way it sometimes did in Verantum" without losing anything. Let the city remain unnamed for another paragraph.
+
+---
+
+### tension: 7/10
+**Weakest passage**: The man's entrance is the chapter's climax but he remains more concept than presence. "His face had the quality of something carefully blank—practiced in the same way Maren had practiced her own forgettability" is the strongest line about him, but it arrives too late.
+
+**Strongest passage**: "Her body knew something her mind hadn't caught up to yet."
+
+This is where tension stops being generated and becomes felt. The reader's body catches up before Maren's does.
+
+**Fix**: Give the man one physical detail that isn't about his blankness or eyes. How does he stand? What are his hands doing? Make him a body, not just a threat archetype.
+
+---
+
+### prose_craft: 8/10
+**Weakest passage**: "Elara's jaw tightened. There it was."
+
+The "There it was" is trying to be a beat but feels artificial—a writing tic rather than a character tic. It appears earlier (""I can't tell you." Her voice was steady now") without this problem.
+
+**Strongest passage**: "She poured water over tea leaves she didn't particularly want and stood near the back room where the light was better. Through the narrow window there she could see the alley that ran behind the shop, the stones worn smooth by generations, the puddle that never quite dried."
+
+This passage demonstrates sustained attention—the mundane observed with the same vigilance one would give a threat. The puddle that never quite dries is a perfect world detail: natural, uncanny, unexplained.
+
+**Fix**: Remove or vary "There it was." Let the jaw tightening speak for itself.
+
+---
+
+### SLOP CHECK
+- **"The gesture quick and almost angry"** — "quick" is overused in this chapter (also appears as "the gesture was quick" in the money request). Vary gesture descriptors.
+- **"The quiet agreement that everyone had their reasons for being where they were"** — This is close to telling. It names the theme rather than dramatizing it.
+- **"The light coming through grey and thin"** — Excellent, avoidable cliché in a chapter that mostly avoids them.
+- **No exclamation marks** — Correct.
+- **No threnodic semicolons** — Correct.
+- **No dialogue tells** — Mostly correct; "Her voice was steady" is borderline but works because it's about containment.
+
+---
+
+### SUMMARY
+**Overall score: 7.0/10**
+
+**Major issues (must fix):**
+1. The man's entrance needs grounding in physical specificity—he's currently more symbol than character.
+2. The Elara-to-man transition needs one intermediate beat (sensory, not dialogue) to let the tension catch up rather than compress.
+3. Remove or vary "There it was"—it appears twice as a beat marker and reads as authorial tic.
+
+**Minor issues (can fix later):**
+1. Character description of Maren lists rather than observes in one paragraph; integrate into action.
+2. "For what" followed immediately by "To who" is rhythmically flat—add variation to Maren's flat questions.
+3. "Not hard, just present" opening is competent but slightly familiar; could discover a fresher entry point.
+4. The "rituals of opening" sentence is the best in the chapter—ensure the prose elsewhere earns that level of implied complexity.
+
+This chapter establishes voice and atmosphere effectively. The relationship between restraint and violence is properly calibrated—the prose earns its silences. What needs strengthening is the final act: the man, the transition, the physical presence of threat. The emotional architecture is solid. The thriller architecture needs one more level of concrete detail.

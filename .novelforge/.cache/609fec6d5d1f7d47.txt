@@ -1,0 +1,62 @@
+# Continuity Hunter Review: Chapter 1
+
+## What WORKS
+
+**The Sensory Consistency of the Setting**
+The rain functions as a continuous atmospheric element from dawn through the chapter's end. Maren watching it "move across the glass in small rivers" at the opening matches the older woman with "wet hair," and the rain being "muted" when Elara enters establishes temporal continuity. The weather isn't forgotten or contradicted, which is basic but essential—I see too many thrillers where weather becomes a convenience.
+
+**The Body Memory Mechanic**
+The detail that Maren's hands tap "in the rhythm she'd never been able to stop, the one that used to signal readiness to a handler across a crowded room" establishes her past without info-dumping. This is good setup. The fact that Elara has inherited "the fidgeting" creates a genetic/trained echo that implies Maren's profession shaped more than her own behavior.
+
+**The $300 Specificity**
+Small amounts matter in thrillers. "Three hundred" is believable debt—not life-destroying, but significant enough to force someone to their estranged mother's shop. This specificity grounds the stakes.
+
+---
+
+## What DOESN'T WORK
+
+**The Afternoon Shadow Problem**
+
+Here's the actual continuity break. Early in the chapter:
+
+> "She could see the way the shadows gathered there in the late afternoon."
+
+This scene takes place in the **morning**. The first customer arrives at "half past eight." Elara arrives after. We're deep in morning or early midday at most. But Maren, looking through the back window at the alley, sees "late afternoon" shadows?
+
+Unless the shop's back window has some kind of prophetic quality (which nothing else in the chapter supports), this is a straight contradiction. Shadows in late afternoon angle differently than shadows at mid-morning. You don't "see" late afternoon shadows hours before they'll exist.
+
+**The "Someone Else's Eyes" Setup Without Setup**
+
+We're told Elara has "Maren's jaw and someone else's eyes." The World Bible establishes Maren's eye color as "river water—not quite grey, not quite green." So whose eyes does Elara have? Her father's? Someone else's entirely?
+
+This is presented as a significant character detail, but we have zero information about Elara's father or any other parental figure. The World Bible mentions nothing. If "someone else's eyes" is going to matter—and in this genre, inherited features always eventually matter—you need to either establish who's being referenced or make it clear this is a mystery TO BE SOLVED, not a mystery that HAS BEEN SOLVED and withheld from the reader.
+
+Right now it reads as an incomplete detail.
+
+**Maren's Recognition Timing**
+
+> "Her body knew something her mind hadn't caught up to yet."
+
+This is well-written atmospheric tension. But then:
+
+> "She turned before Elara could see the recognition on her face."
+
+If her mind hadn't caught up, why is there recognition on her face? Is Maren recognizing something subconsciously? If so, what? If not, the prose is conflating instinct with actual recognition in a way that creates muddy characterization. Is Maren an ex-operative with supernatural intuition, or just someone with good instincts? The chapter can't have it both ways without clarity.
+
+---
+
+## What Would I Fix
+
+**For the shadow problem:** Either move the scene to afternoon (easy fix—push the timeline), or change "late afternoon" to "where the shadows would gather when the sun moved lower" (foreshadowing without false temporal placement), or have Maren actively remembering/imagining the afternoon shadows rather than observing them.
+
+**For Elara's eyes:** Either establish who "someone else" is early (a photograph in the shop, a casual mention, anything), or make it clear this is a mystery marker—like Elara's borrowed $300, it's one of several debts/queries the reader should track.
+
+**For the recognition beat:** Split the moment. Either her body knows and her face shows nothing (her training is intact), OR she has a flash of real recognition and we learn what she's recognizing. The current version leaves us uncertain whether Maren's competence is intact or compromised, which undercuts both her character and the tension.
+
+---
+
+## The Verdict
+
+Solid setup chapter. The world feels lived-in, the rain motif is consistent, the relationship between Maren and Elara has genuine texture. But three specific details create friction: one factual continuity error (the shadows), one character detail without anchor (the eyes), and one moment of characterization that can't decide what it's saying.
+
+These are fixable. They're the kind of details that slip through when you're drafting fast. The bones are good. But if you're going to ask readers to track mysteries, you need to be more careful than they do.

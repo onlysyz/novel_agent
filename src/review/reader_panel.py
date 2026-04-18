@@ -122,7 +122,7 @@ Write your review as {persona['name']}. Address these specific concerns:
 Be direct. Reference passages. Don't be wishy-washy."""
 
     try:
-        response = client.generate(system_prompt, user_prompt, max_tokens=2048)
+        response = client.generate(system_prompt, user_prompt, max_tokens=4096)
     except Exception as e:
         print(f"  [{persona['name']}] API error: {e}")
         return {

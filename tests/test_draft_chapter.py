@@ -13,6 +13,7 @@ from src.drafting.draft_chapter import (
     count_words,
     build_chapter_prompt,
     parse_chapter_content,
+    _extract_scenes,
     MIN_CHAPTER_WORDS,
     MAX_CHAPTER_WORDS,
     TARGET_WORDS_PER_CHAPTER,
@@ -783,6 +784,101 @@ She reached into her pocket and pulled out the broken amulet. It was still warm.
         result = parse_chapter_content("Just plain prose.")
         assert set(result.keys()) == {"scene_beats", "world_building", "narrative_notes", "scenes"}
 
+
+class TestExtractScenes:
+    """Tests for _extract_scenes helper."""
+
+    def test_detects_horizontal_rule_triple_dash(self):
+        """--- is detected as a scene marker."""
+        text = "Prose of scene one.\n---\nProse of scene two."
+        scenes = _extract_scenes(text)
+        assert "---" in scenes
+
+    def test_detects_horizontal_rule_triple_star(self):
+        """*** is detected as a scene marker."""
+        text = "Prose of scene one.\n***\nProse of scene two."
+        scenes = _extract_scenes(text)
+        assert "***" in scenes
+
+    def test_detects_horizontal_rule_double_underscore(self):
+        """__ is detected as a scene marker."""
+        text = "Prose of scene one.\n__\nProse of scene two."
+        scenes = _extract_scenes(text)
+        assert "__" in scenes
+
+    def test_detects_scene_header_single_hash(self):
+        """# Scene is detected."""
+        text = "Prose.\n# Scene\nMore prose."
+        scenes = _extract_scenes(text)
+        assert "# Scene" in scenes
+
+    def test_detects_scene_header_double_hash(self):
+        """## Scene is detected."""
+        text = "Prose.\n## Scene\nMore prose."
+        scenes = _extract_scenes(text)
+        assert "## Scene" in scenes
+
+    def test_detects_scene_header_triple_hash(self):
+        """### Scene is detected."""
+        text = "Prose.\n### Scene\nMore prose."
+        scenes = _extract_scenes(text)
+        assert "### Scene" in scenes
+
+    def test_detects_scene_with_number(self):
+        """### Scene 1 and ## Scene 2 (digit suffixes) are detected."""
+        text = "Prose.\n### Scene 1\nMore prose.\n## Scene 2\nEnd."
+        scenes = _extract_scenes(text)
+        assert "### Scene 1" in scenes
+        assert "## Scene 2" in scenes
+        # "Scene" alone (no suffix) is also detected
+        assert "## Scene" in _extract_scenes("Prose.\n## Scene\nEnd.")
+
+    def test_does_not_detect_scene_beats_section_header(self):
+        """'## Scene Beats' (with word after 'Scene') is NOT a scene marker."""
+        text = "Prose.\n## Scene Beats\n- First beat\nMore prose."
+        scenes = _extract_scenes(text)
+        assert "## Scene Beats" not in scenes
+
+    def test_multiple_scene_markers_in_order(self):
+        """Multiple scene markers returned in order of appearance."""
+        text = "# Scene\nProse one.\n---\nProse two.\n### Scene 1\nProse three."
+        scenes = _extract_scenes(text)
+        assert scenes == ["# Scene", "---", "### Scene 1"]
+
+    def test_empty_text_returns_empty_list(self):
+        """Empty string returns empty list."""
+        assert _extract_scenes("") == []
+
+    def test_plain_prose_no_scene_markers(self):
+        """Prose without any markers returns empty list."""
+        text = """
+# Chapter 1
+
+Sarah stood in the ruined cathedral. The wind howled through the broken windows.
+
+She reached into her pocket and pulled out the broken amulet.
+"""
+        assert _extract_scenes(text) == []
+
+    def test_scene_markers_at_start(self):
+        """Scene markers at beginning of text are detected."""
+        text = "---\nProse of scene one.\n## Scene\nProse two."
+        scenes = _extract_scenes(text)
+        assert scenes[0] == "---"
+
+    def test_scene_markers_at_end(self):
+        """Scene markers at end of text are detected."""
+        text = "Prose of scene one.\n### Scene 1\n---\n"
+        scenes = _extract_scenes(text)
+        assert "---" in scenes
+        assert "### Scene 1" in scenes
+
+    def test_scene_header_case_insensitive(self):
+        """Scene header detection is case-insensitive."""
+        text = "Prose.\n# SCENE\nMore prose.\n## scene\nEnd."
+        scenes = _extract_scenes(text)
+        assert "# SCENE" in scenes
+        assert "## scene" in scenes
 
 
 class TestGetPreviousChapterEnding:

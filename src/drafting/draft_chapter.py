@@ -324,6 +324,40 @@ def count_words(text: str) -> int:
     return len(text.split())
 
 
+def _extract_scenes(text: str) -> list[str]:
+    """Extract scene break markers from chapter text.
+
+    Detects:
+    - Horizontal rules: ---, ***, __
+    - Scene headers: ## Scene, ### Scene 1, # Scene Two, etc.
+
+    Args:
+        text: Raw chapter text
+
+    Returns:
+        List of detected scene marker strings (in order of appearance)
+    """
+    lines = text.split("\n")
+    scenes = []
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Horizontal rule scene breaks
+        if stripped in ("---", "***", "__"):
+            scenes.append(stripped)
+            continue
+
+        # Scene header markers (## Scene, ### Scene 1, etc.)
+        header_match = re.match(r"^#{1,3}\s+(.+)", stripped)
+        if header_match:
+            header_text = header_match.group(1).lower()
+            if re.match(r"scene(\s+\d+)?$", header_text):
+                scenes.append(stripped)
+
+    return scenes
+
+
 def parse_chapter_content(text: str) -> dict:
     """Parse chapter text for embedded structural annotations.
 
@@ -353,7 +387,7 @@ def parse_chapter_content(text: str) -> dict:
         "scene_beats": [],
         "world_building": [],
         "narrative_notes": [],
-        "scenes": [],
+        "scenes": _extract_scenes(text),
     }
 
     current_section = None
@@ -361,10 +395,8 @@ def parse_chapter_content(text: str) -> dict:
     for line in lines:
         stripped = line.strip()
 
-        # Detect scene breaks (horizontal rules or scene headers)
-        if stripped == "---" or stripped == "***" or stripped == "__":
-            result["scenes"].append(stripped)
-            current_section = None
+        # Skip scene markers (handled by _extract_scenes above)
+        if stripped in ("---", "***", "__"):
             continue
 
         # Detect section headers
@@ -378,8 +410,6 @@ def parse_chapter_content(text: str) -> dict:
             elif "narrative" in header_text or "note" in header_text or "annotation" in header_text:
                 current_section = "narrative_notes"
             elif re.match(r"scene\s+\d+", header_text) or re.match(r"scene$", header_text):
-                # "Scene 1", "## Scene Two", "### Scene"
-                result["scenes"].append(stripped)
                 current_section = None
             else:
                 current_section = None

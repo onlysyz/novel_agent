@@ -450,3 +450,135 @@ Scene Beats:
 """
         brief = extract_chapter_brief(outline, 1)
         assert brief["position"] == "Midpoint"
+
+    def test_keyword_fallback_scene_beats(self):
+        """Line without colon but containing 'scene' keyword sets scene_beats section."""
+        outline = """
+## Chapter 1
+POV: Sarah
+This scene beats section follows the opening
+- First beat captured
+- Second beat captured
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert "First beat captured" in brief["scene_beats"]
+        assert "Second beat captured" in brief["scene_beats"]
+
+    def test_keyword_fallback_beats_alone(self):
+        """Line without colon containing 'beats' keyword sets scene_beats."""
+        outline = """
+## Chapter 1
+POV: Sarah
+beats to cover in this chapter
+- Opening scene
+- Middle scene
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert "Opening scene" in brief["scene_beats"]
+        assert "Middle scene" in brief["scene_beats"]
+
+    def test_keyword_fallback_events(self):
+        """Line without colon containing 'events' keyword sets scene_beats."""
+        outline = """
+## Chapter 1
+POV: Sarah
+Key events to dramatize
+- Event one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert "Event one" in brief["scene_beats"]
+
+    def test_keyword_fallback_foreshadow(self):
+        """Line without colon containing 'foreshadow' keyword sets foreshadow_plants."""
+        outline = """
+## Chapter 1
+POV: Sarah
+Important foreshadow to plant
+- The glowing amulet
+- The old map
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert "The glowing amulet" in brief["foreshadow_plants"]
+        assert "The old map" in brief["foreshadow_plants"]
+
+    def test_keyword_fallback_payoff(self):
+        """Line without colon containing 'payoff' keyword sets payoff_payoffs."""
+        outline = """
+## Chapter 1
+POV: Sarah
+Payoffs from earlier setup
+- The amulet reveals its power
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert "The amulet reveals its power" in brief["payoff_payoffs"]
+
+    def test_keyword_fallback_emotional_arc(self):
+        """Keyword-only line (no colon) sets section but does not capture text."""
+        outline = """
+## Chapter 1
+POV: Sarah
+The emotional arc for this chapter
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        # Keyword-only line without colon captures nothing; section is set for next bullets
+        assert brief["emotional_arc"] == ""
+        # Bullets after KEY:VALUE line are captured correctly
+        assert brief["scene_beats"] == ["Beat one"]
+
+    def test_keyword_fallback_try_fail(self):
+        """Keyword-only line (no colon) sets section but does not capture text."""
+        outline = """
+## Chapter 1
+POV: Sarah
+Try-fail cycle for the protagonist
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        # Keyword-only line without colon captures nothing
+        assert brief["try_fail"] == ""
+        # Bullets after KEY:VALUE line are captured correctly
+        assert brief["scene_beats"] == ["Beat one"]
+
+    def test_keyword_fallback_location(self):
+        """Keyword-only line (no colon) sets section but does not capture text."""
+        outline = """
+## Chapter 1
+POV: Sarah
+The location is the dark forest
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        # Keyword-only line without colon captures nothing
+        assert brief["location"] == ""
+        # Bullets after KEY:VALUE line are captured correctly
+        assert brief["scene_beats"] == ["Beat one"]
+
+    def test_location_extracted(self):
+        """Location field extracted from outline."""
+        outline = """
+## Chapter 1
+POV: Sarah
+Location: The ruined cathedral
+
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["location"] == "The ruined cathedral"
+
+    def test_try_fail_cycle_extracted(self):
+        """Try-Fail Cycle field extracted from outline."""
+        outline = """
+## Chapter 1
+POV: Sarah
+Try-Fail Cycle: Sarah tries to escape but is captured
+
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["try_fail"] == "Sarah tries to escape but is captured"

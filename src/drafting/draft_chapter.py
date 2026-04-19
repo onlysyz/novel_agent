@@ -151,14 +151,16 @@ def extract_chapter_brief(outline: str, chapter_num: int) -> dict:
                     current_section = "pov"
                 elif any(kw in lower_line for kw in ["location", "setting", "place"]):
                     current_section = "location"
+                # Check compound/specific keywords before single "beat" to avoid
+                # "beat" matching inside "scene beats" or "beats"
+                elif any(kw in lower_line for kw in ["scene", "beats", "events"]):
+                    current_section = "scene_beats"
                 elif any(kw in lower_line for kw in ["beat", "save the cat"]):
                     current_section = "beat"
                 elif any(kw in lower_line for kw in ["emotional", "arc"]):
                     current_section = "emotional_arc"
                 elif any(kw in lower_line for kw in ["try-fail", "try fail", "cycle"]):
                     current_section = "try_fail"
-                elif any(kw in lower_line for kw in ["scene", "beats", "events"]):
-                    current_section = "scene_beats"
                 elif any(kw in lower_line for kw in ["foreshadow", "plant", "seed"]):
                     current_section = "foreshadow_plants"
                 elif any(kw in lower_line for kw in ["payoff", "pay off"]):

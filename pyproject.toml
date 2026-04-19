@@ -34,4 +34,4 @@ packages = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "--cov=src.drafting.evaluate --cov=src.review.review --cov=src.drafting.draft_chapter --cov=src.common.scoring"
+addopts = "--cov=src.drafting.evaluate --cov=src.review.review --cov=src.drafting.draft_chapter --cov=src.common.scoring --cov=src.export.export --cov=src.export.typeset --cov=src.export.epub_export --cov=src.export.cover_art"

@@ -76,7 +76,16 @@ CHAPTER_TEMPLATE = r"""
 
 def sanitize_latex(text: str) -> str:
     """Escape special LaTeX characters."""
-    # Order matters - escape backslashes first
+    # Use placeholder markers for braces to avoid re-escaping braces
+    # that appear in the backslash replacement string.
+    # Order: braces -> backslash -> other specials -> restore braces
+    OPEN_MARKER = "\x01"
+    CLOSE_MARKER = "\x02"
+
+    # Step 1: protect existing braces
+    text = text.replace("{", OPEN_MARKER).replace("}", CLOSE_MARKER)
+
+    # Step 2: escape all special chars (with placeholders for braces)
     replacements = [
         ("\\", r"\textbackslash{}"),
         ("&", r"\&"),
@@ -84,13 +93,15 @@ def sanitize_latex(text: str) -> str:
         ("$", r"\$"),
         ("#", r"\#"),
         ("_", r"\_"),
-        ("{", r"\{"),
-        ("}", r"\}"),
         ("~", r"\textasciitilde{}"),
         ("^", r"\textasciicircum{}"),
     ]
     for old, new in replacements:
         text = text.replace(old, new)
+
+    # Step 3: restore braces as escaped LaTeX
+    text = text.replace(OPEN_MARKER, r"\{").replace(CLOSE_MARKER, r"\}")
+
     return text
 
 

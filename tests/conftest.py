@@ -4,6 +4,14 @@ import pytest
 from pathlib import Path
 from unittest.mock import mock_open, patch, MagicMock
 
+# Import export fixtures so they're discoverable by pytest
+from tests.conftest_export import (
+    mock_novedir_export,
+    sample_markdown,
+    mock_manuscript_md,
+    mock_state_json,
+)
+
 
 # ─── Minimal context fixtures ────────────────────────────────────────────────
 
@@ -175,61 +183,3 @@ def mock_prev_chapter(tmp_path):
     prev_file = tmp_path / "ch_01.md"
     prev_file.write_text(chapter_content)
     return prev_file
-
-
-# ─── Export fixtures ─────────────────────────────────────────────────────────────
-
-@pytest.fixture
-def mock_novedir_export(tmp_path):
-    """Create a minimal novel directory structure for export tests."""
-    chapters_dir = tmp_path / "chapters"
-    chapters_dir.mkdir()
-
-    chapter1 = chapters_dir / "ch_01.md"
-    chapter1.write_text(
-        "# Chapter One\n\n"
-        "This is the first chapter. It has some content.\n\n"
-        "And a second paragraph.\n"
-    )
-
-    chapter2 = chapters_dir / "ch_02.md"
-    chapter2.write_text(
-        "# Chapter Two\n\n"
-        "The second chapter continues the story.\n\n"
-        "It also has multiple paragraphs.\n"
-    )
-
-    seed_file = tmp_path / "seed.txt"
-    seed_file.write_text("A mysterious fantasy novel about a hidden kingdom.")
-
-    outline_file = tmp_path / "outline.md"
-    outline_file.write_text("# The Hidden Kingdom\n\nA mysterious fantasy novel.")
-
-    return tmp_path
-
-
-@pytest.fixture
-def sample_markdown():
-    """Sample markdown text for conversion tests."""
-    return (
-        "# Main Title\n\n"
-        "This is a paragraph with **bold** and *italic* text.\n\n"
-        "## Section Two\n\n"
-        "Another paragraph with **bold** content.\n\n"
-        "---\n\n"
-        "### Subsection\n\n"
-        "Final paragraph.\n"
-    )
-
-
-@pytest.fixture
-def mock_manuscript_md(tmp_path):
-    """Create a minimal manuscript.md for TXT export tests."""
-    manuscript = tmp_path / "manuscript.md"
-    manuscript.write_text(
-        "# My Novel Title\n\n"
-        "## Chapter 1\n\n"
-        "This is **bold** and this is *italic*.\n\n"
-        "Visit [my site](https://example.com) for more.\n"
-    )
-    return manuscript

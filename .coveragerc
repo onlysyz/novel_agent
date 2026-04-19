@@ -1,0 +1,6 @@
+[run]
+source = src/drafting/evaluate, src/review/review, src/drafting/draft_chapter
+
+[report]
+fail_under = 59
+show_missing = True

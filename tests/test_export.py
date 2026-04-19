@@ -787,26 +787,8 @@ class TestExportManuscriptTxt:
 class TestExportAll:
     """Tests for src.export.export.export_all()."""
 
-    def test_export_all_returns_dict(self, tmp_path):
-        from src.export.export import export_all
-
-        with patch("src.export.export.generate_epub") as mock_epub:
-            with patch("src.export.export.generate_latex") as mock_latex:
-                with patch("src.export.export.compile_pdf") as mock_pdf:
-                    with patch("src.export.export.generate_cover") as mock_cover:
-                        with patch("src.export.export.export_manuscript_txt") as mock_txt:
-                            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
-                                mock_epub.return_value = {"epub_path": "test.epub"}
-                                mock_latex.return_value = {"tex_path": "test.tex"}
-                                mock_pdf.return_value = {"pdf_path": "test.pdf"}
-                                mock_cover.return_value = {"cover_path": "test.png"}
-                                mock_txt.return_value = {"txt_path": "test.txt"}
-                                mock_meta.return_value = {"title": "Test", "author": "Test"}
-
-                                result = export_all(output_dir=tmp_path)
-                                assert isinstance(result, dict)
-
-    def test_respects_formats_list(self, tmp_path):
+    def test_calls_export_manuscript_txt(self, tmp_path):
+        """export_manuscript_txt is called with output_dir."""
         from src.export.export import export_all
 
         with patch("src.export.export.export_manuscript_txt") as mock_txt:
@@ -814,31 +796,70 @@ class TestExportAll:
                 mock_txt.return_value = {"txt_path": "test.txt"}
                 mock_meta.return_value = {"title": "Test", "author": "Test"}
 
-                result = export_all(formats=["txt"], output_dir=tmp_path)
+                export_all(formats=["txt"], output_dir=tmp_path)
 
-                assert "txt" in result
-                assert "epub" not in result
-                assert "pdf" not in result
+                mock_txt.assert_called_once_with(tmp_path)
 
-    def test_export_all_without_cover(self, tmp_path):
+    def test_calls_generate_epub_with_correct_path(self, tmp_path):
+        """generate_epub is called with str(output_dir / 'manuscript.epub')."""
         from src.export.export import export_all
 
-        with patch("src.export.export.export_manuscript_txt") as mock_txt:
-            with patch("src.export.export.generate_epub") as mock_epub:
-                with patch("src.export.export.generate_latex") as mock_latex:
-                    with patch("src.export.export.compile_pdf") as mock_pdf:
-                        with patch("src.export.typeset.get_novel_metadata") as mock_meta:
-                            mock_txt.return_value = {"txt_path": "test.txt"}
-                            mock_epub.return_value = {"epub_path": "test.epub"}
-                            mock_latex.return_value = {"tex_path": "test.tex"}
-                            mock_pdf.return_value = {"pdf_path": "test.pdf"}
-                            mock_meta.return_value = {"title": "Test", "author": "Test"}
+        with patch("src.export.export.generate_epub") as mock_epub:
+            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                mock_epub.return_value = {"epub_path": "test.epub"}
+                mock_meta.return_value = {"title": "Test", "author": "Test"}
 
-                            result = export_all(formats=["txt", "epub", "pdf"], include_cover=False, output_dir=tmp_path)
+                export_all(formats=["epub"], output_dir=tmp_path)
 
-                            assert "cover" not in result
+                expected_path = str(tmp_path / "manuscript.epub")
+                mock_epub.assert_called_once_with(expected_path)
+
+    def test_calls_generate_latex_with_correct_path(self, tmp_path):
+        """generate_latex is called with str(output_dir / 'manuscript.tex')."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.generate_latex") as mock_latex:
+            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                mock_latex.return_value = {"tex_path": "test.tex"}
+                mock_meta.return_value = {"title": "Test", "author": "Test"}
+
+                export_all(formats=["pdf"], output_dir=tmp_path)
+
+                expected_path = str(tmp_path / "manuscript.tex")
+                mock_latex.assert_called_once_with(expected_path)
+
+    def test_calls_compile_pdf_after_latex(self, tmp_path):
+        """compile_pdf is called with the tex_path returned by generate_latex and output_dir."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.generate_latex") as mock_latex:
+            with patch("src.export.export.compile_pdf") as mock_pdf:
+                with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                    tex_path = str(tmp_path / "manuscript.tex")
+                    mock_latex.return_value = {"tex_path": tex_path}
+                    mock_pdf.return_value = {"pdf_path": str(tmp_path / "manuscript.pdf")}
+                    mock_meta.return_value = {"title": "Test", "author": "Test"}
+
+                    export_all(formats=["pdf"], output_dir=tmp_path)
+
+                    mock_pdf.assert_called_once_with(tex_path, tmp_path)
+
+    def test_calls_generate_cover_with_correct_path(self, tmp_path):
+        """generate_cover is called with str(output_dir / 'cover.png')."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.generate_cover") as mock_cover:
+            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                mock_cover.return_value = {"cover_path": "test.png"}
+                mock_meta.return_value = {"title": "Test", "author": "Test"}
+
+                export_all(formats=["cover"], output_dir=tmp_path)
+
+                expected_path = str(tmp_path / "cover.png")
+                mock_cover.assert_called_once_with(expected_path)
 
     def test_falls_back_to_simple_cover_on_error(self, tmp_path):
+        """When generate_cover returns an error, generate_simple_cover is called."""
         from src.export.export import export_all
 
         with patch("src.export.export.generate_cover") as mock_cover:
@@ -850,5 +871,92 @@ class TestExportAll:
 
                     result = export_all(formats=["cover"], output_dir=tmp_path)
 
-                    assert "cover" in result
+                    expected_path = str(tmp_path / "cover.png")
+                    mock_simple.assert_called_once_with(expected_path)
                     assert "simple" in result["cover"]
+
+    def test_respects_formats_list_txt_only(self, tmp_path):
+        """Only the formats specified are exported; others are skipped."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.export_manuscript_txt") as mock_txt:
+            with patch("src.export.export.generate_epub") as mock_epub:
+                with patch("src.export.export.generate_latex") as mock_latex:
+                    with patch("src.export.export.compile_pdf") as mock_pdf:
+                        with patch("src.export.export.generate_cover") as mock_cover:
+                            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                                mock_txt.return_value = {"txt_path": "test.txt"}
+                                mock_meta.return_value = {"title": "Test", "author": "Test"}
+
+                                export_all(formats=["txt"], output_dir=tmp_path)
+
+                                mock_txt.assert_called_once()
+                                mock_epub.assert_not_called()
+                                mock_latex.assert_not_called()
+                                mock_pdf.assert_not_called()
+                                mock_cover.assert_not_called()
+
+    def test_respects_formats_list_pdf_only(self, tmp_path):
+        """formats=['pdf'] exports latex then pdf but not txt or cover."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.export_manuscript_txt") as mock_txt:
+            with patch("src.export.export.generate_epub") as mock_epub:
+                with patch("src.export.export.generate_latex") as mock_latex:
+                    with patch("src.export.export.compile_pdf") as mock_pdf:
+                        with patch("src.export.export.generate_cover") as mock_cover:
+                            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                                mock_latex.return_value = {"tex_path": "test.tex"}
+                                mock_pdf.return_value = {"pdf_path": "test.pdf"}
+                                mock_meta.return_value = {"title": "Test", "author": "Test"}
+
+                                export_all(formats=["pdf"], output_dir=tmp_path)
+
+                                mock_latex.assert_called_once()
+                                mock_pdf.assert_called_once()
+                                mock_txt.assert_not_called()
+                                mock_epub.assert_not_called()
+                                mock_cover.assert_not_called()
+
+    def test_without_cover_skips_cover_format(self, tmp_path):
+        """include_cover=False skips cover generation even if cover is in formats."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.generate_cover") as mock_cover:
+            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                mock_cover.return_value = {"cover_path": "test.png"}
+                mock_meta.return_value = {"title": "Test", "author": "Test"}
+
+                export_all(formats=["cover"], include_cover=False, output_dir=tmp_path)
+
+                mock_cover.assert_not_called()
+
+    def test_returns_metadata(self, tmp_path):
+        """Result dict contains 'metadata' key with novel metadata."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.export_manuscript_txt") as mock_txt:
+            with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                mock_txt.return_value = {"txt_path": "test.txt"}
+                mock_meta.return_value = {"title": "My Novel", "author": "Alice"}
+
+                result = export_all(formats=["txt"], output_dir=tmp_path)
+
+                assert "metadata" in result
+                assert result["metadata"]["title"] == "My Novel"
+                assert result["metadata"]["author"] == "Alice"
+
+    def test_pdf_skipped_when_latex_returns_error(self, tmp_path):
+        """compile_pdf is not called if generate_latex returns an error."""
+        from src.export.export import export_all
+
+        with patch("src.export.export.generate_latex") as mock_latex:
+            with patch("src.export.export.compile_pdf") as mock_pdf:
+                with patch("src.export.typeset.get_novel_metadata") as mock_meta:
+                    mock_latex.return_value = {"error": "No chapters found"}
+                    mock_meta.return_value = {"title": "Test", "author": "Test"}
+
+                    result = export_all(formats=["pdf"], output_dir=tmp_path)
+
+                    mock_pdf.assert_not_called()
+                    assert "error" in result["latex"]

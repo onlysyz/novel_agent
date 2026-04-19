@@ -102,7 +102,7 @@ def export_all(
             pdf_result = compile_pdf(tex_result["tex_path"], output_dir)
             results["pdf"] = pdf_result
 
-    if "cover" in formats:
+    if "cover" in formats and include_cover:
         print("\n[Export] Generating cover art...")
         # Try AI cover first, fall back to simple
         cover_result = generate_cover(str(output_dir / "cover.png"))

@@ -15,47 +15,89 @@ class TestSanitizeLatex:
     def test_escapes_backslash(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex(r"path\to\file")
+        # Backslash replaced with \textbackslash{}
         assert r"\textbackslash{}" in result
+        # Original path segments preserved (no \t = tab, \f = formfeed)
+        assert "path" in result
+        assert "to" in result
+        assert "file" in result
 
     def test_escapes_ampersand(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("Rock & Roll")
+        # & must be escaped as \&
         assert r"\&" in result
+        # The & char should not appear unescaped (un-prefixed by \)
+        # Check by looking for \& (escaped) vs raw & appearing elsewhere
+        assert result.replace(r"\&", "") == "Rock  Roll"
 
     def test_escapes_percent(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("100% complete")
         assert r"\%" in result
+        assert result.replace(r"\%", "") == "100 complete"
 
     def test_escapes_dollar(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("$50")
         assert r"\$" in result
+        assert result.replace(r"\$", "") == "50"
 
     def test_escapes_hash(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("Section #1")
         assert r"\#" in result
+        assert result.replace(r"\#", "") == "Section 1"
 
     def test_escapes_underscore(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("word_one")
         assert r"\_" in result
+        assert result.replace(r"\_", "") == "wordone"
 
-    def test_escapes_braces(self):
+    def test_escapes_open_brace(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("{text}")
-        assert r"\{" in result and r"\}" in result
+        assert r"\{" in result
+        assert result.replace(r"\{", "").replace(r"\}", "") == "text"
+
+    def test_escapes_close_brace(self):
+        from src.export.typeset import sanitize_latex
+        result = sanitize_latex("text}")
+        assert r"\}" in result
+        assert result.replace(r"\}", "") == "text"
 
     def test_escapes_tilde(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("a~b")
         assert r"\textasciitilde{}" in result
+        assert result.replace(r"\textasciitilde{}", "") == "ab"
 
     def test_escapes_caret(self):
         from src.export.typeset import sanitize_latex
         result = sanitize_latex("a^b")
         assert r"\textasciicircum{}" in result
+        assert result.replace(r"\textasciicircum{}", "") == "ab"
+
+    def test_no_double_escaping_of_braces_in_backslash_replacement(self):
+        r"""Braces inside \textbackslash{} must not be re-escaped to \\\{ \\\}."""
+        from src.export.typeset import sanitize_latex
+        result = sanitize_latex(r"a\b")
+        # The replacement string \textbackslash{} has { and } which must NOT become \{ \}
+        # Only the literal braces in the input should be escaped
+        assert r"\textbackslash{}" in result
+        # The braces inside \textbackslash{} should not be escaped as \{
+        # If double-escaped we'd see \\{
+        assert r"\\\{" not in result
+
+    def test_backslash_with_brace_input(self):
+        """A backslash followed by a brace — brace must only be escaped once."""
+        from src.export.typeset import sanitize_latex
+        result = sanitize_latex(r"\{")
+        # \{ is the correct escape for an open brace
+        # Not \\\{ (which would be backslash + escaped brace)
+        assert r"\{" in result
+        assert r"\\\{" not in result
 
     def test_escapes_all_special_chars(self):
         from src.export.typeset import sanitize_latex
@@ -76,8 +118,50 @@ class TestSanitizeLatex:
         """Backslash must be escaped before other replacements."""
         from src.export.typeset import sanitize_latex
         result = sanitize_latex(r"a\b")
-        # Should escape backslash first, not convert \b to something else
         assert r"\textbackslash{}" in result
+
+    def test_multiple_backslashes(self):
+        from src.export.typeset import sanitize_latex
+        # Three backslash characters in the input
+        input_val = "a\\b\\c"
+        result = sanitize_latex(input_val)
+        # a\b\c has 2 backslashes, each becomes \textbackslash{}
+        assert result.count(r"\textbackslash{}") == 2
+
+    def test_mixed_special_chars_no_interference(self):
+        from src.export.typeset import sanitize_latex
+        result = sanitize_latex(r"100% @ #1 & $50 _test_ {a} ~b ^c")
+        # None of the escapes should interfere with each other
+        assert r"\%" in result
+        assert r"\@" not in result  # @ is not special
+        assert r"\#" in result
+        assert r"\$" in result
+        assert r"\_" in result
+        assert r"\{" in result
+        assert r"\}" in result
+        assert r"\textasciitilde{}" in result
+        assert r"\textasciicircum{}" in result
+
+    def test_idempotent(self):
+        """Running sanitize_latex twice should give the same result."""
+        from src.export.typeset import sanitize_latex
+        original = "Hello World"
+        once = sanitize_latex(original)
+        twice = sanitize_latex(once)
+        assert once == twice
+
+    def test_backslash_with_existing_braces_in_input(self):
+        """Input containing both backslash and braces is handled correctly."""
+        from src.export.typeset import sanitize_latex
+        result = sanitize_latex(r"\text{block}")
+        # \text -> \textbackslash{} , {block} -> \{block\}
+        assert r"\textbackslash{}" in result
+        assert r"\{block\}" in result
+
+    def test_preserves_normal_text(self):
+        from src.export.typeset import sanitize_latex
+        result = sanitize_latex("Hello World")
+        assert result == "Hello World"
 
 
 class TestConvertMarkdownToLatex:

@@ -3,10 +3,11 @@
 import pytest
 import sys
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.review.review import ReviewParser
+from src.review.review import ReviewParser, opus_review, run_opus_review_loop
 
 
 class TestReviewParserStarRating:
@@ -198,3 +199,127 @@ class TestReviewParserShouldStop:
         assert "1 major" in reason
         assert "1 moderate" in reason
         assert "1 minor" in reason
+
+
+class TestOpusReview:
+    """Tests for opus_review with mocked API."""
+
+    def _mock_review_response(self, rating=4.0, qualified=True):
+        """Return a synthetic Opus review response."""
+        hedge = "Perhaps " if qualified else ""
+        return f"""
+**CRITIC'S RATING**: {rating}/5 stars
+
+**CRITIC'S ASSESSMENT**:
+The chapter demonstrates solid narrative craft with effective tension building.
+
+**PROFESSOR'S SUGGESTIONS**:
+{hedge}Consider expanding the interior monologue in the third paragraph.
+{hedge}The dialogue in scene two could be tightened.
+"""
+
+    def test_opus_review_returns_required_keys(self):
+        """opus_review returns dict with all expected fields."""
+        mock_client = MagicMock()
+        mock_client.generate_with_opus.return_value = self._mock_review_response()
+
+        with patch("src.review.review.get_client", return_value=mock_client):
+            result = opus_review(
+                "Chapter text here.",
+                {"chapter_brief": {}, "voice": "", "canon": ""},
+                1,
+            )
+
+        assert "rating" in result
+        assert "items" in result
+        assert "severity" in result
+        assert "should_stop" in result
+        assert "stop_reason" in result
+        assert "raw_review" in result
+
+    def test_opus_review_parses_rating(self):
+        """opus_review correctly parses the star rating from LLM response."""
+        mock_client = MagicMock()
+        mock_client.generate_with_opus.return_value = self._mock_review_response(rating=3.5)
+
+        with patch("src.review.review.get_client", return_value=mock_client):
+            result = opus_review(
+                "Chapter text.",
+                {"chapter_brief": {}, "voice": "", "canon": ""},
+                1,
+            )
+
+        assert result["rating"] == 3.5
+
+    def test_opus_review_api_error_returns_defaults(self):
+        """API error returns graceful fallback."""
+        mock_client = MagicMock()
+        mock_client.generate_with_opus.side_effect = Exception("API failure")
+
+        with patch("src.review.review.get_client", return_value=mock_client):
+            result = opus_review(
+                "Chapter text.",
+                {"chapter_brief": {}, "voice": "", "canon": ""},
+                1,
+            )
+
+        assert result["rating"] == 3.0
+        assert result["should_stop"] is True
+        assert "API error" in result["stop_reason"]
+
+
+class TestRunOpusReviewLoop:
+    """Tests for run_opus_review_loop."""
+
+    def test_runs_single_iteration_when_stopped_early(self):
+        """Loop exits after 1 iteration when should_stop=True."""
+        # Build results that always return should_stop=True on first call
+        mock_results = [
+            {
+                "rating": 4.5,
+                "items": [{"severity": "minor", "qualified": True}],
+                "severity": {"major": 0, "moderate": 0, "minor": 1},
+                "should_stop": True,
+                "stop_reason": "High rating with no major issues",
+                "raw_review": "...",
+            }
+        ]
+
+        with patch("src.review.review.opus_review", side_effect=mock_results):
+            result = run_opus_review_loop(
+                "Chapter text.",
+                {"chapter_brief": {}, "voice": "", "canon": ""},
+                1,
+                max_iterations=3,
+            )
+
+        assert result["iterations"] == 1
+        assert result["final_rating"] == 4.5
+        assert result["final_review"]["should_stop"] is True
+
+    def test_runs_max_iterations_when_not_stopped(self):
+        """Loop runs all iterations when should_stop=False throughout."""
+        mock_results = [
+            {
+                "rating": 3.5,
+                "items": [
+                    {"severity": "major", "qualified": False},
+                    {"severity": "moderate", "qualified": False},
+                ],
+                "severity": {"major": 1, "moderate": 1, "minor": 0},
+                "should_stop": False,
+                "stop_reason": "...",
+                "raw_review": "...",
+            }
+        ] * 3
+
+        with patch("src.review.review.opus_review", side_effect=mock_results):
+            result = run_opus_review_loop(
+                "Chapter text.",
+                {"chapter_brief": {}, "voice": "", "canon": ""},
+                1,
+                max_iterations=3,
+            )
+
+        assert result["iterations"] == 3
+        assert len(result["results"]) == 3

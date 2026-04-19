@@ -3,6 +3,7 @@
 import pytest
 import sys
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -11,6 +12,7 @@ from src.drafting.evaluate import (
     _parse_evaluation_response,
     _default_evaluation,
     quick_slop_check,
+    evaluate_chapter,
     DIMENSION_CRITERIA,
 )
 
@@ -181,6 +183,17 @@ class TestQuickSlopCheck:
         assert result["total"] > 0
 
 
+    def test_em_dash_density_empty_text(self):
+        """Empty text returns 0.0 early without division by zero."""
+        detector = SlopDetector("")
+        assert detector._check_em_dash_density() == 0.0
+
+    def test_transition_abuse_no_paragraphs(self):
+        """Text with no non-empty paragraphs returns 0.0 early."""
+        detector = SlopDetector("   \n\n   \n  ")
+        assert detector._check_transition_abuse() == 0.0
+
+
 class TestDefaultEvaluation:
     """Tests for _default_evaluation."""
 
@@ -193,3 +206,103 @@ class TestDefaultEvaluation:
         assert "overall_score" in result
         assert "slop_penalty" in result
         assert result["slop_penalty"] == 2.0
+
+
+class TestEvaluateChapter:
+    """Tests for evaluate_chapter with mocked API."""
+
+    def _mock_response(self):
+        """Return a synthetic LLM evaluation response covering all 9 dimensions."""
+        return """
+### voice_adherence: 7.0/10
+Weakest passage: "..."
+Strongest passage: "..."
+Fix: ...
+
+### beat_coverage: 6.5/10
+...
+
+### character_voice: 8.0/10
+...
+
+### plants_seeded: 7.0/10
+...
+
+### prose_quality: 6.0/10
+...
+
+### continuity: 7.5/10
+...
+
+### canon_compliance: 8.0/10
+...
+
+### lore_integration: 7.0/10
+...
+
+### engagement: 6.5/10
+...
+
+### SLOP CHECK
+No mechanical issues detected.
+
+### SUMMARY
+Overall score: 7.1/10
+Major issues: None.
+Minor issues: Some pacing improvements.
+"""
+
+    def test_evaluate_chapter_returns_all_fields(self):
+        """evaluate_chapter returns complete result dict with all required keys."""
+        mock_client = MagicMock()
+        mock_client.generate.return_value = self._mock_response()
+
+        with patch("src.drafting.evaluate.get_client", return_value=mock_client):
+            result = evaluate_chapter(
+                "Some chapter text.",
+                {"chapter_brief": {}, "voice": "", "world": "", "characters": "", "outline": "", "canon": ""},
+            )
+
+        assert "overall_score" in result
+        assert "slop_penalty" in result
+        assert "slop_details" in result
+        assert "raw_evaluation" in result
+        for dim in DIMENSION_CRITERIA:
+            assert dim in result
+
+    def test_evaluate_chapter_splits_slop_penalty(self):
+        """Slop penalty is subtracted from voice, prose, and engagement."""
+        # Clean text so slop penalty = 0
+        clean_text = "A simple clean sentence with normal words."
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "\n".join(
+            f"### {dim}: 7.0/10\n..." for dim in DIMENSION_CRITERIA
+        )
+
+        with patch("src.drafting.evaluate.get_client", return_value=mock_client):
+            result = evaluate_chapter(
+                clean_text,
+                {"chapter_brief": {}, "voice": "", "world": "", "characters": "", "outline": "", "canon": ""},
+            )
+
+        # All dimensions should be 7.0
+        assert result["voice_adherence"] == 7.0
+        assert result["prose_quality"] == 7.0
+        assert result["engagement"] == 7.0
+
+    def test_evaluate_chapter_api_error_returns_default(self):
+        """API error triggers graceful fallback via _default_evaluation."""
+        mock_client = MagicMock()
+        mock_client.generate.side_effect = Exception("API failure")
+
+        with patch("src.drafting.evaluate.get_client", return_value=mock_client):
+            result = evaluate_chapter(
+                "Some text.",
+                {"chapter_brief": {}, "voice": "", "world": "", "characters": "", "outline": "", "canon": ""},
+            )
+
+        # Should return default evaluation (all 6s, overall adjusted down by slop)
+        assert result["raw_evaluation"] == "Evaluation unavailable (API error)"
+        assert "overall_score" in result
+        assert result["overall_score"] <= 6.0

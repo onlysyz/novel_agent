@@ -2,5 +2,5 @@
 source = src/drafting/evaluate, src/review/review, src/drafting/draft_chapter
 
 [report]
-fail_under = 59
+fail_under = 73
 show_missing = True

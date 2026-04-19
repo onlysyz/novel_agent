@@ -447,9 +447,21 @@ struct PipelineProgress {
     message: String,
 }
 
+// Mutex to prevent multiple pipelines from running simultaneously
+use std::sync::Mutex;
+static PIPELINE_RUNNING: Mutex<bool> = Mutex::new(false);
+
 // Run pipeline command - async with progress events
 #[tauri::command]
 async fn run_pipeline_phase(phase: String, cwd: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+    // Check if pipeline is already running
+    let mut locked = PIPELINE_RUNNING.lock().unwrap();
+    if *locked {
+        return Err("Pipeline already running".to_string());
+    }
+    *locked = true;
+    drop(locked); // release lock early
+
     // Emit started event
     app_handle.emit("pipeline-started", &phase).map_err(|e| e.to_string())?;
 
@@ -457,6 +469,7 @@ async fn run_pipeline_phase(phase: String, cwd: String, app_handle: tauri::AppHa
     let cwd_clone = cwd.clone();
     let app_handle_clone = app_handle.clone();
     tauri::async_runtime::spawn(async move {
+        // Release the lock when task completes
         let python = if Command::new("python3").arg("--version").output().is_ok() {
             "python3"
         } else {
@@ -475,6 +488,12 @@ async fn run_pipeline_phase(phase: String, cwd: String, app_handle: tauri::AppHa
             .args(&["run_pipeline.py", "--phase", &phase])
             .current_dir(&cwd_clone)
             .output();
+
+        // Release lock on completion
+        {
+            let mut locked = PIPELINE_RUNNING.lock().unwrap();
+            *locked = false;
+        }
 
         match output {
             Ok(output) => {
@@ -504,6 +523,14 @@ async fn run_pipeline_phase(phase: String, cwd: String, app_handle: tauri::AppHa
 // Run full pipeline - async with progress events
 #[tauri::command]
 async fn run_full_pipeline(cwd: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+    // Check if pipeline is already running
+    let mut locked = PIPELINE_RUNNING.lock().unwrap();
+    if *locked {
+        return Err("Pipeline already running".to_string());
+    }
+    *locked = true;
+    drop(locked);
+
     // Emit started event
     app_handle.emit("pipeline-started", "full").map_err(|e| e.to_string())?;
 
@@ -513,6 +540,27 @@ async fn run_full_pipeline(cwd: String, app_handle: tauri::AppHandle) -> Result<
     tauri::async_runtime::spawn(async move {
         let python = if Command::new("python3").arg("--version").output().is_ok() {
             "python3"
+        } else {
+            "python"
+        };
+
+        let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+            phase: "full".to_string(),
+            step: "running".to_string(),
+            message: "Running full pipeline...".to_string(),
+        });
+
+        let output = Command::new(python)
+            .env("PYTHONPATH", &cwd_clone)
+            .args(&["run_pipeline.py", "--full"])
+            .current_dir(&cwd_clone)
+            .output();
+
+        // Release lock on completion
+        {
+            let mut locked = PIPELINE_RUNNING.lock().unwrap();
+            *locked = false;
+        }
         } else {
             "python"
         };

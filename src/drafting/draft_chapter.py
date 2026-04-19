@@ -10,8 +10,11 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from src.common.api import get_client
+
+def get_client():
+    """Lazy import to avoid circular dependency and sys.path manipulation."""
+    from src.common.api import get_client as _get_client
+    return _get_client()
 
 DOTNOVEL = Path(".novelforge")
 NOVEL_DIR = Path(".")
@@ -133,8 +136,7 @@ def extract_chapter_brief(outline: str, chapter_num: int) -> dict:
                     current_section = key_to_section[key_lower]
                     value = line.split(":", 1)[1].strip()
                     if current_section not in ["scene_beats", "foreshadow_plants", "payoff_payoffs"]:
-                        if isinstance(chapter_info.get(current_section), str):
-                            chapter_info[current_section] = value
+                        chapter_info[current_section] = value
             elif line.startswith("- ") or line.startswith("* "):
                 text = line[2:].strip()
                 if current_section == "scene_beats":

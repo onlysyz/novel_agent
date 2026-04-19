@@ -3,6 +3,7 @@
 import pytest
 import sys
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -249,3 +250,203 @@ class TestBuildChapterPrompt:
         }
         system, user = build_chapter_prompt(ctx, 1)
         assert "PREVIOUS CHAPTER ENDING" not in user
+
+
+class TestGetPreviousChapterEnding:
+    """Tests for get_previous_chapter_ending."""
+
+    def test_chapter_one_returns_empty(self):
+        """Chapter 1 has no previous chapter - returns empty string."""
+        from src.drafting.draft_chapter import get_previous_chapter_ending
+        result = get_previous_chapter_ending(Path("/nonexistent"), 1)
+        assert result == ""
+
+    def test_prev_file_not_exists_returns_empty(self, tmp_path):
+        """Missing previous chapter file returns empty string."""
+        from src.drafting.draft_chapter import get_previous_chapter_ending
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+        result = get_previous_chapter_ending(chapters_dir, 2)
+        assert result == ""
+
+    def test_short_file_returns_full_text(self, tmp_path):
+        """File under 2000 chars returned in full."""
+        from src.drafting.draft_chapter import get_previous_chapter_ending
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+        prev_file = chapters_dir / "ch_01.md"
+        prev_file.write_text("A short chapter.")
+        result = get_previous_chapter_ending(chapters_dir, 2)
+        assert result == "A short chapter."
+
+    def test_long_file_truncates_with_ellipsis(self, tmp_path):
+        """File over 2000 chars truncated to last 2000 with ellipsis prefix."""
+        from src.drafting.draft_chapter import get_previous_chapter_ending
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+        prev_file = chapters_dir / "ch_01.md"
+        # 2100 chars total, last 2000 should be returned with "...\n\n" prefix
+        prev_file.write_text("X" * 2100)
+        result = get_previous_chapter_ending(chapters_dir, 2)
+        assert result.startswith("...\n\n")
+        assert len(result) == 2000 + 5  # 5 for "...\n\n"
+
+
+class TestBuildContextPackage:
+    """Tests for build_context_package with mocked filesystem.
+
+    Note: build_context_package reads real files, so we mock the helper
+    functions it calls internally rather than patching Path methods.
+    """
+
+    def test_returns_all_context_keys(self):
+        """build_context_package returns dict with all required keys."""
+        from src.drafting.draft_chapter import build_context_package
+        with patch("src.drafting.draft_chapter.extract_chapter_brief",
+                   return_value={"title": "Ch 1", "scene_beats": [], "word_target": 3200}):
+            with patch("src.drafting.draft_chapter.extract_next_chapter_opener", return_value=""):
+                with patch("src.drafting.draft_chapter.get_previous_chapter_ending", return_value=""):
+                    with patch("src.drafting.draft_chapter.NOVEL_DIR", Path("/mocked")):
+                        with patch.object(Path, "exists", return_value=False):
+                            with patch.object(Path, "read_text", return_value=""):
+                                result = build_context_package(1)
+
+        expected_keys = {"voice", "world", "characters", "outline", "canon",
+                         "anti_patterns", "chapter_brief", "next_chapter_hint", "prev_ending"}
+        assert set(result.keys()) == expected_keys
+
+    def test_calls_extract_chapter_brief(self):
+        """build_context_package calls extract_chapter_brief with correct chapter_num."""
+        from src.drafting.draft_chapter import build_context_package
+        with patch("src.drafting.draft_chapter.extract_chapter_brief",
+                   return_value={"title": "Ch 5", "scene_beats": [], "word_target": 3200}) as mock_extract:
+            with patch("src.drafting.draft_chapter.extract_next_chapter_opener", return_value=""):
+                with patch("src.drafting.draft_chapter.get_previous_chapter_ending", return_value=""):
+                    with patch("src.drafting.draft_chapter.NOVEL_DIR", Path("/mocked")):
+                        with patch.object(Path, "exists", return_value=False):
+                            with patch.object(Path, "read_text", return_value=""):
+                                build_context_package(5)
+            mock_extract.assert_called_once()
+            assert mock_extract.call_args[0][1] == 5
+
+    def test_includes_prev_ending_for_chapter_gt_1(self):
+        """prev_ending is non-empty for chapter > 1 when chapter file exists."""
+        from src.drafting.draft_chapter import build_context_package
+        with patch("src.drafting.draft_chapter.extract_chapter_brief",
+                   return_value={"title": "Ch 2", "scene_beats": [], "word_target": 3200}):
+            with patch("src.drafting.draft_chapter.extract_next_chapter_opener", return_value=""):
+                with patch("src.drafting.draft_chapter.get_previous_chapter_ending",
+                           return_value="The door creaked open.") as mock_prev:
+                    with patch("src.drafting.draft_chapter.NOVEL_DIR", Path("/mocked")):
+                        with patch.object(Path, "exists", return_value=False):
+                            with patch.object(Path, "read_text", return_value=""):
+                                result = build_context_package(2)
+            mock_prev.assert_called_once()
+            assert result["prev_ending"] == "The door creaked open."
+
+    def test_prev_ending_empty_for_chapter_1(self):
+        """prev_ending is empty for chapter 1 (no previous)."""
+        from src.drafting.draft_chapter import build_context_package
+        with patch("src.drafting.draft_chapter.extract_chapter_brief",
+                   return_value={"title": "Ch 1", "scene_beats": [], "word_target": 3200}):
+            with patch("src.drafting.draft_chapter.extract_next_chapter_opener", return_value=""):
+                with patch("src.drafting.draft_chapter.get_previous_chapter_ending", return_value="") as mock_prev:
+                    with patch("src.drafting.draft_chapter.NOVEL_DIR", Path("/mocked")):
+                        with patch.object(Path, "exists", return_value=False):
+                            with patch.object(Path, "read_text", return_value=""):
+                                result = build_context_package(1)
+            mock_prev.assert_called_once()
+            assert result["prev_ending"] == ""
+
+
+class TestExtractChapterBriefEdgeCases:
+    """Additional edge case tests for extract_chapter_brief."""
+
+    def test_alternate_header_format_hashes(self):
+        """'## Chapter N' and '### Chapter N' headers work."""
+        outline = """
+## Chapter 1: Named Header
+POV: Test
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["title"] == "Named Header"
+
+    def test_alternate_header_format_number_dot(self):
+        """'^N. Chapter' format is detected (title remains default)."""
+        outline = """
+1. Chapter with Number Prefix
+POV: Test
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        # The chapter pattern '^1.\\s+' detects the chapter but title regex
+        # requires "Chapter N: Title" format, so title stays as default "Chapter 1"
+        assert brief["title"] == "Chapter 1"
+
+    def test_key_value_takes_precedence_over_keyword(self):
+        """KEY: VALUE format is captured even when 'beat' appears in section name."""
+        outline = """
+## Chapter 1
+POV: Sarah
+Scene Beats:
+- Beat one
+- Beat two
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["scene_beats"] == ["Beat one", "Beat two"]
+
+    def test_missing_sections_default_to_empty(self):
+        """Outline without optional sections returns empty defaults."""
+        outline = """
+## Chapter 1: Only Title
+POV: Sarah
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["location"] == ""
+        assert brief["beat"] == ""
+        assert brief["emotional_arc"] == ""
+        assert brief["try_fail"] == ""
+        assert brief["scene_beats"] == []
+        assert brief["foreshadow_plants"] == []
+        assert brief["payoff_payoffs"] == []
+
+    def test_asterisk_bullet_points(self):
+        """Asterisk-prefixed lines are treated as bullet points."""
+        outline = """
+## Chapter 1
+Scene Beats:
+* Asterisk bullet one
+* Asterisk bullet two
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert "Asterisk bullet one" in brief["scene_beats"]
+        assert "Asterisk bullet two" in brief["scene_beats"]
+
+    def test_word_target_parsed_from_outline(self):
+        """Word target in outline is captured from KEY: VALUE line."""
+        outline = """
+## Chapter 1: Custom Length
+Word Target: 5000
+
+Scene Beats:
+- One beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["word_target"] == "5000"
+
+    def test_position_extracted(self):
+        """Position field extracted when present."""
+        outline = """
+## Chapter 1
+Position: Midpoint
+
+Scene Beats:
+- One beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["position"] == "Midpoint"

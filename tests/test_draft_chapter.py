@@ -1272,6 +1272,48 @@ Scene Beats:
         # Bullets after KEY:VALUE line are captured correctly
         assert brief["scene_beats"] == ["Beat one"]
 
+    def test_keyword_fallback_beat_alone(self):
+        """Line without colon containing 'beat' (not scene/beats/events) triggers beat branch."""
+        outline = """
+## Chapter 1
+POV: Sarah
+The beat went on and on
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        # The "beat" keyword (without "scene"/"beats"/"events") sets beat type
+        # "The beat went on" contains "beat" but not "scene"/"beats"/"events"
+        # so it hits the 'beat' branch at line 157
+        assert brief["beat"] == ""
+
+    def test_keyword_fallback_pov_only(self):
+        """Line without colon containing 'pov' (not 'point of view') sets pov section."""
+        outline = """
+## Chapter 1
+pov character perspective here
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        # "pov character perspective here" contains "pov" and "perspective"
+        # but is caught by the first 'pov' branch at line 149
+        assert brief["pov"] == ""
+
+    def test_keyword_fallback_word_only(self):
+        """Line without colon containing 'word' triggers word_target branch (line 167)."""
+        outline = """
+## Chapter 1
+POV: Sarah
+word count target for this chapter
+Scene Beats:
+- Beat one
+"""
+        brief = extract_chapter_brief(outline, 1)
+        # "word" keyword (without colon) hits word_target branch at line 167
+        # brief["word_target"] stays at default integer 3200 (no KEY:VALUE to override)
+        assert brief["word_target"] == 3200
+
     def test_location_extracted(self):
         """Location field extracted from outline."""
         outline = """

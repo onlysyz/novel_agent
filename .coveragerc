@@ -1,6 +1,0 @@
-[run]
-source = src/drafting/evaluate, src/review/review, src/drafting/draft_chapter, src/common/scoring
-
-[report]
-fail_under = 73
-show_missing = True

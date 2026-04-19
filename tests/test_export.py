@@ -230,6 +230,20 @@ class TestConvertMarkdownToLatex:
         assert r"\par" in result
         assert r"\subsection*{Section}" in result
 
+    def test_converts_paragraph_then_h1(self):
+        r"""H1 header preceded by paragraph emits \par before \section."""
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("Some paragraph\n\n# Title")
+        assert r"\par" in result
+        assert r"\section*{Title}" in result
+
+    def test_converts_paragraph_then_h3(self):
+        r"""H3 header preceded by paragraph emits \par before \subsubsection."""
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("Some paragraph\n\n### Subsection")
+        assert r"\par" in result
+        assert r"\subsubsection*{Subsection}" in result
+
     def test_multiple_paragraphs(self, sample_markdown):
         from src.export.typeset import convert_markdown_to_latex
         result = convert_markdown_to_latex(sample_markdown)
@@ -784,8 +798,357 @@ class TestExportManuscriptTxt:
                 assert result["txt_path"].endswith("manuscript.txt")
 
 
+class TestEpubLoadChapters:
+    """Tests for src.export.epub_export.load_chapters()."""
+
+    def test_loads_single_chapter(self, mock_epub_chapters):
+        """load_chapters returns one chapter with correct number, title, content."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_chapters["chapters_dir"].parent):
+            result = epub_export.load_chapters()
+
+        assert len(result) == 3
+        # chapters are sorted by number
+        num, title, content = result[0]
+        assert num == 1
+        assert title == "The Hidden Kingdom"
+        assert "Sarah stood in the cathedral ruins" in content
+
+    def test_loads_multiple_chapters_sorted(self, mock_epub_chapters):
+        """load_chapters returns all chapters sorted by number."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_chapters["chapters_dir"].parent):
+            result = epub_export.load_chapters()
+
+        assert len(result) == 3
+        nums = [r[0] for r in result]
+        assert nums == [1, 2, 3]
+
+    def test_extracts_title_from_first_header(self, mock_epub_chapters):
+        """Title is extracted from the first # heading in the chapter file."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_chapters["chapters_dir"].parent):
+            result = epub_export.load_chapters()
+
+        titles = [r[1] for r in result]
+        assert "The Hidden Kingdom" in titles
+        assert "The Discovery" in titles
+        assert "The Map" in titles
+
+    def test_strips_title_from_content(self, mock_epub_chapters):
+        """The first # heading is removed from the chapter content."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_chapters["chapters_dir"].parent):
+            result = epub_export.load_chapters()
+
+        # First chapter content should not contain the title heading
+        first_content = result[0][2]
+        assert not first_content.startswith("# The Hidden Kingdom")
+        assert "Sarah stood in the cathedral ruins" in first_content
+
+    def test_skips_revised_versions(self, mock_epub_chapters):
+        """Files containing _revised in their name are skipped."""
+        from src.export import epub_export
+
+        # Create a revised file alongside ch_01
+        revised_path = mock_epub_chapters["chapters_dir"] / "ch_01_revised.md"
+        revised_path.write_text("# Revised Chapter\n\nThis is the revised content.")
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_chapters["chapters_dir"].parent):
+            result = epub_export.load_chapters()
+
+        # Should still have 3 chapters (revised is skipped)
+        assert len(result) == 3
+
+    def test_skips_non_integer_chapter_filenames(self, mock_epub_chapters):
+        """Chapter files with non-integer names are skipped."""
+        from src.export import epub_export
+
+        # Create a badly-named chapter file
+        bad_path = mock_epub_chapters["chapters_dir"] / "ch_abc.md"
+        bad_path.write_text("# Bad Chapter\n\nThis should be skipped.")
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_chapters["chapters_dir"].parent):
+            result = epub_export.load_chapters()
+
+        # Should still have 3 chapters (bad file is skipped)
+        assert len(result) == 3
+
+    def test_returns_empty_list_when_no_chapters(self, tmp_path):
+        """When chapters directory is empty, returns empty list."""
+        from src.export import epub_export
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        with patch.object(epub_export, "NOVEL_DIR", tmp_path):
+            result = epub_export.load_chapters()
+
+        assert result == []
+
+    def test_returns_empty_list_when_chapters_dir_missing(self, tmp_path):
+        """When chapters directory does not exist, returns empty list."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", tmp_path):
+            result = epub_export.load_chapters()
+
+        assert result == []
+
+
+class TestEpubGetMetadata:
+    """Tests for src.export.epub_export.get_metadata()."""
+
+    def test_returns_title_from_outline(self, mock_epub_metadata):
+        """Title is extracted from the first # heading in outline.md."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_metadata["seed"].parent):
+            result = epub_export.get_metadata()
+
+        assert result["title"] == "The Hidden Kingdom"
+
+    def test_returns_seed_as_description(self, mock_epub_metadata):
+        """Seed text is included as description."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_metadata["seed"].parent):
+            result = epub_export.get_metadata()
+
+        assert "hidden kingdom" in result["description"].lower()
+
+    def test_returns_author_novelforge(self, mock_epub_metadata):
+        """Author field is set to NovelForge."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_metadata["seed"].parent):
+            result = epub_export.get_metadata()
+
+        assert result["author"] == "NovelForge"
+
+    def test_returns_uuid_format(self, mock_epub_metadata):
+        """UUID is a valid UUID4 format string."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_metadata["seed"].parent):
+            result = epub_export.get_metadata()
+
+        import re
+        pattern = r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        assert re.match(pattern, result["uuid"]) is not None
+
+    def test_returns_date(self, mock_epub_metadata):
+        """Date field is present and is a string."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_metadata["seed"].parent):
+            result = epub_export.get_metadata()
+
+        assert "date" in result
+        assert isinstance(result["date"], str)
+
+    def test_returns_rights(self, mock_epub_metadata):
+        """Rights field is present."""
+        from src.export import epub_export
+
+        with patch.object(epub_export, "NOVEL_DIR", mock_epub_metadata["seed"].parent):
+            result = epub_export.get_metadata()
+
+        assert "rights" in result
+        assert isinstance(result["rights"], str)
+
+    def test_missing_seed_returns_empty_description(self, tmp_path):
+        """When seed.txt does not exist, description is empty string."""
+        from src.export import epub_export
+
+        outline = tmp_path / "outline.md"
+        outline.write_text("# Title\n\nContent")
+        # No seed.txt
+
+        with patch.object(epub_export, "NOVEL_DIR", tmp_path):
+            result = epub_export.get_metadata()
+
+        assert result["description"] == ""
+
+    def test_missing_outline_defaults_to_untitled(self, tmp_path):
+        """When outline.md does not exist, title defaults to 'Untitled Novel'."""
+        from src.export import epub_export
+
+        seed = tmp_path / "seed.txt"
+        seed.write_text("A story")
+        # No outline.md
+
+        with patch.object(epub_export, "NOVEL_DIR", tmp_path):
+            result = epub_export.get_metadata()
+
+        assert result["title"] == "Untitled Novel"
+
+
+class TestTypesetLoadChapters:
+    """Tests for src.export.typeset.load_chapters()."""
+
+    def test_loads_single_chapter(self, mock_typeset_chapters):
+        """load_chapters returns one chapter with correct number, title, content."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_chapters["chapters_dir"].parent):
+            result = typeset.load_chapters()
+
+        assert len(result) == 3
+        num, title, content = result[0]
+        assert num == 1
+        assert title == "The Hidden Kingdom"
+        assert "Sarah stood in the cathedral ruins" in content
+
+    def test_loads_multiple_chapters_sorted(self, mock_typeset_chapters):
+        """load_chapters returns all chapters sorted by number."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_chapters["chapters_dir"].parent):
+            result = typeset.load_chapters()
+
+        nums = [r[0] for r in result]
+        assert nums == [1, 2, 3]
+
+    def test_extracts_title_from_first_header(self, mock_typeset_chapters):
+        """Title is extracted from the first # heading in the chapter file."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_chapters["chapters_dir"].parent):
+            result = typeset.load_chapters()
+
+        titles = [r[1] for r in result]
+        assert "The Hidden Kingdom" in titles
+        assert "The Discovery" in titles
+        assert "The Map" in titles
+
+    def test_strips_title_from_content(self, mock_typeset_chapters):
+        """The first # heading is removed from the chapter content."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_chapters["chapters_dir"].parent):
+            result = typeset.load_chapters()
+
+        first_content = result[0][2]
+        assert not first_content.startswith("# The Hidden Kingdom")
+        assert "Sarah stood in the cathedral ruins" in first_content
+
+    def test_skips_revised_versions(self, mock_typeset_chapters):
+        """Files containing _revised in their name are skipped."""
+        from src.export import typeset
+
+        revised_path = mock_typeset_chapters["chapters_dir"] / "ch_01_revised.md"
+        revised_path.write_text("# Revised Chapter\n\nThis is the revised content.")
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_chapters["chapters_dir"].parent):
+            result = typeset.load_chapters()
+
+        assert len(result) == 3
+
+    def test_skips_non_integer_chapter_filenames(self, mock_typeset_chapters):
+        """Chapter files with non-integer names are skipped."""
+        from src.export import typeset
+
+        bad_path = mock_typeset_chapters["chapters_dir"] / "ch_abc.md"
+        bad_path.write_text("# Bad Chapter\n\nThis should be skipped.")
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_chapters["chapters_dir"].parent):
+            result = typeset.load_chapters()
+
+        assert len(result) == 3
+
+    def test_returns_empty_list_when_no_chapters(self, tmp_path):
+        """When chapters directory is empty, returns empty list."""
+        from src.export import typeset
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        with patch.object(typeset, "NOVEL_DIR", tmp_path):
+            result = typeset.load_chapters()
+
+        assert result == []
+
+    def test_returns_empty_list_when_chapters_dir_missing(self, tmp_path):
+        """When chapters directory does not exist, returns empty list."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", tmp_path):
+            result = typeset.load_chapters()
+
+        assert result == []
+
+
+class TestTypesetGetNovelMetadata:
+    """Tests for src.export.typeset.get_novel_metadata()."""
+
+    def test_returns_title_from_outline(self, mock_typeset_metadata):
+        """Title is extracted from the first # heading in outline.md."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_metadata["seed"].parent):
+            result = typeset.get_novel_metadata()
+
+        assert result["title"] == "The Hidden Kingdom"
+
+    def test_returns_seed_text(self, mock_typeset_metadata):
+        """Seed text is included in the returned metadata."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_metadata["seed"].parent):
+            result = typeset.get_novel_metadata()
+
+        assert "hidden kingdom" in result["seed"].lower()
+
+    def test_returns_author_novelforge(self, mock_typeset_metadata):
+        """Author field is set to NovelForge."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_metadata["seed"].parent):
+            result = typeset.get_novel_metadata()
+
+        assert result["author"] == "NovelForge"
+
+    def test_returns_dedication_empty(self, mock_typeset_metadata):
+        """Dedication field is present and empty by default."""
+        from src.export import typeset
+
+        with patch.object(typeset, "NOVEL_DIR", mock_typeset_metadata["seed"].parent):
+            result = typeset.get_novel_metadata()
+
+        assert "dedication" in result
+        assert result["dedication"] == ""
+
+    def test_missing_seed_returns_empty_seed_field(self, tmp_path):
+        """When seed.txt does not exist, seed field is empty string."""
+        from src.export import typeset
+
+        outline = tmp_path / "outline.md"
+        outline.write_text("# Title\n\nContent")
+
+        with patch.object(typeset, "NOVEL_DIR", tmp_path):
+            result = typeset.get_novel_metadata()
+
+        assert result["seed"] == ""
+
+    def test_missing_outline_defaults_to_untitled(self, tmp_path):
+        """When outline.md does not exist, title defaults to 'Untitled Novel'."""
+        from src.export import typeset
+
+        seed = tmp_path / "seed.txt"
+        seed.write_text("A story")
+
+        with patch.object(typeset, "NOVEL_DIR", tmp_path):
+            result = typeset.get_novel_metadata()
+
+        assert result["title"] == "Untitled Novel"
+
+
 class TestExportAll:
-    """Tests for src.export.export.export_all()."""
 
     def test_calls_export_manuscript_txt(self, tmp_path):
         """export_manuscript_txt is called with output_dir."""

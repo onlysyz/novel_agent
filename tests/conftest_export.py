@@ -40,6 +40,26 @@ The ruins spoke of a time when this place had been sacred ground.
 
 # ─── Mocked NOVEL_DIR filesystem ───────────────────────────────────────────────
 
+# Chapter content with proper title headers for load_chapters tests
+CHAPTER_CONTENT_01 = (
+    "# The Hidden Kingdom\n\n"
+    "Sarah stood in the cathedral ruins, her boots crunching on broken stone.\n\n"
+    "The ancient door groaned as she pushed it open."
+)
+
+CHAPTER_CONTENT_02 = (
+    "# The Discovery\n\n"
+    "Marcus arrived at the ruins just as the sun broke through the clouds.\n\n"
+    "He found Sarah standing before an altar covered in strange symbols."
+)
+
+CHAPTER_CONTENT_03 = (
+    "# The Map\n\n"
+    "The journal revealed the first clue to the hidden kingdom's location.\n\n"
+    "Sarah traced the faded ink with her finger."
+)
+
+
 def build_mock_novedir(tmp_path: Path) -> dict[str, Path]:
     """Create a minimal novel directory structure and return path mappings."""
     chapters_dir = tmp_path / "chapters"
@@ -69,6 +89,110 @@ def build_mock_novedir(tmp_path: Path) -> dict[str, Path]:
         "seed": tmp_path / "seed.txt",
         "outline": tmp_path / "outline.md",
         "manuscript": tmp_path / "manuscript.md",
+    }
+
+
+def build_chapters_fixture(tmp_path: Path) -> dict[str, Path]:
+    """Create chapters directory with proper chapter files for load_chapters tests.
+
+    Files created:
+        chapters/ch_01.md — title: "The Hidden Kingdom"
+        chapters/ch_02.md — title: "The Discovery"
+        chapters/ch_03.md — title: "The Map"
+        seed.txt
+        outline.md
+    """
+    chapters_dir = tmp_path / "chapters"
+    chapters_dir.mkdir()
+
+    (chapters_dir / "ch_01.md").write_text(CHAPTER_CONTENT_01)
+    (chapters_dir / "ch_02.md").write_text(CHAPTER_CONTENT_02)
+    (chapters_dir / "ch_03.md").write_text(CHAPTER_CONTENT_03)
+
+    (tmp_path / "seed.txt").write_text(
+        "A mysterious fantasy novel about a hidden kingdom."
+    )
+    (tmp_path / "outline.md").write_text(
+        "# The Hidden Kingdom\n\nA fantasy novel about a hidden kingdom."
+    )
+
+    return {
+        "chapters_dir": chapters_dir,
+        "ch_01": chapters_dir / "ch_01.md",
+        "ch_02": chapters_dir / "ch_02.md",
+        "ch_03": chapters_dir / "ch_03.md",
+        "seed": tmp_path / "seed.txt",
+        "outline": tmp_path / "outline.md",
+    }
+
+
+# ─── Fixtures for epub_export and typeset ─────────────────────────────────────
+
+@pytest.fixture
+def mock_epub_chapters(tmp_path):
+    """Create a minimal novel directory for epub_export.load_chapters() tests.
+
+    Creates chapters/ch_01.md and chapters/ch_02.md with proper title headers.
+    """
+    return build_chapters_fixture(tmp_path)
+
+
+@pytest.fixture
+def mock_epub_metadata(tmp_path):
+    """Create a minimal novel directory for epub_export.get_metadata() tests.
+
+    Creates seed.txt and outline.md with known content.
+    """
+    chapters_dir = tmp_path / "chapters"
+    chapters_dir.mkdir()
+
+    (chapters_dir / "ch_01.md").write_text(CHAPTER_CONTENT_01)
+
+    (tmp_path / "seed.txt").write_text(
+        "A mysterious fantasy novel about a hidden kingdom."
+    )
+    (tmp_path / "outline.md").write_text(
+        "# The Hidden Kingdom\n\nA fantasy novel about a hidden kingdom."
+    )
+
+    return {
+        "chapters_dir": chapters_dir,
+        "seed": tmp_path / "seed.txt",
+        "outline": tmp_path / "outline.md",
+    }
+
+
+@pytest.fixture
+def mock_typeset_chapters(tmp_path):
+    """Create a minimal novel directory for typeset.load_chapters() tests.
+
+    Creates chapters/ch_01.md and chapters/ch_02.md with proper title headers.
+    """
+    return build_chapters_fixture(tmp_path)
+
+
+@pytest.fixture
+def mock_typeset_metadata(tmp_path):
+    """Create a minimal novel directory for typeset.get_novel_metadata() tests.
+
+    Creates seed.txt and outline.md with known content.
+    """
+    chapters_dir = tmp_path / "chapters"
+    chapters_dir.mkdir()
+
+    (chapters_dir / "ch_01.md").write_text(CHAPTER_CONTENT_01)
+
+    (tmp_path / "seed.txt").write_text(
+        "A mysterious fantasy novel about a hidden kingdom."
+    )
+    (tmp_path / "outline.md").write_text(
+        "# The Hidden Kingdom\n\nA fantasy novel about a hidden kingdom."
+    )
+
+    return {
+        "chapters_dir": chapters_dir,
+        "seed": tmp_path / "seed.txt",
+        "outline": tmp_path / "outline.md",
     }
 
 

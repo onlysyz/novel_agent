@@ -111,26 +111,30 @@ def extract_chapter_brief(outline: str, chapter_num: int) -> dict:
             if re.match(r"^(## |### |Chapter \d)", line, re.IGNORECASE):
                 break
 
-            # Parse sections
-            lower_line = line.lower()
-            if any(kw in lower_line for kw in ["pov", "point of view", "perspective"]):
-                current_section = "pov"
-            elif any(kw in lower_line for kw in ["location", "setting", "place"]):
-                current_section = "location"
-            elif any(kw in lower_line for kw in ["beat", "save the cat"]):
-                current_section = "beat"
-            elif any(kw in lower_line for kw in ["emotional", "arc"]):
-                current_section = "emotional_arc"
-            elif any(kw in lower_line for kw in ["try-fail", "try fail", "cycle"]):
-                current_section = "try_fail"
-            elif any(kw in lower_line for kw in ["scene", "beats", "events"]):
-                current_section = "scene_beats"
-            elif any(kw in lower_line for kw in ["foreshadow", "plant", "seed"]):
-                current_section = "foreshadow_plants"
-            elif any(kw in lower_line for kw in ["payoff", "pay off"]):
-                current_section = "payoff_payoffs"
-            elif any(kw in lower_line for kw in ["word", "target"]):
-                current_section = "word_target"
+            # KEY:VALUE detection MUST run BEFORE keyword keyword detection
+            # to avoid "beat" in "Scene Beats:" being caught by the keyword check
+            if line and ":" in line:
+                key = line.split(":", 1)[0].strip()
+                key_lower = key.lower()
+                key_to_section = {
+                    "pov": "pov", "point of view": "pov", "perspective": "pov",
+                    "location": "location", "setting": "location", "place": "location",
+                    "beat": "beat", "save the cat": "beat",
+                    "emotional arc": "emotional_arc", "emotional": "emotional_arc",
+                    "try-fail cycle": "try_fail", "try-fail": "try_fail", "try fail": "try_fail", "cycle": "try_fail",
+                    "scene beats": "scene_beats", "scene": "scene_beats", "beats": "scene_beats", "events": "scene_beats",
+                    "foreshadow plants": "foreshadow_plants", "foreshadow": "foreshadow_plants", "plant": "foreshadow_plants", "seed": "foreshadow_plants",
+                    "payoffs": "payoff_payoffs", "payoff": "payoff_payoffs", "pay off": "payoff_payoffs",
+                    "word target": "word_target", "word": "word_target",
+                    "position": "position",
+                    "title": "title",
+                }
+                if key_lower in key_to_section:
+                    current_section = key_to_section[key_lower]
+                    value = line.split(":", 1)[1].strip()
+                    if current_section not in ["scene_beats", "foreshadow_plants", "payoff_payoffs"]:
+                        if isinstance(chapter_info.get(current_section), str):
+                            chapter_info[current_section] = value
             elif line.startswith("- ") or line.startswith("* "):
                 text = line[2:].strip()
                 if current_section == "scene_beats":
@@ -139,12 +143,26 @@ def extract_chapter_brief(outline: str, chapter_num: int) -> dict:
                     foreshadow_text.append(text)
                 elif current_section == "payoff_payoffs":
                     payoff_text.append(text)
-            elif line and current_section and ":" in line:
-                # Key: value format
-                value = line.split(":", 1)[1].strip()
-                if current_section not in ["scene_beats", "foreshadow_plants", "payoff_payoffs"]:
-                    if isinstance(chapter_info.get(current_section), str):
-                        chapter_info[current_section] = value
+            else:
+                lower_line = line.lower()
+                if any(kw in lower_line for kw in ["pov", "point of view", "perspective"]):
+                    current_section = "pov"
+                elif any(kw in lower_line for kw in ["location", "setting", "place"]):
+                    current_section = "location"
+                elif any(kw in lower_line for kw in ["beat", "save the cat"]):
+                    current_section = "beat"
+                elif any(kw in lower_line for kw in ["emotional", "arc"]):
+                    current_section = "emotional_arc"
+                elif any(kw in lower_line for kw in ["try-fail", "try fail", "cycle"]):
+                    current_section = "try_fail"
+                elif any(kw in lower_line for kw in ["scene", "beats", "events"]):
+                    current_section = "scene_beats"
+                elif any(kw in lower_line for kw in ["foreshadow", "plant", "seed"]):
+                    current_section = "foreshadow_plants"
+                elif any(kw in lower_line for kw in ["payoff", "pay off"]):
+                    current_section = "payoff_payoffs"
+                elif any(kw in lower_line for kw in ["word", "target"]):
+                    current_section = "word_target"
 
     chapter_info["scene_beats"] = beats_text
     chapter_info["foreshadow_plants"] = foreshadow_text

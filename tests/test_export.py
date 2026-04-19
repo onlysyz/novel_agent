@@ -331,7 +331,7 @@ class TestEscapeXml:
         from src.export.epub_export import escape_xml
         assert escape_xml("it's") == "it&apos;s"
 
-    def test_escapes_all(self):
+    def test_escapes_all_special_chars_together(self):
         from src.export.epub_export import escape_xml
         result = escape_xml('a & b < c > d "e" \'f\'')
         assert "a &amp; b" in result
@@ -340,9 +340,63 @@ class TestEscapeXml:
         assert "&quot;e&quot;" in result
         assert "&apos;f&apos;" in result
 
+    def test_escapes_ampersand_exactly(self):
+        """Ampersand is escaped to &amp; (not &amp;amp; etc)."""
+        from src.export.epub_export import escape_xml
+        assert escape_xml("&") == "&amp;"
+        assert escape_xml("&&") == "&amp;&amp;"
+
+    def test_escapes_less_than_exactly(self):
+        """Less-than is escaped to &lt;."""
+        from src.export.epub_export import escape_xml
+        assert escape_xml("<") == "&lt;"
+        assert escape_xml("<<") == "&lt;&lt;"
+
+    def test_escapes_greater_than_exactly(self):
+        """Greater-than is escaped to &gt;."""
+        from src.export.epub_export import escape_xml
+        assert escape_xml(">") == "&gt;"
+        assert escape_xml(">>") == "&gt;&gt;"
+
+    def test_escapes_double_quote_exactly(self):
+        """Double quote is escaped to &quot;."""
+        from src.export.epub_export import escape_xml
+        assert escape_xml('"') == "&quot;"
+        assert escape_xml('""') == "&quot;&quot;"
+
+    def test_escapes_single_quote_exactly(self):
+        """Single quote is escaped to &apos;."""
+        from src.export.epub_export import escape_xml
+        assert escape_xml("'") == "&apos;"
+        assert escape_xml("''") == "&apos;&apos;"
+
+    def test_special_chars_at_boundaries(self):
+        from src.export.epub_export import escape_xml
+        assert escape_xml("&start") == "&amp;start"
+        assert escape_xml("start&") == "start&amp;"
+        assert escape_xml("<end") == "&lt;end"
+        assert escape_xml("end>") == "end&gt;"
+
+    def test_consecutive_special_chars(self):
+        from src.export.epub_export import escape_xml
+        assert escape_xml("a & < > \" ' b") == "a &amp; &lt; &gt; &quot; &apos; b"
+
+    def test_not_idempotent_runs_twice(self):
+        """Running escape_xml twice double-escapes — it is not idempotent."""
+        from src.export.epub_export import escape_xml
+        once = escape_xml("a & b")
+        twice = escape_xml(once)
+        # Second pass escapes the & in &amp; to &amp;amp;
+        assert twice == "a &amp;amp; b"
+        assert once != twice
+
     def test_preserves_normal_text(self):
         from src.export.epub_export import escape_xml
         assert escape_xml("Hello World") == "Hello World"
+
+    def test_escapes_empty_string(self):
+        from src.export.epub_export import escape_xml
+        assert escape_xml("") == ""
 
 
 class TestConvertMarkdownToXhtml:

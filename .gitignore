@@ -28,6 +28,7 @@ outline.md
 canon.md
 voice.md
 anti_patterns.md
+export/
 
 # Pipeline state
 .novelforge/

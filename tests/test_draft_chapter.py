@@ -14,6 +14,7 @@ from src.drafting.draft_chapter import (
     build_chapter_prompt,
     parse_chapter_content,
     _extract_scenes,
+    _extract_worldbuilding,
     MIN_CHAPTER_WORDS,
     MAX_CHAPTER_WORDS,
     TARGET_WORDS_PER_CHAPTER,
@@ -879,6 +880,91 @@ She reached into her pocket and pulled out the broken amulet.
         scenes = _extract_scenes(text)
         assert "# SCENE" in scenes
         assert "## scene" in scenes
+
+
+class TestExtractWorldbuilding:
+    """Tests for _extract_worldbuilding helper."""
+
+    def test_detects_bracket_world_format(self):
+        """[[World:ancient_city]] format is extracted."""
+        text = "The [[World:ancient_city]] had stood for a thousand years."
+        result = _extract_worldbuilding(text)
+        assert "[[World:ancient_city]]" in result
+
+    def test_detects_bracket_pipe_format(self):
+        """[[world|ancient_city]] format is extracted."""
+        text = "Legends spoke of [[world|forgotten_kingdom]]."
+        result = _extract_worldbuilding(text)
+        assert "[[World:forgotten_kingdom]]" in result
+
+    def test_detects_curly_braces_format(self):
+        """{wc:ancient_city} format is extracted."""
+        text = "The treaty was signed in {wc:the_conclave}."
+        result = _extract_worldbuilding(text)
+        assert "{wc:the_conclave}" in result
+
+    def test_multiple_references_in_text(self):
+        """Multiple different references are all extracted."""
+        text = (
+            "The [[World:ancient_city]] crumbled. "
+            "Meanwhile, {wc:magic_fading} spread. "
+            "At [[world|forgotten_kingdom]], the king watched."
+        )
+        result = _extract_worldbuilding(text)
+        assert "[[World:ancient_city]]" in result
+        assert "{wc:magic_fading}" in result
+        assert "[[World:forgotten_kingdom]]" in result
+
+    def test_duplicate_references_deduplicated(self):
+        """Same reference appearing multiple times is returned only once."""
+        text = (
+            "The [[World:ancient_city]] fell. "
+            "Later, [[World:ancient_city]] was forgotten."
+        )
+        result = _extract_worldbuilding(text)
+        assert result.count("[[World:ancient_city]]") == 1
+        assert len(result) == 1
+
+    def test_no_references_returns_empty(self):
+        """Plain prose with no world references returns empty list."""
+        text = "Sarah stood in the ruined cathedral. The wind howled through broken windows."
+        assert _extract_worldbuilding(text) == []
+
+    def test_empty_text_returns_empty(self):
+        """Empty string returns empty list."""
+        assert _extract_worldbuilding("") == []
+
+    def test_reference_in_middle_of_sentence(self):
+        """Reference embedded mid-sentence is extracted."""
+        text = "According to scholars, [[World:magic_fading]] had begun centuries ago."
+        result = _extract_worldbuilding(text)
+        assert "[[World:magic_fading]]" in result
+
+    def test_multiple_curly_brace_references(self):
+        """Multiple {wc:...} references in same text are all extracted."""
+        text = "At {wc:the_conclave}, they debated {wc:magic_fading}."
+        result = _extract_worldbuilding(text)
+        assert "{wc:the_conclave}" in result
+        assert "{wc:magic_fading}" in result
+
+    def test_reference_with_underscores_and_numbers(self):
+        """References with underscores and numbers are extracted correctly."""
+        text = "The order of {wc:shadow_guard_7} was formed."
+        result = _extract_worldbuilding(text)
+        assert "{wc:shadow_guard_7}" in result
+
+    def test_bracket_reference_case_variations(self):
+        """[[WORLD:fact]] and [[world|fact]] variations normalize to [[World:fact]]."""
+        text = "Facts: [[WORLD:ancient_fact]] and [[world|older_fact]]."
+        result = _extract_worldbuilding(text)
+        assert "[[World:ancient_fact]]" in result
+        assert "[[World:older_fact]]" in result
+
+    def test_all_keys_present_in_parse_result(self):
+        """parse_chapter_content result includes world_building key."""
+        text = "## World Building\n- The ancient city walls"
+        result = parse_chapter_content(text)
+        assert "world_building" in result
 
 
 class TestGetPreviousChapterEnding:

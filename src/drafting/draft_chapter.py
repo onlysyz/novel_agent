@@ -358,6 +358,40 @@ def _extract_scenes(text: str) -> list[str]:
     return scenes
 
 
+def _extract_worldbuilding(text: str) -> list[str]:
+    """Extract inline world bible reference markers from prose.
+
+    The AI model may embed world bible references in prose using formats:
+    - [[World:ancient_city]] — reference to a world fact
+    - [[world|ancient_city]] — alternate bracket format
+    - {wc:ancient_city} — curly-brace world context marker
+    - *See World:ancient_city* — italicized references
+
+    Args:
+        text: Raw chapter prose
+
+    Returns:
+        List of extracted world reference strings (deduplicated, in order)
+    """
+    references = []
+
+    # Match [[World:...]], [[WORLD:...]], and [[world|...]]
+    bracket_matches = re.findall(r"\[\[(?:[Ww]orld:|WORLD:|world\|)([^\]]+)\]\]", text)
+    for match in bracket_matches:
+        ref = f"[[World:{match}]]"
+        if ref not in references:
+            references.append(ref)
+
+    # Match {wc:...}
+    wc_matches = re.findall(r"\{wc:([^}]+)\}", text)
+    for match in wc_matches:
+        ref = f"{{wc:{match}}}"
+        if ref not in references:
+            references.append(ref)
+
+    return references
+
+
 def parse_chapter_content(text: str) -> dict:
     """Parse chapter text for embedded structural annotations.
 

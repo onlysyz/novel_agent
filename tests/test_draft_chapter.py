@@ -251,6 +251,337 @@ class TestBuildChapterPrompt:
         system, user = build_chapter_prompt(ctx, 1)
         assert "PREVIOUS CHAPTER ENDING" not in user
 
+    def test_writing_rules_included_in_user(self):
+        """WRITING_RULES constant is included in the user prompt."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "No fake emotion.",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "WRITING RULES" in user
+        assert "MANDATORY WRITING RULES" in user
+
+    def test_anti_patterns_section_in_user(self):
+        """ANTI-PATTERNS TO AVOID section appears when anti_patterns is set."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "Avoid excessive dialogue tags.",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "ANTI-PATTERNS TO AVOID" in user
+        assert "Avoid excessive dialogue tags." in user
+
+    def test_world_context_section_in_user(self):
+        """WORLD CONTEXT section appears with world content."""
+        ctx = {
+            "voice": "",
+            "world": "The kingdom is divided into three realms.",
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "WORLD CONTEXT" in user
+        assert "kingdom is divided into three realms" in user
+
+    def test_characters_context_section_in_user(self):
+        """CHARACTER CONTEXT section appears with characters content."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "Sarah: brave leader of the survivors.",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "CHARACTER CONTEXT" in user
+        assert "Sarah: brave leader" in user
+
+    def test_canonical_facts_section_in_user(self):
+        """CANONICAL FACTS section appears with canon content."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "",
+            "outline": "",
+            "canon": "The king died in the year 1000.",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "CANONICAL FACTS" in user
+        assert "king died in the year 1000" in user
+
+    def test_includes_next_chapter_hint_when_present(self):
+        """NEXT CHAPTER OPENER section appears when next_chapter_hint is set."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "The stranger enters the tavern.",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "NEXT CHAPTER OPENER" in user
+        assert "stranger enters the tavern" in user
+
+    def test_excludes_next_chapter_hint_when_empty(self):
+        """NEXT CHAPTER OPENER section omitted when next_chapter_hint is empty."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "NEXT CHAPTER OPENER" not in user
+
+    def test_no_voice_uses_default_message(self):
+        """Empty voice field falls back to default message in prompt."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "No voice guide provided" in user
+
+    def test_no_world_uses_default_message(self):
+        """Empty world field falls back to default message."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "No world context available" in user
+
+    def test_brief_beat_type_in_user(self):
+        """Beat Type field from brief appears in user prompt."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "Cathedral",
+                              "beat": "Setup", "position": "Opening",
+                              "emotional_arc": "Determination", "try_fail": "Sarah fails to rally survivors",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Beat Type" in user
+        assert "Setup" in user
+
+    def test_brief_emotional_arc_in_user(self):
+        """Emotional Arc field from brief appears in user prompt."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "Cathedral",
+                              "beat": "Setup", "position": "Opening",
+                              "emotional_arc": "Determination", "try_fail": "Sarah fails to rally survivors",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Emotional Arc" in user
+        assert "Determination" in user
+
+    def test_brief_try_fail_in_user(self):
+        """Try-Fail Cycle field from brief appears in user prompt."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "Cathedral",
+                              "beat": "Setup", "position": "Opening",
+                              "emotional_arc": "Determination", "try_fail": "Sarah fails to rally survivors",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Try-Fail Cycle" in user
+        assert "Sarah fails to rally survivors" in user
+
+    def test_brief_position_in_user(self):
+        """Position in Novel field from brief appears in user prompt."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "Cathedral",
+                              "beat": "Setup", "position": "Midpoint",
+                              "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Position in Novel" in user
+        assert "Midpoint" in user
+
+    def test_foreshadow_plants_section_with_items(self):
+        """Foreshadowing to Plant section includes plant items."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [],
+                              "foreshadow_plants": ["The amulet glows faintly", "The old king's seal"],
+                              "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Foreshadowing to Plant" in user
+        assert "amulet glows faintly" in user
+        assert "old king's seal" in user
+
+    def test_payoffs_section_with_items(self):
+        """Payoffs to Deliver section includes payoff items."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [],
+                              "payoff_payoffs": ["The amulet reveals its power"], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Payoffs to Deliver" in user
+        assert "amulet reveals its power" in user
+
+    def test_no_scene_beats_shows_default(self):
+        """Empty scene_beats shows '- No specific beats listed'."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "No specific beats listed" in user
+
+    def test_no_foreshadow_shows_default(self):
+        """Empty foreshadow_plants shows '- No specific foreshadowing required'."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "No specific foreshadowing required" in user
+
+    def test_no_payoffs_shows_default(self):
+        """Empty payoff_payoffs shows '- No payoffs required this chapter'."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "No payoffs required this chapter" in user
+
+    def test_word_target_in_user(self):
+        """Word Count Target from brief appears in user prompt."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 5000},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Word Count Target" in user
+        assert "5000" in user
+
+    def test_min_max_word_range_in_user(self):
+        """IMPORTANT section contains MIN and MAX chapter word bounds."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Target" in user
+        # Should reference MIN_CHAPTER_WORDS and MAX_CHAPTER_WORDS in the prompt
+        assert "IMPORTANT" in user
+
 
 class TestGetPreviousChapterEnding:
     """Tests for get_previous_chapter_ending."""

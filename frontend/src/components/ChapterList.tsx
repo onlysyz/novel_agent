@@ -4,22 +4,22 @@ import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
 
 interface Props {
-  cwd: string;
+  outputDir: string;
   selectedChapter: number | null;
   onSelectChapter: (num: number) => void;
 }
 
-export default function ChapterList({ cwd, selectedChapter, onSelectChapter }: Props) {
+export default function ChapterList({ outputDir, selectedChapter, onSelectChapter }: Props) {
   const { t } = useTranslation();
   const [chapters, setChapters] = useState<ChapterSummary[]>([]);
 
   useEffect(() => {
     loadChapters();
-  }, [cwd]);
+  }, [outputDir]);
 
   const loadChapters = async () => {
     try {
-      const chs = await invoke<ChapterSummary[]>("list_chapters", { cwd });
+      const chs = await invoke<ChapterSummary[]>("list_chapters", { outputDir });
       setChapters(chs);
     } catch (e) {
       console.error("Error loading chapters:", e);

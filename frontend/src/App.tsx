@@ -24,34 +24,42 @@ function AppInner() {
   const [state, setState] = useState<PipelineState | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [cwd, setCwd] = useState<string>("");
+
+  // outputDir = where all novel files live (seed.txt, world.md, chapters/, etc.)
+  const [outputDir, setOutputDir] = useState<string>("");
+
   const [pipelineRunning, setPipelineRunning] = useState(false);
   const [pipelineMessage, setPipelineMessage] = useState("");
+  const [pipelineLog, setPipelineLog] = useState<string[]>([]);
 
   useEffect(() => {
     initProject();
 
-    // Listen for pipeline events
-    const unlistenStarted = listen("pipeline-started", (event) => {
-      console.log("Pipeline started:", event.payload);
+    // Pipeline event listeners
+    const unlistenStarted = listen("pipeline-started", () => {
       setPipelineRunning(true);
       setPipelineMessage(t("running"));
+      setPipelineLog([]);
     });
 
     const unlistenProgress = listen<PipelineProgress>("pipeline-progress", (event) => {
-      console.log("Pipeline progress:", event.payload);
       setPipelineMessage(event.payload.message);
     });
 
-    const unlistenComplete = listen("pipeline-complete", async (event) => {
-      console.log("Pipeline complete:", event.payload);
+    const unlistenLog = listen<string>("pipeline-log", (event) => {
+      setPipelineLog((prev) => {
+        const next = [...prev, event.payload];
+        return next.length > 500 ? next.slice(next.length - 500) : next;
+      });
+    });
+
+    const unlistenComplete = listen("pipeline-complete", async () => {
       setPipelineRunning(false);
       setPipelineMessage("");
       await loadState();
     });
 
     const unlistenError = listen<string>("pipeline-error", (event) => {
-      console.error("Pipeline error:", event.payload);
       setPipelineRunning(false);
       setPipelineMessage("");
       alert(`Pipeline error: ${event.payload}`);
@@ -60,6 +68,7 @@ function AppInner() {
     return () => {
       unlistenStarted.then((f) => f());
       unlistenProgress.then((f) => f());
+      unlistenLog.then((f) => f());
       unlistenComplete.then((f) => f());
       unlistenError.then((f) => f());
     };
@@ -67,24 +76,25 @@ function AppInner() {
 
   const initProject = async () => {
     try {
-      const path = await invoke<string>("get_project_path");
-      setCwd(path);
-      const exists = await invoke<boolean>("project_exists", { cwd: path });
+      // get_project_path() always returns the output_dir (novel files directory)
+      const dir = await invoke<string>("get_project_path");
+      setOutputDir(dir);
+      const exists = await invoke<boolean>("project_exists", { outputDir: dir });
       setHasProject(exists);
       if (exists) {
-        await loadState(path);
+        await loadState(dir);
       }
     } catch (e) {
-      console.error("Error checking project:", e);
+      console.error("Error initialising project:", e);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadState = async (path?: string) => {
+  const loadState = async (dir?: string) => {
     try {
-      const p = path || cwd;
-      const s = await invoke<PipelineState>("read_state", { cwd: p });
+      const d = dir || outputDir;
+      const s = await invoke<PipelineState>("read_state", { outputDir: d });
       setState(s);
     } catch (e) {
       console.error("Error loading state:", e);
@@ -98,13 +108,12 @@ function AppInner() {
 
   const handleProjectCreated = async () => {
     try {
-      // Reset state for new project
-      await invoke("reset_project_state", { cwd });
+      await invoke("reset_project_state", { outputDir });
     } catch (e) {
       console.error("Error resetting state:", e);
     }
     setHasProject(true);
-    await loadState(cwd);
+    await loadState(outputDir);
     setView("dashboard");
   };
 
@@ -121,18 +130,17 @@ function AppInner() {
   const handleSaveChapter = async (content: string) => {
     if (selectedChapter === null) return;
     try {
-      await invoke("save_chapter", { cwd, chapterNum: selectedChapter, content });
+      await invoke("save_chapter", { outputDir, chapterNum: selectedChapter, content });
       await loadState();
     } catch (e) {
       console.error("Error saving chapter:", e);
     }
   };
 
+  // Runs a pipeline phase; outputDir is passed so Python knows where to write files
   const handleRunPhase = async (phase: string) => {
     try {
-      // Invoke returns immediately, pipeline runs in background
-      // State is loaded when pipeline-complete event is received
-      await invoke("run_pipeline_phase", { phase, cwd });
+      await invoke("run_pipeline_phase", { phase, outputDir });
     } catch (e) {
       console.error("Error running phase:", e);
       throw e;
@@ -174,26 +182,14 @@ function AppInner() {
           </li>
         </ul>
         <div className="lang-switch">
-          <button
-            className={lang === "en" ? "active" : ""}
-            onClick={() => setLang("en")}
-          >
-            EN
-          </button>
-          <button
-            className={lang === "zh" ? "active" : ""}
-            onClick={() => setLang("zh")}
-          >
-            中文
-          </button>
+          <button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>EN</button>
+          <button className={lang === "zh" ? "active" : ""} onClick={() => setLang("zh")}>中文</button>
         </div>
         {state && (
           <div className="status">
             <div className="phase">{state.phase}</div>
             {state.phase === "drafting" && (
-              <div className="progress">
-                Ch {state.chapters.length}/?
-              </div>
+              <div className="progress">Ch {state.chapters.length}/?</div>
             )}
           </div>
         )}
@@ -203,35 +199,37 @@ function AppInner() {
         {view === "dashboard" && state && (
           <Dashboard
             state={state}
+            outputDir={outputDir}
             onRunPhase={handleRunPhase}
             onNewProject={handleNewProject}
             pipelineRunning={pipelineRunning}
             pipelineMessage={pipelineMessage}
+            pipelineLog={pipelineLog}
           />
         )}
         {view === "chapters" && (
           <ChapterList
-            cwd={cwd}
+            outputDir={outputDir}
             selectedChapter={selectedChapter}
             onSelectChapter={handleChapterSelect}
           />
         )}
         {view === "chapters" && selectedChapter !== null && (
           <ChapterEditor
-            cwd={cwd}
+            outputDir={outputDir}
             chapterNum={selectedChapter}
             onSave={handleSaveChapter}
             onClose={() => setSelectedChapter(null)}
           />
         )}
         {view === "foundation" && (
-          <FoundationView cwd={cwd} />
+          <FoundationView outputDir={outputDir} />
         )}
         {view === "export" && state && (
-          <ExportView cwd={cwd} />
+          <ExportView outputDir={outputDir} />
         )}
         {view === "settings" && (
-          <SettingsView cwd={cwd} onNewProject={handleNewProject} />
+          <SettingsView outputDir={outputDir} onNewProject={handleNewProject} />
         )}
       </main>
     </div>

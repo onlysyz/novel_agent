@@ -305,6 +305,167 @@ body {
   to { transform: rotate(360deg); }
 }
 
+.pipeline-log {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 14px;
+  max-height: 260px;
+  overflow-y: auto;
+  text-align: left;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 11px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.85);
+  scroll-behavior: smooth;
+}
+
+.pipeline-log .log-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.pipeline-log .log-err {
+  color: #ffb3b3;
+}
+
+/* Progress Panel */
+.progress-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.progress-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-tertiary);
+}
+
+.progress-panel-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.progress-panel-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.log-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.log-toggle:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+/* Structured step list */
+.progress-steps {
+  padding: 0.5rem 0;
+  max-height: 280px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.progress-step {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  transition: background 0.1s;
+}
+
+.progress-step:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.step-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.step-text {
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+/* Per-type colours */
+.step-foundation .step-text { color: #93c5fd; }  /* blue-300 */
+.step-chapter   .step-text { color: #d8b4fe; }   /* purple-300 */
+.step-review    .step-text { color: #fbbf24; }   /* amber */
+.step-score     .step-text { color: #4ade80; }   /* green */
+.step-complete  .step-text { color: #4ade80; font-weight: 600; }
+.step-git       .step-text { color: var(--text-secondary); }
+.step-info      .step-text { color: var(--text-muted); font-size: 0.75rem; }
+
+/* Blinking cursor at bottom of steps during run */
+.step-cursor {
+  padding: 0.25rem 1rem;
+  font-size: 0.875rem;
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Raw log (collapsible) */
+.raw-log {
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  max-height: 220px;
+  overflow-y: auto;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.6);
+  scroll-behavior: smooth;
+}
+
+.raw-log .log-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.raw-log .log-err {
+  color: #ffb3b3;
+}
+
+/* Current step shown inside action card while running */
+.action-card .current-step {
+  font-size: 0.8125rem;
+  opacity: 0.8;
+  font-family: 'Menlo', 'Consolas', monospace;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .dashboard .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

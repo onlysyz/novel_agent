@@ -6,10 +6,10 @@ import { useTranslation } from "../i18n";
 type DocName = "world" | "characters" | "outline" | "canon" | "voice";
 
 interface Props {
-  cwd: string;
+  outputDir: string;
 }
 
-export default function FoundationView({ cwd }: Props) {
+export default function FoundationView({ outputDir }: Props) {
   const { t } = useTranslation();
   const [selectedDoc, setSelectedDoc] = useState<DocName>("world");
   const [doc, setDoc] = useState<FoundationDoc | null>(null);
@@ -18,7 +18,7 @@ export default function FoundationView({ cwd }: Props) {
   const loadDoc = async (name: DocName) => {
     setLoading(true);
     try {
-      const d = await invoke<FoundationDoc>("read_foundation_doc", { cwd, name });
+      const d = await invoke<FoundationDoc>("read_foundation_doc", { outputDir, name });
       setDoc(d);
       setSelectedDoc(name);
     } catch (e) {

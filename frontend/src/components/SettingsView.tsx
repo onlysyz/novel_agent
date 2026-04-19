@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
 
 interface Props {
-  cwd: string;
+  outputDir: string;
   onNewProject: () => void;
 }
 
@@ -18,10 +18,9 @@ interface AIConfig {
   novel_title: string;
 }
 
-export default function SettingsView({ cwd, onNewProject }: Props) {
+export default function SettingsView({ outputDir, onNewProject }: Props) {
   const { t } = useTranslation();
   const [seed, setSeed] = useState("");
-  const [projectPath, setProjectPath] = useState("");
   const [aiConfig, setAiConfig] = useState<AIConfig>({
     api_key: "",
     base_url: "",
@@ -36,31 +35,21 @@ export default function SettingsView({ cwd, onNewProject }: Props) {
 
   useEffect(() => {
     loadSeed();
-    loadPath();
     loadAIConfig();
-  }, [cwd]);
+  }, [outputDir]);
 
   const loadSeed = async () => {
     try {
-      const s = await invoke<string>("read_seed", { cwd });
+      const s = await invoke<string>("read_seed", { outputDir });
       setSeed(s);
     } catch (e) {
       console.error("Error loading seed:", e);
     }
   };
 
-  const loadPath = async () => {
-    try {
-      const path = await invoke<string>("get_project_path");
-      setProjectPath(path);
-    } catch (e) {
-      console.error("Error loading path:", e);
-    }
-  };
-
   const loadAIConfig = async () => {
     try {
-      const config = await invoke<AIConfig>("read_ai_config", { cwd });
+      const config = await invoke<AIConfig>("read_ai_config", { outputDir });
       setAiConfig(config);
     } catch (e) {
       console.error("Error loading AI config:", e);
@@ -69,9 +58,8 @@ export default function SettingsView({ cwd, onNewProject }: Props) {
 
   const handleSaveSeed = async () => {
     try {
-      // Get current language from existing seed or default to en
-      const lang = await invoke<string>("read_language", { cwd });
-      await invoke("write_seed", { cwd, seed, language: lang });
+      const lang = await invoke<string>("read_language", { outputDir });
+      await invoke("write_seed", { outputDir, seed, language: lang });
       alert(t("seed_saved"));
     } catch (e) {
       console.error("Error saving seed:", e);
@@ -81,7 +69,7 @@ export default function SettingsView({ cwd, onNewProject }: Props) {
 
   const handleSaveAIConfig = async () => {
     try {
-      await invoke("write_ai_config", { cwd, config: aiConfig });
+      await invoke("write_ai_config", { outputDir, config: aiConfig });
       setConfigSaved(true);
       setTimeout(() => setConfigSaved(false), 2000);
     } catch (e) {
@@ -100,7 +88,7 @@ export default function SettingsView({ cwd, onNewProject }: Props) {
         <h2>{t("project")}</h2>
         <div className="setting-item">
           <label>{t("project_path")}</label>
-          <p className="setting-value">{projectPath}</p>
+          <p className="setting-value">{outputDir}</p>
         </div>
       </section>
 

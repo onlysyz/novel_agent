@@ -4,13 +4,13 @@ import { Chapter } from "../types";
 import { useTranslation } from "../i18n";
 
 interface Props {
-  cwd: string;
+  outputDir: string;
   chapterNum: number;
   onSave: (content: string) => Promise<void>;
   onClose: () => void;
 }
 
-export default function ChapterEditor({ cwd, chapterNum, onSave, onClose }: Props) {
+export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }: Props) {
   const { t } = useTranslation();
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [content, setContent] = useState("");
@@ -23,7 +23,7 @@ export default function ChapterEditor({ cwd, chapterNum, onSave, onClose }: Prop
 
   const loadChapter = async () => {
     try {
-      const ch = await invoke<Chapter>("read_chapter", { cwd, chapterNum });
+      const ch = await invoke<Chapter>("read_chapter", { outputDir, chapterNum });
       setChapter(ch);
       setContent(ch.content);
       setHasChanges(false);

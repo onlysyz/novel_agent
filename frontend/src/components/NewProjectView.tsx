@@ -31,8 +31,8 @@ export default function NewProjectView({ onProjectCreated, onCancel }: Props) {
 
     setCreating(true);
     try {
-      const cwd = await invoke<string>("get_project_path");
-      await invoke("write_seed", { cwd, seed: seed.trim(), language });
+      const outputDir = await invoke<string>("get_project_path");
+      await invoke("write_seed", { outputDir, seed: seed.trim(), language });
       onProjectCreated();
     } catch (e) {
       console.error("Error creating project:", e);

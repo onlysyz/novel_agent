@@ -262,14 +262,20 @@ def run_foundation(state: dict) -> dict:
     """
     print_header("FOUNDATION PHASE")
 
-    sys.path.insert(0, str(NOVEL_DIR))
-    from src.foundation import (
-        generate_world,
-        generate_characters,
-        generate_outline,
-        generate_canon,
-        generate_voice,
-    )
+    sys.path.insert(0, str(Path(__file__).parent))
+    import src.foundation.gen_world as _gw
+    import src.foundation.gen_characters as _gc
+    import src.foundation.gen_outline as _go
+    import src.foundation.gen_canon as _gca
+    import src.foundation.voice_fingerprint as _gv
+    # Point every generator at the correct output directory
+    for _mod in [_gw, _gc, _go, _gca, _gv]:
+        _mod.NOVEL_DIR = NOVEL_DIR
+    generate_world      = _gw.generate_world
+    generate_characters = _gc.generate_characters
+    generate_outline    = _go.generate_outline
+    generate_canon      = _gca.generate_canon
+    generate_voice      = _gv.generate_voice
 
     # Check for seed
     seed_path = NOVEL_DIR / "seed.txt"
@@ -392,8 +398,13 @@ def run_drafting(state: dict) -> dict:
     """Sequential chapter writing."""
     print_header("DRAFTING PHASE")
 
-    sys.path.insert(0, str(NOVEL_DIR))
-    from src.drafting import draft_chapter, build_context_package
+    sys.path.insert(0, str(Path(__file__).parent))
+    import src.drafting.draft_chapter as _dc
+    import src.drafting.evaluate as _ev
+    _dc.NOVEL_DIR = NOVEL_DIR
+    _ev.NOVEL_DIR = NOVEL_DIR
+    draft_chapter = _dc.draft_chapter
+    build_context_package = _dc.build_context_package
 
     # Determine chapter count from config
     project_config = load_project_config()
@@ -499,13 +510,17 @@ def run_review(state: dict) -> dict:
     """Multi-cycle revision with adversarial editing, reader panel, and Opus review."""
     print_header("REVIEW PHASE")
 
-    sys.path.insert(0, str(NOVEL_DIR))
-    from src.review import (
-        run_reader_panel,
-        run_adversarial_loop,
-        run_opus_review_loop,
-    )
-    from src.drafting import build_context_package
+    sys.path.insert(0, str(Path(__file__).parent))
+    import src.review.review as _rv
+    import src.review.adversarial_edit as _ae
+    import src.review.reader_panel as _rp
+    import src.drafting.draft_chapter as _dc2
+    for _mod in [_rv, _ae, _rp, _dc2]:
+        _mod.NOVEL_DIR = NOVEL_DIR
+    run_reader_panel      = _rp.run_reader_panel
+    run_adversarial_loop  = _ae.run_adversarial_loop
+    run_opus_review_loop  = _rv.run_opus_review_loop
+    build_context_package = _dc2.build_context_package
 
     # Get chapters
     chapters_dir = NOVEL_DIR / "chapters"
@@ -619,8 +634,14 @@ def run_export(state: dict) -> dict:
     print_header("EXPORT PHASE")
 
     # Import export module
-    sys.path.insert(0, str(NOVEL_DIR))
-    from src.export.export import export_all
+    sys.path.insert(0, str(Path(__file__).parent))
+    import src.export.export as _exp
+    import src.export.epub_export as _epub
+    import src.export.cover_art as _cover
+    import src.export.typeset as _typeset
+    for _mod in [_exp, _epub, _cover, _typeset]:
+        _mod.NOVEL_DIR = NOVEL_DIR
+    export_all = _exp.export_all
 
     # Check that we have chapters
     chapters_dir = NOVEL_DIR / "chapters"

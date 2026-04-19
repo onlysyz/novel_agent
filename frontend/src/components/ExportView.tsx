@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
 
 interface Props {
-  cwd: string;
+  outputDir: string;
 }
 
 interface ExportFile {
@@ -14,7 +14,7 @@ interface ExportFile {
   path: string;
 }
 
-export default function ExportView({ cwd }: Props) {
+export default function ExportView({ outputDir }: Props) {
   const { t } = useTranslation();
   const [manuscript, setManuscript] = useState("");
   const [exportFiles, setExportFiles] = useState<ExportFile[]>([]);
@@ -23,11 +23,11 @@ export default function ExportView({ cwd }: Props) {
   useEffect(() => {
     loadManuscript();
     loadExportFiles();
-  }, [cwd]);
+  }, [outputDir]);
 
   const loadManuscript = async () => {
     try {
-      const text = await invoke<string>("get_manuscript", { cwd });
+      const text = await invoke<string>("get_manuscript", { outputDir });
       setManuscript(text);
     } catch (e) {
       console.error("Error loading manuscript:", e);
@@ -36,7 +36,7 @@ export default function ExportView({ cwd }: Props) {
 
   const loadExportFiles = async () => {
     try {
-      const files = await invoke<ExportFile[]>("list_exports", { cwd });
+      const files = await invoke<ExportFile[]>("list_exports", { outputDir });
       setExportFiles(files);
     } catch (e) {
       console.error("Error loading export files:", e);
@@ -45,7 +45,7 @@ export default function ExportView({ cwd }: Props) {
 
   const handleOpen = async (file: ExportFile) => {
     try {
-      await invoke("open_export_file", { cwd, filename: file.name });
+      await invoke("open_export_file", { outputDir, filename: file.name });
     } catch (e) {
       console.error("Error opening file:", e);
       alert(`Error opening file: ${e}`);
@@ -55,7 +55,7 @@ export default function ExportView({ cwd }: Props) {
   const handleDownload = async (file: ExportFile) => {
     setLoading(true);
     try {
-      const data = await invoke<string>("get_export_file", { cwd, filename: file.name });
+      const data = await invoke<string>("get_export_file", { outputDir, filename: file.name });
       const mimeTypes: Record<string, string> = {
         text: "text/plain",
         epub: "application/epub+zip",
@@ -71,9 +71,7 @@ export default function ExportView({ cwd }: Props) {
       } else {
         const binary = atob(data);
         const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) {
-          bytes[i] = binary.charCodeAt(i);
-        }
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
         blob = new Blob([bytes], { type: mime });
       }
 
@@ -133,17 +131,8 @@ export default function ExportView({ cwd }: Props) {
                   </span>
                 </div>
                 <div className="export-file-actions">
-                  <button
-                    className="btn-secondary"
-                    onClick={() => handleOpen(file)}
-                  >
-                    {t("open")}
-                  </button>
-                  <button
-                    className="btn-primary"
-                    onClick={() => handleDownload(file)}
-                    disabled={loading}
-                  >
+                  <button className="btn-secondary" onClick={() => handleOpen(file)}>{t("open")}</button>
+                  <button className="btn-primary" onClick={() => handleDownload(file)} disabled={loading}>
                     {t("download")}
                   </button>
                 </div>
@@ -159,10 +148,7 @@ export default function ExportView({ cwd }: Props) {
         <div className="export-actions">
           <button
             className="btn-secondary"
-            onClick={() => {
-              navigator.clipboard.writeText(manuscript);
-              alert(t("manuscript_copied"));
-            }}
+            onClick={() => { navigator.clipboard.writeText(manuscript); alert(t("manuscript_copied")); }}
             disabled={!manuscript}
           >
             {t("copy_manuscript")}

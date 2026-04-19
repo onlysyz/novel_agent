@@ -461,6 +461,70 @@ class TestConvertMarkdownToXhtml:
         assert "&lt;" in result
         assert "&gt;" in result
 
+    def test_converts_bold_and_italic_combined(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("***bold italic***")
+        assert "<strong>" in result
+        assert "<em>bold italic</em>" not in result  # closing tag is </strong></em>
+        # The bold comes before italic in nesting
+        assert result.index("<strong>") < result.index("<em>")
+        # The content appears between the tags
+        assert "bold italic" in result
+
+    def test_links_not_converted(self):
+        """Markdown links pass through unchanged as plain text in a paragraph."""
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("See [this](https://example.com)")
+        # Links are not converted to <a> tags — they stay as markdown text
+        assert "<a>" not in result
+        assert "[this](https://example.com)" in result
+        assert "<p>" in result
+
+    def test_paragraph_without_trailing_newline(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("Just plain text")
+        assert "<p>Just plain text</p>" in result
+
+    def test_empty_string_returns_empty(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("")
+        assert result == ""
+
+    def test_plain_text_becomes_paragraph(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("Plain text without formatting")
+        assert result.startswith("<p>")
+        assert "</p>" in result
+
+    def test_header_then_paragraph(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("# Header\n\nParagraph")
+        assert "<h1>Header</h1>" in result
+        assert "<p>Paragraph</p>" in result
+
+    def test_multiple_consecutive_headers(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("# H1\n## H2\n### H3")
+        assert "<h1>H1</h1>" in result
+        assert "<h2>H2</h2>" in result
+        assert "<h3>H3</h3>" in result
+
+    def test_bold_inside_paragraph(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("This is **bold** text")
+        assert "<p>This is <strong>bold</strong> text</p>" in result
+
+    def test_italic_inside_paragraph(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("This is *italic* text")
+        assert "<p>This is <em>italic</em> text</p>" in result
+
+    def test_multiple_paragraphs_separated_by_empty_line(self):
+        from src.export.epub_export import convert_markdown_to_xhtml
+        result = convert_markdown_to_xhtml("Para one\n\nPara two")
+        assert "<p>Para one</p>" in result
+        assert "<p>Para two</p>" in result
+
 
 class TestGenerateUuid:
     """Tests for src.export.epub_export.generate_uuid()."""

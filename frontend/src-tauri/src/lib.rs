@@ -60,24 +60,36 @@ pub struct ChapterSummary {
 // Get current project directory (cwd)
 #[tauri::command]
 fn get_project_path() -> Result<String, String> {
-    // Search upward from current directory AND home directory for .novelforge/state.json
-    let mut search_dirs: Vec<std::path::PathBuf> = vec![];
-
-    if let Ok(cwd) = std::env::current_dir() {
-        search_dirs.push(cwd);
-    }
-    if let Some(home) = std::env::var("HOME").ok().map(|h| std::path::PathBuf::from(h)) {
-        search_dirs.push(home);
+    // First: check if current directory itself is a project
+    if std::path::Path::new(".novelforge/state.json").exists() {
+        return std::env::current_dir()
+            .map(|p| p.to_string_lossy().to_string())
+            .map_err(|e| e.to_string());
     }
 
-    for dir in search_dirs {
-        let mut current = dir;
-        loop {
-            if current.join(".novelforge/state.json").exists() {
-                return Ok(current.to_string_lossy().to_string());
-            }
-            if !current.pop() {
-                break;
+    // Search: check common subdirectory patterns under home
+    if let Ok(home) = std::env::var("HOME") {
+        let home = std::path::PathBuf::from(&home);
+        let candidates = [
+            home.join("workspace"),
+            home.join("Projects"),
+            home.join("Documents"),
+            home.join("code"),
+        ];
+
+        for base in &candidates {
+            if base.is_dir() {
+                if let Ok(entries) = fs::read_dir(base) {
+                    for entry in entries.flatten() {
+                        let path = entry.path();
+                        if path.is_dir() {
+                            let state_file = path.join(".novelforge/state.json");
+                            if state_file.exists() {
+                                return Ok(path.to_string_lossy().to_string());
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -557,6 +557,12 @@ class TestBuildCoverPrompt:
         result = build_cover_prompt("A dragon awakens")
         assert "A dragon awakens" in result
 
+    def test_seed_at_start_of_prompt(self):
+        from src.export.cover_art import build_cover_prompt
+        result = build_cover_prompt("A dragon awakens", "fantasy")
+        # Seed appears at the very start of the prompt
+        assert result.startswith("A dragon awakens")
+
     def test_includes_style(self):
         from src.export.cover_art import build_cover_prompt
         result = build_cover_prompt("A dragon awakens", style="fantasy")
@@ -565,60 +571,104 @@ class TestBuildCoverPrompt:
     def test_fantasy_style(self):
         from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("magic", style="fantasy")
-        assert "epic fantasy" in result or "fantasy" in result.lower()
+        fantasy_desc = GENRE_STYLES["fantasy"]
+        # The fantasy description should appear in the prompt
+        assert fantasy_desc in result
 
     def test_scifi_style(self):
-        from src.export.cover_art import build_cover_prompt
+        from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("space", style="scifi")
-        assert "science fiction" in result.lower() or "futuristic" in result.lower()
+        assert GENRE_STYLES["scifi"] in result
 
     def test_thriller_style(self):
-        from src.export.cover_art import build_cover_prompt
+        from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("danger", style="thriller")
-        assert "thriller" in result.lower() or "dark" in result.lower()
+        assert GENRE_STYLES["thriller"] in result
 
     def test_romance_style(self):
-        from src.export.cover_art import build_cover_prompt
+        from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("love", style="romance")
-        assert "romance" in result.lower() or "elegant" in result.lower()
+        assert GENRE_STYLES["romance"] in result
 
     def test_mystery_style(self):
-        from src.export.cover_art import build_cover_prompt
+        from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("clue", style="mystery")
-        assert "mystery" in result.lower() or "vintage" in result.lower()
+        assert GENRE_STYLES["mystery"] in result
 
     def test_horror_style(self):
-        from src.export.cover_art import build_cover_prompt
+        from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("fear", style="horror")
-        assert "horror" in result.lower() or "dark" in result.lower()
+        assert GENRE_STYLES["horror"] in result
 
     def test_literary_style(self):
-        from src.export.cover_art import build_cover_prompt
+        from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("life", style="literary")
-        assert "literary" in result.lower() or "minimal" in result.lower()
+        assert GENRE_STYLES["literary"] in result
 
     def test_unknown_style_defaults_to_fantasy(self):
         from src.export.cover_art import build_cover_prompt, GENRE_STYLES
         result = build_cover_prompt("something", style="unknown")
-        fantasy_style = GENRE_STYLES["fantasy"]
-        assert fantasy_style.split(",")[0] in result
+        assert GENRE_STYLES["fantasy"] in result
 
-    def test_includes_requirements(self):
+    def test_includes_style_line(self):
+        from src.export.cover_art import build_cover_prompt
+        result = build_cover_prompt("test", style="fantasy")
+        # Prompt should have a "Style:" section
+        lines = result.split("\n")
+        style_lines = [l for l in lines if l.startswith("Style:")]
+        assert len(style_lines) == 1
+
+    def test_includes_requirements_section(self):
+        from src.export.cover_art import build_cover_prompt
+        result = build_cover_prompt("test", style="fantasy")
+        # Prompt should have a "Requirements:" section
+        assert "Requirements:" in result
+        # Requirements should be hyphen-prefixed
+        lines = result.split("\n")
+        req_lines = [l for l in lines if l.startswith("- ")]
+        assert len(req_lines) >= 4
+
+    def test_requirement_vertical_format(self):
         from src.export.cover_art import build_cover_prompt
         result = build_cover_prompt("test")
-        assert "Vertical book cover" in result or "2:3" in result or "aspect ratio" in result.lower()
+        assert "Vertical book cover" in result or "2:3" in result
 
-    def test_includes_no_text_requirement(self):
+    def test_requirement_no_text(self):
         from src.export.cover_art import build_cover_prompt
         result = build_cover_prompt("test")
-        assert "No text" in result or "no text" in result or "title" in result.lower()
+        # Requirement to have no text/title on the cover
+        assert "No text" in result or "no text" in result
 
     def test_truncates_long_seed(self):
         from src.export.cover_art import build_cover_prompt
         long_seed = "x" * 1000
         result = build_cover_prompt(long_seed)
-        # The seed is embedded in prompt, so total length is what matters
+        # The seed is embedded in prompt, total length is bounded
         assert len(result) < 2000
+
+    def test_empty_seed_included(self):
+        from src.export.cover_art import build_cover_prompt
+        result = build_cover_prompt("", "fantasy")
+        # Empty seed should still produce valid prompt with style + requirements
+        assert "Style:" in result
+        assert "Requirements:" in result
+
+    def test_seed_with_markdown_preserved(self):
+        from src.export.cover_art import build_cover_prompt
+        result = build_cover_prompt("A **dragon** awakens", "fantasy")
+        # Markdown in seed is preserved (not stripped)
+        assert "**dragon**" in result
+
+    def test_seed_with_special_chars(self):
+        from src.export.cover_art import build_cover_prompt
+        result = build_cover_prompt("A dragon & a phoenix: it's epic!", "fantasy")
+        assert "A dragon & a phoenix: it's epic!" in result
+
+    def test_all_genre_styles_present(self):
+        from src.export.cover_art import build_cover_prompt, GENRE_STYLES
+        for genre in GENRE_STYLES:
+            result = build_cover_prompt("test seed", style=genre)
+            assert GENRE_STYLES[genre] in result, f"Genre {genre} style not in prompt"
 
 
 class TestExportManuscriptTxt:

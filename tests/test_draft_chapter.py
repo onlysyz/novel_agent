@@ -12,6 +12,7 @@ from src.drafting.draft_chapter import (
     extract_next_chapter_opener,
     count_words,
     build_chapter_prompt,
+    parse_chapter_content,
     MIN_CHAPTER_WORDS,
     MAX_CHAPTER_WORDS,
     TARGET_WORDS_PER_CHAPTER,
@@ -581,6 +582,207 @@ class TestBuildChapterPrompt:
         assert "Target" in user
         # Should reference MIN_CHAPTER_WORDS and MAX_CHAPTER_WORDS in the prompt
         assert "IMPORTANT" in user
+
+
+class TestParseChapterContent:
+    """Tests for parse_chapter_content."""
+
+    def test_parses_scene_beats_section(self):
+        """## Scene Beats header and its bullets are extracted."""
+        text = """
+# Chapter 1
+
+Some prose here.
+
+## Scene Beats
+- Sarah discovers the broken amulet
+- She remembers her mother's last words
+
+More prose.
+"""
+        result = parse_chapter_content(text)
+        assert "Sarah discovers the broken amulet" in result["scene_beats"]
+        assert "She remembers her mother's last words" in result["scene_beats"]
+
+    def test_parses_world_building_section(self):
+        """## World Building header and its bullets are extracted."""
+        text = """
+# Chapter 1
+
+## World Building
+- The ancient city walls are crumbling
+- Magic has faded over centuries
+
+Prose continues.
+"""
+        result = parse_chapter_content(text)
+        assert "The ancient city walls are crumbling" in result["world_building"]
+        assert "Magic has faded over centuries" in result["world_building"]
+
+    def test_parses_narrative_notes_section(self):
+        """## Narrative Notes header and its bullets are extracted."""
+        text = """
+# Chapter 1
+
+## Narrative Notes
+- This scene establishes Sarah's determination
+- Foreshadow the amulet's power here
+
+More text.
+"""
+        result = parse_chapter_content(text)
+        assert "This scene establishes Sarah's determination" in result["narrative_notes"]
+        assert "Foreshadow the amulet's power here" in result["narrative_notes"]
+
+    def test_parses_mixed_sections(self):
+        """Multiple annotated sections parsed correctly."""
+        text = """
+# Chapter 1
+
+## Scene Beats
+- First beat
+- Second beat
+
+## World Building
+- World detail one
+
+## Narrative Notes
+- Narrative note one
+"""
+        result = parse_chapter_content(text)
+        assert "First beat" in result["scene_beats"]
+        assert "Second beat" in result["scene_beats"]
+        assert "World detail one" in result["world_building"]
+        assert "Narrative note one" in result["narrative_notes"]
+
+    def test_asterisk_bullets_extracted(self):
+        """Asterisk-prefixed bullets are also extracted."""
+        text = """
+## Scene Beats
+* Sarah discovers the amulet
+* The door opens slowly
+"""
+        result = parse_chapter_content(text)
+        assert "Sarah discovers the amulet" in result["scene_beats"]
+        assert "The door opens slowly" in result["scene_beats"]
+
+    def test_bullets_not_in_section_ignored(self):
+        """Bullets appearing before any section header are ignored."""
+        text = """
+# Chapter 1
+
+- This bullet appears before any section header
+- It should be ignored
+
+## Scene Beats
+- This beat is captured
+"""
+        result = parse_chapter_content(text)
+        assert "This bullet appears before any section header" not in result["scene_beats"]
+        assert "This beat is captured" in result["scene_beats"]
+
+    def test_scene_markers_horizontal_rule(self):
+        """Horizontal rules (---) are detected as scene breaks."""
+        text = """
+Prose of scene one.
+
+---
+
+Prose of scene two.
+"""
+        result = parse_chapter_content(text)
+        assert "---" in result["scenes"]
+
+    def test_scene_markers_header(self):
+        """## Scene markers are detected as scene breaks."""
+        text = """
+Prose.
+
+## Scene
+Prose of a new scene.
+
+### Scene 1
+Another scene marker.
+"""
+        result = parse_chapter_content(text)
+        assert "## Scene" in result["scenes"]
+        assert "### Scene 1" in result["scenes"]
+
+    def test_plain_prose_returns_empty(self):
+        """Chapter text with no annotations returns empty lists."""
+        text = """
+# Chapter 1
+
+Sarah stood in the ruined cathedral. The wind howled through the broken windows.
+
+She reached into her pocket and pulled out the broken amulet. It was still warm.
+"""
+        result = parse_chapter_content(text)
+        assert result["scene_beats"] == []
+        assert result["world_building"] == []
+        assert result["narrative_notes"] == []
+        assert result["scenes"] == []
+
+    def test_empty_text_returns_empty(self):
+        """Empty text returns all-empty result."""
+        result = parse_chapter_content("")
+        assert result["scene_beats"] == []
+        assert result["world_building"] == []
+        assert result["narrative_notes"] == []
+        assert result["scenes"] == []
+
+    def test_section_header_variants_scene_beats(self):
+        """Various 'Scene Beats' header formats are recognized."""
+        text = """
+## Scene Beats
+- Beat one
+
+### Scene Beats
+- Beat two
+
+# Scene Beats
+- Beat three
+"""
+        result = parse_chapter_content(text)
+        assert "Beat one" in result["scene_beats"]
+        assert "Beat two" in result["scene_beats"]
+        assert "Beat three" in result["scene_beats"]
+
+    def test_world_building_variants(self):
+        """## World Building and ## World-Building variants recognized."""
+        text = """
+## World Building
+- Detail one
+
+## World-Building
+- Detail two
+"""
+        result = parse_chapter_content(text)
+        assert "Detail one" in result["world_building"]
+        assert "Detail two" in result["world_building"]
+
+    def test_narrative_notes_variants(self):
+        """## Narrative Notes and ## Notes variants recognized."""
+        text = """
+## Narrative Notes
+- Note one
+
+## Notes
+- Note two
+
+## Annotations
+- Note three
+"""
+        result = parse_chapter_content(text)
+        assert "Note one" in result["narrative_notes"]
+        assert "Note two" in result["narrative_notes"]
+        assert "Note three" in result["narrative_notes"]
+
+    def test_all_keys_present(self):
+        """Result always has all four keys even if empty."""
+        result = parse_chapter_content("Just plain prose.")
+        assert set(result.keys()) == {"scene_beats", "world_building", "narrative_notes", "scenes"}
+
 
 
 class TestGetPreviousChapterEnding:

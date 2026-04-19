@@ -6,9 +6,7 @@ Handles continuity with previous chapters and adherence to outline beats.
 
 import os
 import re
-import sys
 from pathlib import Path
-from typing import Optional
 
 
 def get_client():
@@ -324,6 +322,81 @@ Write the full chapter now. Output ONLY the chapter prose, nothing else."""
 def count_words(text: str) -> int:
     """Count words in text."""
     return len(text.split())
+
+
+def parse_chapter_content(text: str) -> dict:
+    """Parse chapter text for embedded structural annotations.
+
+    The AI model sometimes includes section markers in its output such as:
+    ## Scene Beats
+    - First beat
+    - Second beat
+    ## World Building
+    - The ancient city walls...
+    ## Narrative Notes
+    - Character development here
+
+    This function extracts those structured sections from otherwise raw prose.
+
+    Args:
+        text: The generated chapter text (may contain embedded section headers)
+
+    Returns:
+        dict with keys:
+        - scene_beats: list of extracted scene beat bullets
+        - world_building: list of world building items
+        - narrative_notes: list of narrative/annotation items
+        - scenes: list of detected scene markers (### Scene, ## Scene, or ---)
+    """
+    lines = text.split("\n")
+    result = {
+        "scene_beats": [],
+        "world_building": [],
+        "narrative_notes": [],
+        "scenes": [],
+    }
+
+    current_section = None
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Detect scene breaks (horizontal rules or scene headers)
+        if stripped == "---" or stripped == "***" or stripped == "__":
+            result["scenes"].append(stripped)
+            current_section = None
+            continue
+
+        # Detect section headers
+        header_match = re.match(r"^#{1,3}\s+(.+)", stripped)
+        if header_match:
+            header_text = header_match.group(1).lower()
+            if "scene beat" in header_text or header_text == "scene beats":
+                current_section = "scene_beats"
+            elif "world building" in header_text or "world-building" in header_text or "worldbuilding" in header_text:
+                current_section = "world_building"
+            elif "narrative" in header_text or "note" in header_text or "annotation" in header_text:
+                current_section = "narrative_notes"
+            elif re.match(r"scene\s+\d+", header_text) or re.match(r"scene$", header_text):
+                # "Scene 1", "## Scene Two", "### Scene"
+                result["scenes"].append(stripped)
+                current_section = None
+            else:
+                current_section = None
+            continue
+
+        # Extract bullet points
+        if stripped.startswith("- ") or stripped.startswith("* "):
+            item = stripped[2:].strip()
+            if item:
+                if current_section == "scene_beats":
+                    result["scene_beats"].append(item)
+                elif current_section == "world_building":
+                    result["world_building"].append(item)
+                elif current_section == "narrative_notes":
+                    result["narrative_notes"].append(item)
+
+    return result
 
 
 def draft_chapter(

@@ -16,6 +16,7 @@ dist/
 .venv/
 venv/
 uv.lock
+.coverage
 
 # Novel content (generated)
 seed.txt

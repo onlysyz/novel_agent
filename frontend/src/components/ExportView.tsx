@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { useTranslation } from "../i18n";
 
 interface Props {
   cwd: string;
@@ -14,6 +15,7 @@ interface ExportFile {
 }
 
 export default function ExportView({ cwd }: Props) {
+  const { t } = useTranslation();
   const [manuscript, setManuscript] = useState("");
   const [exportFiles, setExportFiles] = useState<ExportFile[]>([]);
   const [loading, setLoading] = useState(false);
@@ -98,10 +100,10 @@ export default function ExportView({ cwd }: Props) {
   };
 
   const formatLabel = (name: string) => {
-    if (name.includes("manuscript.txt")) return "Manuscript (TXT)";
-    if (name.includes("manuscript.epub")) return "Manuscript (ePub)";
+    if (name.includes("manuscript.txt")) return `${t("nav_export")} (TXT)`;
+    if (name.includes("manuscript.epub")) return `${t("nav_export")} (ePub)`;
     if (name.includes("cover")) return "Book Cover";
-    if (name.includes("manuscript.pdf")) return "Manuscript (PDF)";
+    if (name.includes("manuscript.pdf")) return `${t("nav_export")} (PDF)`;
     return name;
   };
 
@@ -110,16 +112,16 @@ export default function ExportView({ cwd }: Props) {
   return (
     <div className="export-view">
       <header className="page-header">
-        <h1>Export</h1>
+        <h1>{t("export_title")}</h1>
         <button className="btn-secondary" onClick={loadExportFiles} disabled={loading}>
-          Refresh
+          {t("refresh")}
         </button>
       </header>
 
       <section className="section">
-        <h2>Available Files</h2>
+        <h2>{t("available_files")}</h2>
         {exportFiles.length === 0 ? (
-          <p className="empty-state">No export files yet. Run the export phase first.</p>
+          <p className="empty-state">{t("no_export_files_yet")}</p>
         ) : (
           <div className="export-files-list">
             {exportFiles.map((file) => (
@@ -135,14 +137,14 @@ export default function ExportView({ cwd }: Props) {
                     className="btn-secondary"
                     onClick={() => handleOpen(file)}
                   >
-                    Open
+                    {t("open")}
                   </button>
                   <button
                     className="btn-primary"
                     onClick={() => handleDownload(file)}
                     disabled={loading}
                   >
-                    Download
+                    {t("download")}
                   </button>
                 </div>
               </div>
@@ -152,27 +154,27 @@ export default function ExportView({ cwd }: Props) {
       </section>
 
       <section className="section">
-        <h2>Quick Copy</h2>
-        <p className="muted">{wordCount.toLocaleString()} words in manuscript</p>
+        <h2>{t("quick_copy")}</h2>
+        <p className="muted">{wordCount.toLocaleString()} {t("words_in_manuscript")}</p>
         <div className="export-actions">
           <button
             className="btn-secondary"
             onClick={() => {
               navigator.clipboard.writeText(manuscript);
-              alert("Manuscript copied as Markdown!");
+              alert(t("manuscript_copied"));
             }}
             disabled={!manuscript}
           >
-            Copy Manuscript
+            {t("copy_manuscript")}
           </button>
         </div>
       </section>
 
       <section className="section">
-        <h2>Preview</h2>
+        <h2>{t("preview")}</h2>
         <pre className="manuscript-preview">
-          {manuscript.slice(0, 5000) || "No manuscript available. Run the pipeline first."}
-          {manuscript.length > 5000 && "\n\n... (truncated)"}
+          {manuscript.slice(0, 5000) || t("no_manuscript_available")}
+          {manuscript.length > 5000 && `\n\n${t("truncated")}`}
         </pre>
       </section>
     </div>

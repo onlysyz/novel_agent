@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { useTranslation } from "../i18n";
 
 interface Props {
   cwd: string;
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default function SettingsView({ cwd, onNewProject }: Props) {
+  const { t } = useTranslation();
   const [seed, setSeed] = useState("");
   const [projectPath, setProjectPath] = useState("");
 
@@ -36,49 +38,49 @@ export default function SettingsView({ cwd, onNewProject }: Props) {
   const handleSaveSeed = async () => {
     try {
       await invoke("write_seed", { cwd, seed });
-      alert("Seed saved!");
+      alert(t("seed_saved"));
     } catch (e) {
       console.error("Error saving seed:", e);
-      alert(`Error saving: ${e}`);
+      alert(`${t("error_saving")}: ${e}`);
     }
   };
 
   return (
     <div className="settings-view">
       <header className="page-header">
-        <h1>Settings</h1>
+        <h1>{t("settings_title")}</h1>
       </header>
 
       <section className="section">
-        <h2>Project</h2>
+        <h2>{t("project")}</h2>
         <div className="setting-item">
-          <label>Project Path</label>
+          <label>{t("project_path")}</label>
           <p className="setting-value">{projectPath}</p>
         </div>
       </section>
 
       <section className="section">
-        <h2>Novel Concept (Seed)</h2>
+        <h2>{t("novel_concept_seed")}</h2>
         <textarea
           className="seed-input"
           value={seed}
           onChange={(e) => setSeed(e.target.value)}
-          placeholder="Describe your novel concept..."
+          placeholder={t("novel_concept_placeholder")}
           rows={6}
         />
-        <button className="btn-primary" onClick={handleSaveSeed}>Save Seed</button>
+        <button className="btn-primary" onClick={handleSaveSeed}>{t("save_seed")}</button>
       </section>
 
       <section className="section">
-        <h2>New Project</h2>
-        <p>Start a new project from scratch. This will clear the current project.</p>
-        <button className="btn-secondary" onClick={onNewProject}>Create New Project</button>
+        <h2>{t("new_project")}</h2>
+        <p>{t("new_project_desc")}</p>
+        <button className="btn-secondary" onClick={onNewProject}>{t("create_new_project")}</button>
       </section>
 
       <section className="section">
-        <h2>About</h2>
-        <p>NovelForge v0.1.0</p>
-        <p className="muted">Autonomous novel writing powered by dual-agent AI</p>
+        <h2>{t("about")}</h2>
+        <p>{t("novelforge_version")}</p>
+        <p className="muted">{t("novelforge_desc")}</p>
       </section>
     </div>
   );

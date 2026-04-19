@@ -1,23 +1,24 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { useTranslation } from "../i18n";
 
 interface Props {
   onProjectCreated: () => void;
 }
 
 export default function NewProjectView({ onProjectCreated }: Props) {
+  const { t } = useTranslation();
   const [seed, setSeed] = useState("");
   const [creating, setCreating] = useState(false);
 
   const handleCreate = async () => {
     if (!seed.trim()) {
-      alert("Please enter a novel concept");
+      alert(t("please_enter_concept"));
       return;
     }
 
     setCreating(true);
     try {
-      // Get cwd for this operation
       const cwd = await invoke<string>("get_project_path");
       await invoke("write_seed", { cwd, seed: seed.trim() });
       onProjectCreated();
@@ -33,20 +34,20 @@ export default function NewProjectView({ onProjectCreated }: Props) {
     <div className="new-project-view">
       <div className="new-project-card">
         <div className="logo">NovelForge</div>
-        <h1>Start Your Novel</h1>
-        <p className="tagline">Describe your story concept, and watch it unfold.</p>
+        <h1>{t("start_your_novel")}</h1>
+        <p className="tagline">{t("tagline")}</p>
 
         <div className="seed-input-container">
-          <label htmlFor="seed">Novel Concept</label>
+          <label htmlFor="seed">{t("novel_concept")}</label>
           <textarea
             id="seed"
             value={seed}
             onChange={(e) => setSeed(e.target.value)}
-            placeholder="A retired assassin is forced back into service when her daughter is kidnapped by the same criminal syndicate she once worked for..."
+            placeholder={t("seed_placeholder")}
             rows={5}
           />
           <p className="hint">
-            The more specific your concept, the better the AI can craft your story.
+            {t("hint")}
           </p>
         </div>
 
@@ -55,11 +56,11 @@ export default function NewProjectView({ onProjectCreated }: Props) {
           onClick={handleCreate}
           disabled={creating || !seed.trim()}
         >
-          {creating ? "Creating..." : "Create Novel Project"}
+          {creating ? t("creating") : t("create_novel_project")}
         </button>
 
         <p className="examples">
-          <strong>Examples:</strong>
+          <strong>{t("examples")}</strong>
           <br />A detective must solve her own murder to save her daughter.
           <br />A librarian discovers books that predict the future.
           <br />Two rival chefs fall in love while competing on a reality TV show.

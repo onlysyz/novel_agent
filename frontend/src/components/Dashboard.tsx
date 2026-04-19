@@ -1,4 +1,5 @@
 import { PipelineState } from "../types";
+import { useTranslation } from "../i18n";
 
 interface Props {
   state: PipelineState;
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }: Props) {
+  const { t } = useTranslation();
+
   const handleRun = async (phase: string) => {
     try {
       await onRunPhase(phase);
@@ -34,63 +37,63 @@ export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }
   return (
     <div className="dashboard">
       <header className="page-header">
-        <h1>Dashboard</h1>
-        <button className="btn-secondary" onClick={onNewProject}>New Project</button>
+        <h1>{t("dashboard_title")}</h1>
+        <button className="btn-secondary" onClick={onNewProject}>{t("dashboard_new_project")}</button>
       </header>
 
       <div className="stats-grid">
         <div className="stat-card">
-          <h3>Phase</h3>
-          <p className="stat-value phase">{state.phase || "Not started"}</p>
+          <h3>{t("phase")}</h3>
+          <p className="stat-value phase">{state.phase || t("phase_not_started")}</p>
         </div>
         <div className="stat-card">
-          <h3>Chapters</h3>
+          <h3>{t("chapters")}</h3>
           <p className="stat-value">{state.chapters.length}</p>
         </div>
         <div className="stat-card">
-          <h3>Words</h3>
+          <h3>{t("words")}</h3>
           <p className="stat-value">{totalWords.toLocaleString()}</p>
         </div>
         <div className="stat-card">
-          <h3>Avg Score</h3>
+          <h3>{t("avg_score")}</h3>
           <p className="stat-value">{avgChapterScore.toFixed(1)}</p>
         </div>
       </div>
 
       {state.foundation_scores && (
         <section className="section">
-          <h2>Foundation Scores</h2>
+          <h2>{t("foundation_scores")}</h2>
           <div className="foundation-scores">
             <div className="score-bar">
-              <span>World</span>
+              <span>{t("world")}</span>
               <div className="bar">
                 <div className="fill" style={{ width: `${state.foundation_scores.world * 10}%` }} />
               </div>
               <span className="score">{state.foundation_scores.world.toFixed(1)}</span>
             </div>
             <div className="score-bar">
-              <span>Characters</span>
+              <span>{t("characters")}</span>
               <div className="bar">
                 <div className="fill" style={{ width: `${state.foundation_scores.characters * 10}%` }} />
               </div>
               <span className="score">{state.foundation_scores.characters.toFixed(1)}</span>
             </div>
             <div className="score-bar">
-              <span>Outline</span>
+              <span>{t("outline")}</span>
               <div className="bar">
                 <div className="fill" style={{ width: `${state.foundation_scores.outline * 10}%` }} />
               </div>
               <span className="score">{state.foundation_scores.outline.toFixed(1)}</span>
             </div>
             <div className="score-bar">
-              <span>Canon</span>
+              <span>{t("canon")}</span>
               <div className="bar">
                 <div className="fill" style={{ width: `${state.foundation_scores.canon * 10}%` }} />
               </div>
               <span className="score">{state.foundation_scores.canon.toFixed(1)}</span>
             </div>
             <div className="score-bar">
-              <span>Voice</span>
+              <span>{t("voice")}</span>
               <div className="bar">
                 <div className="fill" style={{ width: `${state.foundation_scores.voice * 10}%` }} />
               </div>
@@ -102,7 +105,7 @@ export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }
 
       {state.chapters.length > 0 && (
         <section className="section">
-          <h2>Chapter Progress</h2>
+          <h2>{t("chapter_progress")}</h2>
           <div className="chapter-progress">
             {state.chapters.map((ch) => (
               <div key={ch.number} className={`chapter-dot ${ch.score ? 'done' : 'pending'}`}>
@@ -115,30 +118,30 @@ export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }
       )}
 
       <section className="section actions">
-        <h2>Run Pipeline</h2>
+        <h2>{t("run_pipeline")}</h2>
         <div className="action-buttons">
           {state.phase === "none" || state.phase === "foundation" ? (
             <button className="btn-primary" onClick={() => handleRun("foundation")}>
-              Run Foundation
+              {t("run_foundation")}
             </button>
           ) : null}
           {state.phase === "drafting" ? (
             <button className="btn-primary" onClick={() => handleRun("drafting")}>
-              Continue Drafting
+              {t("continue_drafting")}
             </button>
           ) : null}
           {state.phase === "review" ? (
             <button className="btn-primary" onClick={() => handleRun("review")}>
-              Continue Review
+              {t("continue_review")}
             </button>
           ) : null}
           {state.phase === "export" ? (
             <button className="btn-primary" onClick={() => handleRun("export")}>
-              Export
+              {t("export")}
             </button>
           ) : null}
           <button className="btn-secondary" onClick={handleRunAll}>
-            Run Full Pipeline
+            {t("run_full_pipeline")}
           </button>
         </div>
       </section>

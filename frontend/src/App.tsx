@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { View, PipelineState } from "./types";
+import { I18nProvider, useTranslation } from "./i18n";
 import Dashboard from "./components/Dashboard";
 import ChapterList from "./components/ChapterList";
 import ChapterEditor from "./components/ChapterEditor";
@@ -9,7 +10,8 @@ import SettingsView from "./components/SettingsView";
 import ExportView from "./components/ExportView";
 import NewProjectView from "./components/NewProjectView";
 
-function App() {
+function AppInner() {
+  const { t, lang, setLang } = useTranslation();
   const [view, setView] = useState<View>("dashboard");
   const [hasProject, setHasProject] = useState<boolean | null>(null);
   const [state, setState] = useState<PipelineState | null>(null);
@@ -94,7 +96,7 @@ function App() {
   };
 
   if (loading) {
-    return <div className="loading">Loading NovelForge...</div>;
+    return <div className="loading">{t("loading_novelforge")}</div>;
   }
 
   if (!hasProject) {
@@ -111,21 +113,35 @@ function App() {
         <div className="logo">NovelForge</div>
         <ul className="nav-items">
           <li className={view === "dashboard" ? "active" : ""}>
-            <button onClick={() => setView("dashboard")}>Dashboard</button>
+            <button onClick={() => setView("dashboard")}>{t("nav_dashboard")}</button>
           </li>
           <li className={view === "chapters" ? "active" : ""}>
-            <button onClick={() => setView("chapters")}>Chapters</button>
+            <button onClick={() => setView("chapters")}>{t("nav_chapters")}</button>
           </li>
           <li className={view === "foundation" ? "active" : ""}>
-            <button onClick={() => setView("foundation")}>Foundation</button>
+            <button onClick={() => setView("foundation")}>{t("nav_foundation")}</button>
           </li>
           <li className={view === "export" ? "active" : ""}>
-            <button onClick={() => setView("export")}>Export</button>
+            <button onClick={() => setView("export")}>{t("nav_export")}</button>
           </li>
           <li className={view === "settings" ? "active" : ""}>
-            <button onClick={() => setView("settings")}>Settings</button>
+            <button onClick={() => setView("settings")}>{t("nav_settings")}</button>
           </li>
         </ul>
+        <div className="lang-switch">
+          <button
+            className={lang === "en" ? "active" : ""}
+            onClick={() => setLang("en")}
+          >
+            EN
+          </button>
+          <button
+            className={lang === "zh" ? "active" : ""}
+            onClick={() => setLang("zh")}
+          >
+            中文
+          </button>
+        </div>
         {state && (
           <div className="status">
             <div className="phase">{state.phase}</div>
@@ -176,4 +192,10 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <I18nProvider>
+      <AppInner />
+    </I18nProvider>
+  );
+}

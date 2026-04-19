@@ -1,0 +1,194 @@
+export const translations = {
+  en: {
+    // App shell
+    nav_dashboard: "Dashboard",
+    nav_chapters: "Chapters",
+    nav_foundation: "Foundation",
+    nav_export: "Export",
+    nav_settings: "Settings",
+
+    // Dashboard
+    dashboard_title: "Dashboard",
+    dashboard_new_project: "New Project",
+    phase: "Phase",
+    phase_not_started: "Not started",
+    chapters: "Chapters",
+    words: "Words",
+    avg_score: "Avg Score",
+    foundation_scores: "Foundation Scores",
+    world: "World",
+    characters: "Characters",
+    outline: "Outline",
+    canon: "Canon",
+    voice: "Voice",
+    chapter_progress: "Chapter Progress",
+    run_pipeline: "Run Pipeline",
+    run_foundation: "Run Foundation",
+    continue_drafting: "Continue Drafting",
+    continue_review: "Continue Review",
+    export: "Export",
+    run_full_pipeline: "Run Full Pipeline",
+
+    // ChapterList
+    chapters_title: "Chapters",
+    no_chapters_yet: "No chapters yet. Run the drafting phase to generate chapters.",
+    chapter: "Chapter",
+    words_count: "words",
+    score_label: "Score",
+
+    // ChapterEditor
+    close: "Close",
+    save: "Save",
+    saving: "Saving...",
+    unsaved: "Unsaved",
+    chapter_content_placeholder: "Chapter content will appear here...",
+
+    // FoundationView
+    foundation_title: "Foundation Documents",
+    loading: "Loading...",
+    select_doc_to_view: "Select a document to view",
+    world_bible: "World Bible",
+
+    // SettingsView
+    settings_title: "Settings",
+    project: "Project",
+    project_path: "Project Path",
+    novel_concept_seed: "Novel Concept (Seed)",
+    novel_concept_placeholder: "Describe your novel concept...",
+    save_seed: "Save Seed",
+    new_project: "New Project",
+    new_project_desc: "Start a new project from scratch. This will clear the current project.",
+    create_new_project: "Create New Project",
+    about: "About",
+    novelforge_version: "NovelForge v0.1.0",
+    novelforge_desc: "Autonomous novel writing powered by dual-agent AI",
+    seed_saved: "Seed saved!",
+    error_saving: "Error saving",
+
+    // NewProjectView
+    start_your_novel: "Start Your Novel",
+    tagline: "Describe your story concept, and watch it unfold.",
+    novel_concept: "Novel Concept",
+    seed_placeholder: "A retired assassin is forced back into service when her daughter is kidnapped by the same criminal syndicate she once worked for...",
+    hint: "The more specific your concept, the better the AI can craft your story.",
+    create_novel_project: "Create Novel Project",
+    creating: "Creating...",
+    examples: "Examples:",
+    please_enter_concept: "Please enter a novel concept",
+
+    // ExportView
+    export_title: "Export",
+    available_files: "Available Files",
+    no_export_files_yet: "No export files yet. Run the export phase first.",
+    refresh: "Refresh",
+    quick_copy: "Quick Copy",
+    words_in_manuscript: "words in manuscript",
+    copy_manuscript: "Copy Manuscript",
+    manuscript_copied: "Manuscript copied as Markdown!",
+    preview: "Preview",
+    no_manuscript_available: "No manuscript available. Run the pipeline first.",
+    truncated: "... (truncated)",
+    open: "Open",
+    download: "Download",
+
+    // General
+    loading_novelforge: "Loading NovelForge...",
+  },
+  zh: {
+    // App shell
+    nav_dashboard: "仪表盘",
+    nav_chapters: "章节",
+    nav_foundation: "设定",
+    nav_export: "导出",
+    nav_settings: "设置",
+
+    // Dashboard
+    dashboard_title: "仪表盘",
+    dashboard_new_project: "新建项目",
+    phase: "阶段",
+    phase_not_started: "未开始",
+    chapters: "章节",
+    words: "字数",
+    avg_score: "平均分",
+    foundation_scores: "设定评分",
+    world: "世界观",
+    characters: "角色",
+    outline: "大纲",
+    canon: "正典",
+    voice: "文风",
+    chapter_progress: "章节进度",
+    run_pipeline: "运行流水线",
+    run_foundation: "运行设定阶段",
+    continue_drafting: "继续撰写",
+    continue_review: "继续审核",
+    export: "导出",
+    run_full_pipeline: "运行完整流水线",
+
+    // ChapterList
+    chapters_title: "章节",
+    no_chapters_yet: "暂无章节。运行撰写阶段以生成章节。",
+    chapter: "第 {n} 章",
+    words_count: "字",
+    score_label: "评分",
+
+    // ChapterEditor
+    close: "关闭",
+    save: "保存",
+    saving: "保存中...",
+    unsaved: "未保存",
+    chapter_content_placeholder: "章节内容将在此显示...",
+
+    // FoundationView
+    foundation_title: "设定文档",
+    loading: "加载中...",
+    select_doc_to_view: "选择一个文档查看",
+    world_bible: "世界观",
+
+    // SettingsView
+    settings_title: "设置",
+    project: "项目",
+    project_path: "项目路径",
+    novel_concept_seed: "小说概念 (种子)",
+    novel_concept_placeholder: "描述你的小说概念...",
+    save_seed: "保存种子",
+    new_project: "新建项目",
+    new_project_desc: "从头开始新建项目。这将清除当前项目。",
+    create_new_project: "创建新项目",
+    about: "关于",
+    novelforge_version: "NovelForge v0.1.0",
+    novelforge_desc: "由双AI代理驱动的自主小说写作工具",
+    seed_saved: "种子已保存！",
+    error_saving: "保存错误",
+
+    // NewProjectView
+    start_your_novel: "开始你的小说",
+    tagline: "描述你的故事概念，看它徐徐展开。",
+    novel_concept: "小说概念",
+    seed_placeholder: "一位退休刺客在女儿被曾效力的犯罪集团绑架后被迫重返江湖...",
+    hint: "概念越具体，AI 就越能创作出你的故事。",
+    create_novel_project: "创建小说项目",
+    creating: "创建中...",
+    examples: "示例：",
+    please_enter_concept: "请输入小说概念",
+
+    // ExportView
+    export_title: "导出",
+    available_files: "可用文件",
+    no_export_files_yet: "暂无导出文件。请先运行导出阶段。",
+    refresh: "刷新",
+    quick_copy: "快速复制",
+    words_in_manuscript: "手稿字数",
+    copy_manuscript: "复制手稿",
+    manuscript_copied: "手稿已复制为 Markdown 格式！",
+    preview: "预览",
+    no_manuscript_available: "暂无手稿。请先运行流水线。",
+    truncated: "...（已截断）",
+    open: "打开",
+    download: "下载",
+
+    // General
+    loading_novelforge: "NovelForge 加载中...",
+  },
+} as const;
+
+export type Language = keyof typeof translations;

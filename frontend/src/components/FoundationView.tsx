@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { FoundationDoc } from "../types";
+import { useTranslation } from "../i18n";
 
 type DocName = "world" | "characters" | "outline" | "canon" | "voice";
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function FoundationView({ cwd }: Props) {
+  const { t } = useTranslation();
   const [selectedDoc, setSelectedDoc] = useState<DocName>("world");
   const [doc, setDoc] = useState<FoundationDoc | null>(null);
   const [loading, setLoading] = useState(false);
@@ -27,18 +29,18 @@ export default function FoundationView({ cwd }: Props) {
     }
   };
 
-  const docs: { key: DocName; label: string }[] = [
-    { key: "world", label: "World Bible" },
-    { key: "characters", label: "Characters" },
-    { key: "outline", label: "Outline" },
-    { key: "canon", label: "Canon" },
-    { key: "voice", label: "Voice" },
+  const docs: { key: DocName; labelKey: string }[] = [
+    { key: "world", labelKey: "world_bible" },
+    { key: "characters", labelKey: "characters" },
+    { key: "outline", labelKey: "outline" },
+    { key: "canon", labelKey: "canon" },
+    { key: "voice", labelKey: "voice" },
   ];
 
   return (
     <div className="foundation-view">
       <header className="page-header">
-        <h1>Foundation Documents</h1>
+        <h1>{t("foundation_title")}</h1>
       </header>
       <div className="foundation-tabs">
         {docs.map((d) => (
@@ -47,13 +49,13 @@ export default function FoundationView({ cwd }: Props) {
             className={`tab ${selectedDoc === d.key ? "active" : ""}`}
             onClick={() => loadDoc(d.key)}
           >
-            {d.label}
+            {t(d.labelKey as any)}
           </button>
         ))}
       </div>
       <div className="foundation-content">
         {loading ? (
-          <p>Loading...</p>
+          <p>{t("loading")}</p>
         ) : doc ? (
           <div className="doc-view">
             <div className="doc-header">
@@ -62,7 +64,7 @@ export default function FoundationView({ cwd }: Props) {
             <pre className="doc-text">{doc.content}</pre>
           </div>
         ) : (
-          <p className="empty-state">Select a document to view</p>
+          <p className="empty-state">{t("select_doc_to_view")}</p>
         )}
       </div>
     </div>

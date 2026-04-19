@@ -244,6 +244,69 @@ class TestConvertMarkdownToLatex:
         assert r"\begin{verbatim}" in result
         assert r"\end{verbatim}" in result
 
+    def test_empty_text(self):
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("")
+        assert result == ""
+
+    def test_plain_text_no_formatting(self):
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("Just some plain text.")
+        assert "Just some plain text." in result
+
+    def test_italic_underscore_mid_word(self):
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("This is _really_ important.")
+        assert r"\textit{really}" in result
+
+    def test_bold_and_italic_combined(self):
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("***bold italic***")
+        assert r"\textbf{" in result
+        assert r"\textit{bold italic}" in result
+
+    def test_header_requires_space_after_hash(self):
+        """# must be followed by a space to be recognized as a header."""
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("#NoSpaceHere")
+        # Without space, it's treated as plain text (no \section)
+        assert r"\section*" not in result
+        assert "#NoSpaceHere" in result
+
+    def test_multiple_consecutive_headers(self):
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("# Header1\n## Header2\n### Header3")
+        assert r"\section*{Header1}" in result
+        assert r"\subsection*{Header2}" in result
+        assert r"\subsubsection*{Header3}" in result
+
+    def test_paragraph_without_trailing_newline(self):
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("A paragraph without newline")
+        assert "A paragraph without newline" in result
+
+    def test_paragraph_mixed_bold_italic(self):
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("This has **bold** and *italic* together.")
+        assert r"\textbf{bold}" in result
+        assert r"\textit{italic}" in result
+
+    def test_bold_only_supports_double_asterisk(self):
+        """Bold only supports **...**, not __...__ (underscore is italic)."""
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("This is __bold__ text")
+        # __...__ is not treated as bold — underscores are italic
+        assert r"\textbf{bold}" not in result
+        # The first _ triggers italic, content includes remaining underscores
+        assert r"\textit{" in result
+
+    def test_links_not_converted(self):
+        """Markdown links are not converted by this function."""
+        from src.export.typeset import convert_markdown_to_latex
+        result = convert_markdown_to_latex("See [this](https://example.com)")
+        # Links pass through unchanged (this function doesn't handle them)
+        assert "[this](https://example.com)" in result
+
 
 class TestEscapeXml:
     """Tests for src.export.epub_export.escape_xml()."""

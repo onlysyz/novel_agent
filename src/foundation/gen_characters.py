@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.common.api import get_client
-from src.common.prompts import build_characters_prompt, read_seed, read_layer
+from src.common.prompts import build_characters_prompt, read_seed, read_layer, read_language
 from src.common.scoring import score_foundation, iteration_summary
 
 DOTNOVEL = Path(".novelforge")
@@ -23,6 +23,7 @@ def generate_characters(
     seed: str = None,
     world: str = None,
     voice: str = None,
+    language: str = None,
     min_score: float = MIN_SCORE,
     max_iterations: int = MAX_ITERATIONS,
 ) -> dict:
@@ -33,6 +34,7 @@ def generate_characters(
         seed: Seed concept (reads from seed.txt if not provided)
         world: World bible (reads from world.md if not provided)
         voice: Voice reference for style guidance
+        language: Language code (reads from seed.txt if not provided)
         min_score: Minimum score threshold
         max_iterations: Maximum regeneration attempts
 
@@ -47,6 +49,7 @@ def generate_characters(
     if not world:
         raise ValueError("No world bible provided and world.md not found")
     voice = voice or read_layer("voice.md") or None
+    language = language or read_language()
 
     client = get_client()
     output_path = NOVEL_DIR / "characters.md"
@@ -61,7 +64,7 @@ def generate_characters(
     for iteration in range(1, max_iterations + 1):
         print(f"[Character Generation] Iteration {iteration}/{max_iterations}")
 
-        system, user = build_characters_prompt(seed, world, voice)
+        system, user = build_characters_prompt(seed, world, voice, language)
 
         if refinement_context:
             user += f"\n\n## Previous Attempt Feedback\n{refinement_context}"

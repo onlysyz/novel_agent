@@ -9,13 +9,38 @@ NOVEL_DIR = Path(".")
 
 
 def read_seed() -> str:
-    """Read the seed concept."""
+    """Read the seed concept, stripping the language header if present."""
     seed_path = NOVEL_DIR / "seed.txt"
     if not seed_path.exists():
         seed_path = DOTNOVEL / "seed.txt"
     if seed_path.exists():
-        return seed_path.read_text().strip()
+        content = seed_path.read_text().strip()
+        # Strip [language: xx] header if present
+        if content.startswith("[language:"):
+            lines = content.split("\n")
+            # Skip until after the empty line following the header
+            for i, line in enumerate(lines):
+                if line.startswith("[language:") and i + 1 < len(lines) and not lines[i + 1].strip():
+                    return "\n".join(lines[i + 2:]).strip()
+            # Fallback: just find where content starts
+            for i, line in enumerate(lines):
+                if not line.startswith("[language:") and not line.startswith("#") and line.strip():
+                    return "\n".join(lines[i:]).strip()
+        return content
     return ""
+
+
+def read_language() -> str:
+    """Read the language from the seed.txt header."""
+    seed_path = NOVEL_DIR / "seed.txt"
+    if not seed_path.exists():
+        seed_path = DOTNOVEL / "seed.txt"
+    if seed_path.exists():
+        for line in seed_path.read_text().split("\n"):
+            if line.startswith("[language:"):
+                lang = line.split(":", 1)[1].strip().rstrip("]")
+                return lang.strip()
+    return "en"  # default to English
 
 
 def read_layer(filename: str) -> str:
@@ -38,10 +63,28 @@ def read_craft_guide() -> str:
     return read_layer("CRAFT.md")
 
 
+LANGUAGE_NAMES = {
+    "en": "English",
+    "zh": "Simplified Chinese",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German",
+}
+
+
+def _get_language_instruction(language: str) -> str:
+    """Get language instruction for prompts."""
+    lang_name = LANGUAGE_NAMES.get(language, "English")
+    return f"\n\n## Language\nWrite all content in {lang_name}." if language != "en" else ""
+
+
 def build_world_prompt(
     seed: str,
     voice: Optional[str] = None,
     craft: Optional[str] = None,
+    language: str = "en",
 ) -> tuple[str, str]:
     """Build system and user prompts for world generation."""
     system = """You are a novel architect specializing in creating immersive, consistent fantasy worlds.
@@ -56,10 +99,13 @@ You understand:
 Generate a detailed world bible that serves the specific seed concept.
 All lore elements must interconnect - nothing exists in isolation."""
 
+    lang_instruction = _get_language_instruction(language)
+
     user = f"""Generate a world bible for the following novel concept:
 
 ## Seed Concept
 {seed}
+{lang_instruction}
 
 {f'''## Voice Reference
 {voice}''' if voice else ''}
@@ -95,6 +141,7 @@ def build_characters_prompt(
     seed: str,
     world: str,
     voice: Optional[str] = None,
+    language: str = "en",
 ) -> tuple[str, str]:
     """Build prompts for character generation."""
     system = """You are a character architect specializing in creating distinct, memorable characters.
@@ -108,10 +155,13 @@ You understand:
 
 Generate character profiles that will drive the specific story forward."""
 
+    lang_instruction = _get_language_instruction(language)
+
     user = f"""Generate character profiles for the following novel:
 
 ## Seed Concept
 {seed}
+{lang_instruction}
 
 ## World Bible
 {world}
@@ -140,7 +190,7 @@ Generate 3-8 major characters. Each profile must include:
 ## Anti-Patterns to Avoid
 - Characters who always say the right thing strategically
 - Flat characters who serve only as plot devices
--对话框 that could be interchanged between characters
+- Dialogue that could be interchanged between characters
 - Missing flaws or moments of weakness
 """
     return system, user
@@ -152,6 +202,7 @@ def build_outline_prompt(
     characters: str,
     voice: Optional[str] = None,
     mystery: Optional[str] = None,
+    language: str = "en",
 ) -> tuple[str, str]:
     """Build prompts for outline generation with Save the Cat beats."""
     system = """You are a novel architect familiar with:
@@ -163,10 +214,13 @@ def build_outline_prompt(
 Generate a detailed outline targeting 22-26 chapters (~80,000 words total).
 Each chapter should be 3000-4000 words."""
 
+    lang_instruction = _get_language_instruction(language)
+
     user = f"""Generate a complete story outline for:
 
 ## Seed Concept
 {seed}
+{lang_instruction}
 
 ## World Bible
 {world}
@@ -220,17 +274,20 @@ Minimum 3-chapter distance between planting and payoff.
     return system, user
 
 
-def build_canon_prompt(seed: str, world: str, characters: str, outline: str) -> tuple[str, str]:
+def build_canon_prompt(seed: str, world: str, characters: str, outline: str, language: str = "en") -> tuple[str, str]:
     """Build prompts for canonical facts generation."""
     system = """You are a continuity architect. Your job is to extract HARD FACTS from the generated world, characters, and outline.
 
 These facts will be checked against every chapter. Violations cap chapter scores at 6.
 Be exhaustive, specific, and precise. When in doubt, write it down."""
 
+    lang_instruction = _get_language_instruction(language)
+
     user = f"""Extract all canonical facts from the following documents:
 
 ## Seed Concept
 {seed}
+{lang_instruction}
 
 ## World Bible
 {world}
@@ -281,7 +338,7 @@ Format as a reference document. Be specific enough that a writer could be called
     return system, user
 
 
-def build_voice_prompt(sample_texts: list[str], seed: str) -> tuple[str, str]:
+def build_voice_prompt(sample_texts: list[str], seed: str, language: str = "en") -> tuple[str, str]:
     """Build prompts for voice/writing style fingerprint."""
     system = """You are a literary analyst specializing in prose style. Analyze the provided texts and extract the essential voice characteristics that make them distinctive."""
 
@@ -289,10 +346,13 @@ def build_voice_prompt(sample_texts: list[str], seed: str) -> tuple[str, str]:
         f"--- Sample {i+1} ---\n{text}" for i, text in enumerate(sample_texts)
     )
 
+    lang_instruction = _get_language_instruction(language)
+
     user = f"""Analyze the following sample texts and create a VOICE FINGERPRINT for the author.
 
 ## Seed Concept (what the author wants to write)
 {seed}
+{lang_instruction}
 
 ## Sample Texts
 {sample_texts_formatted}

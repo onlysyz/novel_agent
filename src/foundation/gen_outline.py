@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.common.api import get_client
-from src.common.prompts import build_outline_prompt, read_seed, read_layer
+from src.common.prompts import build_outline_prompt, read_seed, read_layer, read_language
 from src.common.scoring import score_foundation, iteration_summary
 
 DOTNOVEL = Path(".novelforge")
@@ -24,6 +24,7 @@ def generate_outline(
     world: str = None,
     characters: str = None,
     voice: str = None,
+    language: str = None,
     min_score: float = MIN_SCORE,
     max_iterations: int = MAX_ITERATIONS,
 ) -> dict:
@@ -35,6 +36,7 @@ def generate_outline(
         world: World bible (reads from world.md if not provided)
         characters: Character profiles (reads from characters.md if not provided)
         voice: Voice reference for style guidance
+        language: Language code (reads from seed.txt if not provided)
         min_score: Minimum score threshold
         max_iterations: Maximum regeneration attempts
 
@@ -52,6 +54,7 @@ def generate_outline(
     if not characters:
         raise ValueError("No character profiles provided and characters.md not found")
     voice = voice or read_layer("voice.md") or None
+    language = language or read_language()
 
     client = get_client()
     output_path = NOVEL_DIR / "outline.md"
@@ -69,7 +72,7 @@ def generate_outline(
     for iteration in range(1, max_iterations + 1):
         print(f"[Outline Generation] Iteration {iteration}/{max_iterations}")
 
-        system, user = build_outline_prompt(seed, world, characters, voice)
+        system, user = build_outline_prompt(seed, world, characters, voice, language=language)
 
         if refinement_context:
             user += f"\n\n## Previous Attempt Feedback\n{refinement_context}"

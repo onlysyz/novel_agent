@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
+use tauri::Emitter;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Project {
@@ -60,7 +61,26 @@ pub struct ChapterSummary {
 // Get current project directory (cwd)
 #[tauri::command]
 fn get_project_path() -> Result<String, String> {
-    // First: check if current directory itself is a project
+    // First: check if output_dir is configured in .novelforge/config.json
+    let config_path = std::path::PathBuf::from(".novelforge/config.json");
+    if config_path.exists() {
+        if let Ok(content) = std::fs::read_to_string(&config_path) {
+            if let Ok(config) = serde_json::from_str::<serde_json::Value>(&content) {
+                if let Some(output_dir) = config.get("output_dir").and_then(|v| v.as_str()) {
+                    let output_path = std::path::PathBuf::from(output_dir);
+                    if output_path.join(".novelforge/state.json").exists() {
+                        return Ok(output_dir.to_string());
+                    }
+                    // Also check if seed.txt exists there
+                    if output_path.join("seed.txt").exists() {
+                        return Ok(output_dir.to_string());
+                    }
+                }
+            }
+        }
+    }
+
+    // Second: check if current directory itself is a project
     if std::path::Path::new(".novelforge/state.json").exists() {
         return std::env::current_dir()
             .map(|p| p.to_string_lossy().to_string())
@@ -100,19 +120,196 @@ fn get_project_path() -> Result<String, String> {
         .map_err(|e| e.to_string())
 }
 
-// Read seed.txt
+// Read seed.txt (strips language header if present)
 #[tauri::command]
 fn read_seed(cwd: String) -> Result<String, String> {
     let path = PathBuf::from(&cwd).join("seed.txt");
-    let seed = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    let content = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+
+    // Strip [language: xx] header if present
+    let seed = if content.starts_with("[language:") {
+        content
+            .lines()
+            .skip_while(|l| l.starts_with("[language:"))
+            .skip(1) // skip the empty line after header
+            .collect::<Vec<_>>()
+            .join("\n")
+    } else {
+        content
+    };
+
     Ok(seed.trim().to_string())
 }
 
-// Write seed.txt
+// Read language from seed.txt header
 #[tauri::command]
-fn write_seed(cwd: String, seed: String) -> Result<(), String> {
+fn read_language(cwd: String) -> Result<String, String> {
     let path = PathBuf::from(&cwd).join("seed.txt");
-    fs::write(&path, seed).map_err(|e| e.to_string())
+    let content = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+
+    for line in content.lines() {
+        if line.starts_with("[language:") {
+            let lang = line
+                .strip_prefix("[language:")
+                .unwrap_or("")
+                .trim_end_matches(']')
+                .trim();
+            return Ok(lang.to_string());
+        }
+    }
+    Ok("en".to_string()) // default to English
+}
+
+// AI Configuration
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AIConfig {
+    pub api_key: String,
+    pub base_url: String,
+    pub model: String,
+    pub opus_model: String,
+    pub target_words: String,
+    pub chapter_target: String,
+    pub output_dir: String,
+    pub novel_title: String,
+}
+
+// Read AI config
+#[tauri::command]
+fn read_ai_config(cwd: String) -> Result<AIConfig, String> {
+    let config_path = PathBuf::from(&cwd).join(".novelforge/config.json");
+    if config_path.exists() {
+        let content = fs::read_to_string(&config_path).map_err(|e| e.to_string())?;
+        serde_json::from_str(&content).map_err(|e| e.to_string())
+    } else {
+        // Return defaults
+        Ok(AIConfig {
+            api_key: String::new(),
+            base_url: String::new(),
+            model: "claude-sonnet-4-20250514".to_string(),
+            opus_model: "opus-4-5-20251114".to_string(),
+            target_words: "80000".to_string(),
+            chapter_target: "22".to_string(),
+            output_dir: String::new(),
+            novel_title: String::new(),
+        })
+    }
+}
+
+// Write AI config
+#[tauri::command]
+fn write_ai_config(cwd: String, config: AIConfig) -> Result<(), String> {
+    let dotnovel = PathBuf::from(&cwd).join(".novelforge");
+    fs::create_dir_all(&dotnovel).map_err(|e| e.to_string())?;
+    let config_path = dotnovel.join("config.json");
+    let content = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
+    fs::write(&config_path, content).map_err(|e| e.to_string())
+}
+
+// Write seed.txt with language header
+#[tauri::command]
+fn write_seed(cwd: String, seed: String, language: String) -> Result<(), String> {
+    let path = PathBuf::from(&cwd).join("seed.txt");
+    let content = format!("[language: {}]\n{}", language, seed);
+    fs::write(&path, content).map_err(|e| e.to_string())
+}
+
+// Reset state for a new project
+#[tauri::command]
+fn reset_project_state(cwd: String) -> Result<(), String> {
+    let dotnovel = PathBuf::from(&cwd).join(".novelforge");
+    let state_path = dotnovel.join("state.json");
+
+    // Remove existing state
+    if state_path.exists() {
+        fs::remove_file(&state_path).map_err(|e| e.to_string())?;
+    }
+
+    // Also remove generated files for a clean start
+    let files_to_remove = ["voice.md", "world.md", "characters.md", "outline.md", "canon.md", "manuscript.md"];
+    for f in files_to_remove {
+        let path = PathBuf::from(&cwd).join(f);
+        if path.exists() {
+            fs::remove_file(&path).map_err(|e| e.to_string())?;
+        }
+    }
+
+    // Remove chapters directory
+    let chapters_dir = PathBuf::from(&cwd).join("chapters");
+    if chapters_dir.exists() {
+        fs::remove_dir_all(&chapters_dir).map_err(|e| e.to_string())?;
+    }
+
+    Ok(())
+}
+
+// Generate novel title using AI
+#[tauri::command]
+async fn generate_title(cwd: String) -> Result<String, String> {
+    let python = if Command::new("python3").arg("--version").output().is_ok() {
+        "python3"
+    } else {
+        "python"
+    };
+
+    let output = Command::new(python)
+        .env("PYTHONPATH", &cwd)
+        .args(["-c", "
+import sys
+sys.path.insert(0, '.')
+from src.foundation.gen_title import generate_title
+result = generate_title()
+print(result['title'])
+"])
+        .current_dir(&cwd)
+        .output()
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("Failed to generate title: {}", stderr));
+    }
+
+    let title = String::from_utf8_lossy(&output.stdout).trim().to_string();
+
+    // Save title to config
+    let config_path = PathBuf::from(&cwd).join(".novelforge/config.json");
+    let mut config: AIConfig = if config_path.exists() {
+        let content = fs::read_to_string(&config_path).map_err(|e| e.to_string())?;
+        serde_json::from_str(&content).unwrap_or(AIConfig {
+            api_key: String::new(),
+            base_url: String::new(),
+            model: "claude-sonnet-4-20250514".to_string(),
+            opus_model: "opus-4-5-20251114".to_string(),
+            target_words: "80000".to_string(),
+            chapter_target: "22".to_string(),
+            output_dir: String::new(),
+            novel_title: String::new(),
+        })
+    } else {
+        AIConfig {
+            api_key: String::new(),
+            base_url: String::new(),
+            model: "claude-sonnet-4-20250514".to_string(),
+            opus_model: "opus-4-5-20251114".to_string(),
+            target_words: "80000".to_string(),
+            chapter_target: "22".to_string(),
+            output_dir: String::new(),
+            novel_title: String::new(),
+        }
+    };
+
+    // Create .novelforge dir if needed
+    let dotnovel = PathBuf::from(&cwd).join(".novelforge");
+    fs::create_dir_all(&dotnovel).map_err(|e| e.to_string())?;
+
+    // Set the generated title
+    config.novel_title = title.clone();
+
+    // Write config with title
+    let content = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
+    fs::write(&config_path, content).map_err(|e| e.to_string())?;
+
+    Ok(title)
 }
 
 // Read state.json
@@ -242,53 +439,119 @@ fn extract_title(content: &str) -> Option<String> {
     None
 }
 
-// Run pipeline command
-#[tauri::command]
-async fn run_pipeline_phase(phase: String, cwd: String) -> Result<String, String> {
-    let python = if Command::new("python3").arg("--version").output().is_ok() {
-        "python3"
-    } else {
-        "python"
-    };
-    let output = Command::new(python)
-        .env("PYTHONPATH", &cwd)
-        .args(["run_pipeline.py", "--phase", &phase])
-        .current_dir(&cwd)
-        .output()
-        .map_err(|e| e.to_string())?;
-
-    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-    let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-
-    if !output.status.success() {
-        return Err(format!("Pipeline failed: {}\n{}", stdout, stderr));
-    }
-
-    Ok(stdout)
+// Pipeline progress event payload
+#[derive(Clone, serde::Serialize)]
+struct PipelineProgress {
+    phase: String,
+    step: String,
+    message: String,
 }
 
-// Run full pipeline
+// Run pipeline command - async with progress events
 #[tauri::command]
-async fn run_full_pipeline(cwd: String) -> Result<String, String> {
-    let python = if Command::new("python3").arg("--version").output().is_ok() {
-        "python3"
-    } else {
-        "python"
-    };
-    let output = Command::new(python)
-        .env("PYTHONPATH", &cwd)
-        .args(["run_pipeline.py", "--full"])
-        .current_dir(&cwd)
-        .output()
-        .map_err(|e| e.to_string())?;
+async fn run_pipeline_phase(phase: String, cwd: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+    // Emit started event
+    app_handle.emit("pipeline-started", &phase).map_err(|e| e.to_string())?;
 
-    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+    // Spawn background task
+    let cwd_clone = cwd.clone();
+    let app_handle_clone = app_handle.clone();
+    tauri::async_runtime::spawn(async move {
+        let python = if Command::new("python3").arg("--version").output().is_ok() {
+            "python3"
+        } else {
+            "python"
+        };
 
-    if !output.status.success() {
-        return Err(stdout);
-    }
+        // Emit running event
+        let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+            phase: phase.clone(),
+            step: "running".to_string(),
+            message: format!("Running {} phase...", phase),
+        });
 
-    Ok(stdout)
+        let output = Command::new(python)
+            .env("PYTHONPATH", &cwd_clone)
+            .args(&["run_pipeline.py", "--phase", &phase])
+            .current_dir(&cwd_clone)
+            .output();
+
+        match output {
+            Ok(output) => {
+                let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+                let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+
+                if output.status.success() {
+                    let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+                        phase: phase.clone(),
+                        step: "complete".to_string(),
+                        message: format!("{} phase completed", phase),
+                    });
+                    let _ = app_handle_clone.emit("pipeline-complete", phase);
+                } else {
+                    let _ = app_handle_clone.emit("pipeline-error", format!("Pipeline failed: {}\n{}", stdout, stderr));
+                }
+            }
+            Err(e) => {
+                let _ = app_handle_clone.emit("pipeline-error", format!("Pipeline error: {}", e));
+            }
+        }
+    });
+
+    Ok(())
+}
+
+// Run full pipeline - async with progress events
+#[tauri::command]
+async fn run_full_pipeline(cwd: String, app_handle: tauri::AppHandle) -> Result<(), String> {
+    // Emit started event
+    app_handle.emit("pipeline-started", "full").map_err(|e| e.to_string())?;
+
+    // Spawn background task
+    let cwd_clone = cwd.clone();
+    let app_handle_clone = app_handle.clone();
+    tauri::async_runtime::spawn(async move {
+        let python = if Command::new("python3").arg("--version").output().is_ok() {
+            "python3"
+        } else {
+            "python"
+        };
+
+        let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+            phase: "full".to_string(),
+            step: "running".to_string(),
+            message: "Running full pipeline...".to_string(),
+        });
+
+        let output = Command::new(python)
+            .env("PYTHONPATH", &cwd_clone)
+            .args(&["run_pipeline.py", "--full"])
+            .current_dir(&cwd_clone)
+            .output();
+
+        match output {
+            Ok(output) => {
+                let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+                let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+
+                if output.status.success() {
+                    let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+                        phase: "full".to_string(),
+                        step: "complete".to_string(),
+                        message: "Full pipeline completed".to_string(),
+                    });
+                    let _ = app_handle_clone.emit("pipeline-complete", "full");
+                } else {
+                    let _ = app_handle_clone.emit("pipeline-error", format!("Pipeline failed: {}\n{}", stdout, stderr));
+                }
+            }
+            Err(e) => {
+                let _ = app_handle_clone.emit("pipeline-error", format!("Pipeline error: {}", e));
+            }
+        }
+    });
+
+    Ok(())
 }
 
 // Save chapter content
@@ -582,7 +845,12 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_project_path,
             read_seed,
+            read_language,
             write_seed,
+            reset_project_state,
+            read_ai_config,
+            write_ai_config,
+            generate_title,
             read_state,
             read_chapter,
             read_foundation_doc,

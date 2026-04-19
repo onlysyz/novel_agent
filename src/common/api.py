@@ -3,6 +3,7 @@
 import os
 import time
 import logging
+import json
 from pathlib import Path
 from typing import Optional
 
@@ -23,21 +24,52 @@ logger = logging.getLogger("novelforge.api")
 CACHE_DIR = Path(".novelforge/.cache")
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+# Config file path
+CONFIG_FILE = Path(".novelforge/config.json")
+
+
+def _load_config() -> dict:
+    """Load AI config from file with fallback to env vars."""
+    # Default config from environment
+    config = {
+        "api_key": os.getenv("ANTHROPIC_API_KEY", ""),
+        "base_url": os.getenv("ANTHROPIC_BASE_URL", ""),
+        "model": os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514"),
+        "opus_model": os.getenv("CLAUDE_OPUS_MODEL", "opus-4-5-20251114"),
+        "target_words": os.getenv("TARGET_WORDS", "80000"),
+        "chapter_target": os.getenv("CHAPTER_TARGET", "22"),
+    }
+
+    # Override with config file if exists
+    if CONFIG_FILE.exists():
+        try:
+            file_config = json.loads(CONFIG_FILE.read_text())
+            # Only override non-empty values from file
+            for key in ["api_key", "base_url", "model", "opus_model", "target_words", "chapter_target"]:
+                if file_config.get(key):
+                    config[key] = file_config[key]
+        except Exception as e:
+            logger.warning(f"Failed to load config file: {e}")
+
+    return config
+
 
 class AnthropicClient:
     """Wrapper around Anthropic API with retry logic and caching."""
 
     def __init__(
         self,
-        model: str = "claude-sonnet-4-20250514",
-        max_tokens: int = 8192,
+        model: str = None,
+        max_tokens: int = 128000,
         temperature: float = 0.5,
     ):
-        api_key = os.getenv("ANTHROPIC_API_KEY")
+        config = _load_config()
+        api_key = config.get("api_key") or os.getenv("ANTHROPIC_API_KEY")
         if not api_key:
-            raise ValueError("ANTHROPIC_API_KEY not set in environment")
-        self.client = Anthropic(api_key=api_key)
-        self.model = model
+            raise ValueError("ANTHROPIC_API_KEY not set in environment or config file")
+        base_url = config.get("base_url") or os.getenv("ANTHROPIC_BASE_URL") or None
+        self.client = Anthropic(api_key=api_key, base_url=base_url)
+        self.model = model or config.get("model", "claude-sonnet-4-20250514")
         self.max_tokens = max_tokens
         self.temperature = temperature
 
@@ -194,9 +226,10 @@ class AnthropicClient:
         max_tokens: Optional[int] = None,
     ) -> str:
         """Generate using Opus model (for review tasks)."""
+        config = _load_config()
         original_model = self.model
         try:
-            self.model = os.getenv("CLAUDE_OPUS_MODEL", "opus-4-5-20251114")
+            self.model = config.get("opus_model", "opus-4-5-20251114")
             return self.generate(system_prompt, user_prompt, max_tokens)
         finally:
             self.model = original_model
@@ -204,4 +237,4 @@ class AnthropicClient:
 
 def get_client(model: Optional[str] = None) -> AnthropicClient:
     """Get or create an AnthropicClient instance."""
-    return AnthropicClient(model=model or os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514"))
+    return AnthropicClient(model=model)

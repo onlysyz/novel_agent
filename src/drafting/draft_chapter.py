@@ -6,6 +6,7 @@ Handles continuity with previous chapters and adherence to outline beats.
 
 import os
 import re
+import sys
 from pathlib import Path
 
 

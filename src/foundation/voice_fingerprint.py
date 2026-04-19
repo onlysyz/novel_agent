@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.common.api import get_client
-from src.common.prompts import build_voice_prompt, read_seed
+from src.common.prompts import build_voice_prompt, read_seed, read_language
 from src.common.scoring import score_foundation, iteration_summary
 
 DOTNOVEL = Path(".novelforge")
@@ -33,6 +33,7 @@ Three pages. His mother's handwriting. The kind of writing that slanted hard to 
 def generate_voice(
     seed: str = None,
     sample_texts: list = None,
+    language: str = None,
     min_score: float = MIN_SCORE,
     max_iterations: int = MAX_ITERATIONS,
 ) -> dict:
@@ -42,6 +43,7 @@ def generate_voice(
     Args:
         seed: Seed concept (reads from seed.txt if not provided)
         sample_texts: List of sample texts (reads from voice_samples/ dir if not provided)
+        language: Language code (reads from seed.txt if not provided)
         min_score: Minimum score threshold
         max_iterations: Maximum regeneration attempts
 
@@ -52,6 +54,7 @@ def generate_voice(
     seed = seed or read_seed()
     if not seed:
         raise ValueError("No seed concept provided and seed.txt not found")
+    language = language or read_language()
 
     # Load sample texts
     if sample_texts is None:
@@ -82,7 +85,7 @@ def generate_voice(
     for iteration in range(1, max_iterations + 1):
         print(f"[Voice Generation] Iteration {iteration}/{max_iterations}")
 
-        system, user = build_voice_prompt(sample_texts, seed)
+        system, user = build_voice_prompt(sample_texts, seed, language)
 
         if refinement_context:
             user += f"\n\n## Previous Attempt Feedback\n{refinement_context}"

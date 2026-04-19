@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.common.api import get_client
-from src.common.prompts import build_canon_prompt, read_seed, read_layer
+from src.common.prompts import build_canon_prompt, read_seed, read_layer, read_language
 from src.common.scoring import score_foundation, iteration_summary
 
 DOTNOVEL = Path(".novelforge")
@@ -24,6 +24,7 @@ def generate_canon(
     world: str = None,
     characters: str = None,
     outline: str = None,
+    language: str = None,
     min_score: float = MIN_SCORE,
     max_iterations: int = MAX_ITERATIONS,
 ) -> dict:
@@ -35,6 +36,7 @@ def generate_canon(
         world: World bible (reads from world.md if not provided)
         characters: Character profiles (reads from characters.md if not provided)
         outline: Story outline (reads from outline.md if not provided)
+        language: Language code (reads from seed.txt if not provided)
         min_score: Minimum score threshold
         max_iterations: Maximum regeneration attempts
 
@@ -54,6 +56,7 @@ def generate_canon(
     outline = outline or read_layer("outline.md")
     if not outline:
         raise ValueError("No story outline provided and outline.md not found")
+    language = language or read_language()
 
     client = get_client()
     output_path = NOVEL_DIR / "canon.md"
@@ -68,7 +71,7 @@ def generate_canon(
     for iteration in range(1, max_iterations + 1):
         print(f"[Canon Generation] Iteration {iteration}/{max_iterations}")
 
-        system, user = build_canon_prompt(seed, world, characters, outline)
+        system, user = build_canon_prompt(seed, world, characters, outline, language)
 
         if refinement_context:
             user += f"\n\n## Previous Attempt Feedback\n{refinement_context}"

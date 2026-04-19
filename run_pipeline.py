@@ -34,12 +34,43 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-DOTNOVEL = Path(".novelforge")
-NOVEL_DIR = Path(".")
-STATE_FILE = DOTNOVEL / "state.json"
+# These are initialized in main() after parsing args
+DOTNOVEL = None
+NOVEL_DIR = None
+STATE_FILE = None
+CONFIG_FILE = None
 
 # Phase order for sequential execution
 PHASE_ORDER = ["foundation", "drafting", "review", "export"]
+
+
+def load_project_config() -> dict:
+    """Load project config from file with fallback to env vars."""
+    global CONFIG_FILE
+    config = {
+        "target_words": os.getenv("TARGET_WORDS", "80000"),
+        "chapter_target": os.getenv("CHAPTER_TARGET", "22"),
+        "output_dir": os.getenv("OUTPUT_DIR", "."),
+    }
+    if CONFIG_FILE is None:
+        return config
+    try:
+        file_config = json.loads(CONFIG_FILE.read_text())
+        for key in ["target_words", "chapter_target", "output_dir"]:
+            if file_config.get(key):
+                config[key] = file_config[key]
+    except Exception:
+        pass
+    return config
+
+
+def init_paths(output_dir: str = "."):
+    """Initialize paths based on output directory."""
+    global DOTNOVEL, NOVEL_DIR, STATE_FILE, CONFIG_FILE
+    NOVEL_DIR = Path(output_dir) if output_dir and output_dir != "." else Path.cwd()
+    DOTNOVEL = NOVEL_DIR / ".novelforge"
+    STATE_FILE = DOTNOVEL / "state.json"
+    CONFIG_FILE = DOTNOVEL / "config.json"
 
 
 # =============================================================================
@@ -248,8 +279,34 @@ def run_foundation(state: dict) -> dict:
             "Example: echo 'A retired assassin is forced back into service...' > seed.txt"
         )
 
-    seed = seed_path.read_text().strip()
+    # Read seed content (strip language header if present)
+    seed_content = seed_path.read_text().strip()
+    if seed_content.startswith("[language:"):
+        lines = seed_content.split("\n")
+        for i, line in enumerate(lines):
+            if line.startswith("[language:") and i + 1 < len(lines) and not lines[i + 1].strip():
+                language = line.split(":", 1)[1].strip().rstrip("]")
+                seed = "\n".join(lines[i + 2:]).strip()
+                break
+        else:
+            # No empty line after header, find where content starts
+            seed = seed_content
+            for line in lines:
+                if not line.startswith("[language:") and not line.startswith("#") and line.strip():
+                    break
+            seed = seed.split(line, 1)[1].strip() if line in seed else seed
+    else:
+        seed = seed_content
+
+    # Read language from header
+    language = "en"
+    for line in seed_path.read_text().split("\n"):
+        if line.startswith("[language:"):
+            language = line.split(":", 1)[1].strip().rstrip("]")
+            break
+
     print(f"Novel concept: {seed[:80]}{'...' if len(seed) > 80 else ''}")
+    print(f"Language: {language}")
     print()
 
     results = {}
@@ -257,7 +314,7 @@ def run_foundation(state: dict) -> dict:
     # Step 1: World Bible
     print("[1/5] World Bible...")
     start = time.time()
-    result = generate_world(seed=seed)
+    result = generate_world(seed=seed, language=language)
     results["world"] = {
         "score": result["score"],
         "iterations": result["iterations"],
@@ -269,7 +326,7 @@ def run_foundation(state: dict) -> dict:
     print("[2/5] Character Profiles...")
     start = time.time()
     world = (NOVEL_DIR / "world.md").read_text()
-    result = generate_characters(seed=seed, world=world)
+    result = generate_characters(seed=seed, world=world, language=language)
     results["characters"] = {
         "score": result["score"],
         "iterations": result["iterations"],
@@ -281,7 +338,7 @@ def run_foundation(state: dict) -> dict:
     print("[3/5] Story Outline...")
     start = time.time()
     characters = (NOVEL_DIR / "characters.md").read_text()
-    result = generate_outline(seed=seed, world=world, characters=characters)
+    result = generate_outline(seed=seed, world=world, characters=characters, language=language)
     results["outline"] = {
         "score": result["score"],
         "iterations": result["iterations"],
@@ -293,7 +350,7 @@ def run_foundation(state: dict) -> dict:
     print("[4/5] Canonical Facts...")
     start = time.time()
     outline = (NOVEL_DIR / "outline.md").read_text()
-    result = generate_canon(seed=seed, world=world, characters=characters, outline=outline)
+    result = generate_canon(seed=seed, world=world, characters=characters, outline=outline, language=language)
     results["canon"] = {
         "score": result["score"],
         "iterations": result["iterations"],
@@ -304,7 +361,7 @@ def run_foundation(state: dict) -> dict:
     # Step 5: Voice Fingerprint
     print("[5/5] Voice Fingerprint...")
     start = time.time()
-    result = generate_voice(seed=seed)
+    result = generate_voice(seed=seed, language=language)
     results["voice"] = {
         "score": result["score"],
         "iterations": result["iterations"],
@@ -338,9 +395,10 @@ def run_drafting(state: dict) -> dict:
     sys.path.insert(0, str(NOVEL_DIR))
     from src.drafting import draft_chapter, build_context_package
 
-    # Determine chapter count
+    # Determine chapter count from config
+    project_config = load_project_config()
     outline_path = NOVEL_DIR / "outline.md"
-    chapter_count = int(os.getenv("CHAPTER_TARGET", "22"))
+    chapter_count = int(project_config.get("chapter_target", "22"))
     if outline_path.exists():
         outline = outline_path.read_text()
         found = len(re.findall(r"(?:^|\n)(?:Chapter|## Chapter|# Chapter)\s+\d+", outline, re.IGNORECASE))
@@ -695,8 +753,14 @@ Examples:
                         help="Override seed text")
     parser.add_argument("--chapter", type=int,
                         help="Resume from specific chapter (drafting phase)")
+    parser.add_argument("--output-dir", type=str, default=".",
+                        help="Output directory for novel files (default: current directory)")
 
     args = parser.parse_args()
+
+    # Initialize paths based on output directory
+    init_paths(args.output_dir)
+    print(f"Output directory: {NOVEL_DIR}")
 
     # Handle seed override
     if args.seed:

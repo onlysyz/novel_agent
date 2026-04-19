@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.common.api import get_client
-from src.common.prompts import build_world_prompt, read_seed, read_layer, read_craft_guide
+from src.common.prompts import build_world_prompt, read_seed, read_layer, read_craft_guide, read_language
 from src.common.scoring import score_foundation, iteration_summary
 
 DOTNOVEL = Path(".novelforge")
@@ -23,6 +23,7 @@ def generate_world(
     seed: str = None,
     voice: str = None,
     craft: str = None,
+    language: str = None,
     min_score: float = MIN_SCORE,
     max_iterations: int = MAX_ITERATIONS,
 ) -> dict:
@@ -33,6 +34,7 @@ def generate_world(
         seed: Seed concept (reads from seed.txt if not provided)
         voice: Voice reference for style guidance
         craft: Craft guidelines
+        language: Language code (reads from seed.txt if not provided)
         min_score: Minimum score threshold
         max_iterations: Maximum regeneration attempts
 
@@ -45,6 +47,7 @@ def generate_world(
         raise ValueError("No seed concept provided and seed.txt not found")
     voice = voice or read_layer("voice.md") or None
     craft = craft or read_craft_guide() or None
+    language = language or read_language()
 
     client = get_client()
     output_path = NOVEL_DIR / "world.md"
@@ -57,7 +60,7 @@ def generate_world(
     for iteration in range(1, max_iterations + 1):
         print(f"[World Generation] Iteration {iteration}/{max_iterations}")
 
-        system, user = build_world_prompt(seed, voice, craft)
+        system, user = build_world_prompt(seed, voice, craft, language)
 
         try:
             text = client.generate(system, user, max_tokens=4096)

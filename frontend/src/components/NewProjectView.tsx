@@ -4,11 +4,23 @@ import { useTranslation } from "../i18n";
 
 interface Props {
   onProjectCreated: () => void;
+  onCancel: () => void;
 }
 
-export default function NewProjectView({ onProjectCreated }: Props) {
+const LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "zh", name: "中文" },
+  { code: "ja", name: "日本語" },
+  { code: "ko", name: "한국어" },
+  { code: "es", name: "Español" },
+  { code: "fr", name: "Français" },
+  { code: "de", name: "Deutsch" },
+];
+
+export default function NewProjectView({ onProjectCreated, onCancel }: Props) {
   const { t } = useTranslation();
   const [seed, setSeed] = useState("");
+  const [language, setLanguage] = useState("en");
   const [creating, setCreating] = useState(false);
 
   const handleCreate = async () => {
@@ -20,7 +32,7 @@ export default function NewProjectView({ onProjectCreated }: Props) {
     setCreating(true);
     try {
       const cwd = await invoke<string>("get_project_path");
-      await invoke("write_seed", { cwd, seed: seed.trim() });
+      await invoke("write_seed", { cwd, seed: seed.trim(), language });
       onProjectCreated();
     } catch (e) {
       console.error("Error creating project:", e);
@@ -39,6 +51,20 @@ export default function NewProjectView({ onProjectCreated }: Props) {
 
         <div className="seed-input-container">
           <label htmlFor="seed">{t("novel_concept")}</label>
+          <div className="language-selector">
+            <label htmlFor="language">{t("novel_language")}</label>
+            <select
+              id="language"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              {LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <textarea
             id="seed"
             value={seed}
@@ -51,13 +77,22 @@ export default function NewProjectView({ onProjectCreated }: Props) {
           </p>
         </div>
 
-        <button
-          className="btn-primary btn-large"
-          onClick={handleCreate}
-          disabled={creating || !seed.trim()}
-        >
-          {creating ? t("creating") : t("create_novel_project")}
-        </button>
+        <div className="btn-group">
+          <button
+            className="btn-secondary"
+            onClick={onCancel}
+            disabled={creating}
+          >
+            {t("cancel")}
+          </button>
+          <button
+            className="btn-primary"
+            onClick={handleCreate}
+            disabled={creating || !seed.trim()}
+          >
+            {creating ? t("creating") : t("create_novel_project")}
+          </button>
+        </div>
 
         <p className="examples">
           <strong>{t("examples")}</strong>

@@ -15,6 +15,7 @@ from src.drafting.draft_chapter import (
     parse_chapter_content,
     _extract_scenes,
     _extract_worldbuilding,
+    get_client,
     MIN_CHAPTER_WORDS,
     MAX_CHAPTER_WORDS,
     TARGET_WORDS_PER_CHAPTER,
@@ -585,6 +586,138 @@ class TestBuildChapterPrompt:
         # Should reference MIN_CHAPTER_WORDS and MAX_CHAPTER_WORDS in the prompt
         assert "IMPORTANT" in user
 
+    def test_location_field_in_brief_appears_in_user(self):
+        """Location field from brief appears in user prompt."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "The ruined cathedral",
+                              "beat": "Setup", "position": "Opening",
+                              "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "Location" in user
+        assert "ruined cathedral" in user
+
+    def test_world_truncated_at_4000_chars(self):
+        """World text over 4000 chars is truncated in prompt."""
+        ctx = {
+            "voice": "",
+            "world": "X" * 5000,
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        # The section should exist but be truncated
+        assert "WORLD CONTEXT" in user
+        # 4000 X's should appear (truncated)
+        assert "X" * 4000 in user
+        assert ("X" * 5000) not in user
+
+    def test_characters_truncated_at_4000_chars(self):
+        """Characters text over 4000 chars is truncated in prompt."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "Y" * 5000,
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "CHARACTER CONTEXT" in user
+        assert "Y" * 4000 in user
+        assert ("Y" * 5000) not in user
+
+    def test_canon_truncated_at_3000_chars(self):
+        """Canon text over 3000 chars is truncated in prompt."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "Z" * 4000,
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "CANONICAL FACTS" in user
+        assert "Z" * 3000 in user
+        assert ("Z" * 4000) not in user
+
+    def test_all_fields_empty_still_builds_valid_prompts(self):
+        """With all fields empty, prompts still build without errors."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Chapter 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert isinstance(system, str)
+        assert isinstance(user, str)
+        assert len(system) > 0
+        assert len(user) > 0
+        # Should contain default fallbacks
+        assert "No voice guide provided" in user
+        assert "No world context available" in user
+        assert "No character context available" in user
+        assert "No canonical facts provided" in user
+
+    def test_no_characters_uses_default_message(self):
+        """Empty characters field falls back to default message."""
+        ctx = {
+            "voice": "",
+            "world": "",
+            "characters": "",
+            "outline": "",
+            "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "No character context available" in user
+
+    def test_no_canon_uses_default_message(self):
+        """Empty canon field falls back to default message."""
+        ctx = {
+            "voice": "", "world": "", "characters": "", "outline": "", "canon": "",
+            "anti_patterns": "",
+            "chapter_brief": {"title": "Ch 1", "pov": "", "location": "", "beat": "",
+                              "position": "", "emotional_arc": "", "try_fail": "",
+                              "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200},
+            "next_chapter_hint": "",
+            "prev_ending": "",
+        }
+        system, user = build_chapter_prompt(ctx, 1)
+        assert "No canonical facts provided" in user
+
 
 class TestParseChapterContent:
     """Tests for parse_chapter_content."""
@@ -984,6 +1117,16 @@ class TestGetPreviousChapterEnding:
         result = get_previous_chapter_ending(chapters_dir, 2)
         assert result == ""
 
+    def test_chapters_dir_not_exists_returns_empty(self, tmp_path):
+        """When chapters_dir does not exist, returns empty string."""
+        from src.drafting.draft_chapter import get_previous_chapter_ending
+        # chapters_dir does NOT exist - Path("/nonexistent") would short-circuit chapter <= 1
+        # so use tmp_path / "nonexistent_chapters_dir" (does not exist)
+        chapters_dir = tmp_path / "nonexistent_chapters_dir"
+        assert not chapters_dir.exists()
+        result = get_previous_chapter_ending(chapters_dir, 2)
+        assert result == ""
+
     def test_short_file_returns_full_text(self, tmp_path):
         """File under 2000 chars returned in full."""
         from src.drafting.draft_chapter import get_previous_chapter_ending
@@ -993,6 +1136,17 @@ class TestGetPreviousChapterEnding:
         prev_file.write_text("A short chapter.")
         result = get_previous_chapter_ending(chapters_dir, 2)
         assert result == "A short chapter."
+
+    def test_exactly_2000_chars_returns_full_text(self, tmp_path):
+        """File exactly 2000 chars returned with no truncation."""
+        from src.drafting.draft_chapter import get_previous_chapter_ending
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+        prev_file = chapters_dir / "ch_01.md"
+        prev_file.write_text("X" * 2000)
+        result = get_previous_chapter_ending(chapters_dir, 2)
+        assert result == "X" * 2000
+        assert not result.startswith("...")
 
     def test_long_file_truncates_with_ellipsis(self, tmp_path):
         """File over 2000 chars truncated to last 2000 with ellipsis prefix."""
@@ -1339,3 +1493,626 @@ Scene Beats:
 """
         brief = extract_chapter_brief(outline, 1)
         assert brief["try_fail"] == "Sarah tries to escape but is captured"
+
+
+class TestExtractChapterBriefBeatTypes:
+    """Tests for extract_chapter_brief covering all Save the Cat beat types."""
+
+    def test_beat_setup(self):
+        """Beat type 'Setup' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Setup
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Setup"
+
+    def test_beat_catalyst(self):
+        """Beat type 'Catalyst' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Catalyst
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Catalyst"
+
+    def test_beat_debate(self):
+        """Beat type 'Debate' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Debate
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Debate"
+
+    def test_beat_break_into_two(self):
+        """Beat type 'Break into Two' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Break into Two
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Break into Two"
+
+    def test_beat_fun_and_games(self):
+        """Beat type 'Fun and Games' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Fun and Games
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Fun and Games"
+
+    def test_beat_fun_and_games_ampersand(self):
+        """Beat type 'Fun & Games' (with ampersand) is extracted."""
+        outline = """
+## Chapter 1
+Beat: Fun & Games
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Fun & Games"
+
+    def test_beat_midpoint(self):
+        """Beat type 'Midpoint' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Midpoint
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Midpoint"
+
+    def test_beat_midpoint_continued(self):
+        """Beat type 'Midpoint (Continued)' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Midpoint (Continued)
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Midpoint (Continued)"
+
+    def test_beat_midpoint_crisis(self):
+        """Beat type 'Midpoint Crisis' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Midpoint Crisis
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Midpoint Crisis"
+
+    def test_beat_bad_guys_close_in(self):
+        """Beat type 'Bad Guys Close In' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Bad Guys Close In
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Bad Guys Close In"
+
+    def test_beat_all_is_lost(self):
+        """Beat type 'All Is Lost' is extracted."""
+        outline = """
+## Chapter 1
+Beat: All Is Lost
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "All Is Lost"
+
+    def test_beat_final_battle(self):
+        """Beat type 'Final Battle' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Final Battle
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Final Battle"
+
+    def test_beat_climax(self):
+        """Beat type 'Climax' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Climax
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Climax"
+
+    def test_beat_denouement(self):
+        """Beat type 'Denouement' is extracted."""
+        outline = """
+## Chapter 1
+Beat: Denouement
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Denouement"
+
+    def test_beat_save_the_cat_alias(self):
+        """Beat 'Save the Cat' maps to beat field."""
+        outline = """
+## Chapter 1
+Save the Cat: Setup
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Setup"
+
+    def test_beat_position_in_user_prompt(self):
+        """Position field (Opening, Midpoint, etc.) is included in beat extraction."""
+        outline = """
+## Chapter 1
+Beat: Setup
+Position: Opening
+
+Scene Beats:
+- First beat
+"""
+        brief = extract_chapter_brief(outline, 1)
+        assert brief["beat"] == "Setup"
+        assert brief["position"] == "Opening"
+
+
+class TestDraftChapterIntegration:
+    """Tests for draft_chapter() with mocked AI client."""
+
+    def test_draft_chapter_accepted_on_first_try(self, tmp_path):
+        """When score >= min_score on first attempt, no retries."""
+        from src.drafting.draft_chapter import draft_chapter
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "A great chapter with sufficient word count " * 100
+
+        mock_eval = {"overall_score": 7.0, "voice_adherence": 7.0,
+                     "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                    context = {
+                        "voice": "", "world": "", "characters": "", "outline": "",
+                        "canon": "", "anti_patterns": "",
+                        "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "",
+                                        "beat": "", "position": "", "emotional_arc": "",
+                                        "try_fail": "", "scene_beats": [], "foreshadow_plants": [],
+                                        "payoff_payoffs": [], "word_target": 3200},
+                        "next_chapter_hint": "", "prev_ending": "",
+                    }
+                    result = draft_chapter(1, context=context)
+
+        assert result["word_count"] > 0
+        assert result["score"] == 7.0
+        assert result["attempts"] == 1
+
+    def test_draft_chapter_retries_on_low_score(self, tmp_path):
+        """When score < min_score, retries until max_retries reached."""
+        from src.drafting.draft_chapter import draft_chapter
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        mock_client = MagicMock()
+        mock_client.generate.side_effect = [
+            "Low quality attempt." * 50,
+            "Slightly better attempt." * 50,
+            "A great chapter that finally passes the bar." * 50,
+        ]
+
+        mock_eval_failing = {"overall_score": 5.0, "voice_adherence": 5.0,
+                              "beat_coverage": 5.0, "character_voice": 5.0, "slop_penalty": 0.0}
+        mock_eval_passing = {"overall_score": 7.0, "voice_adherence": 7.0,
+                              "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter") as mock_evaluate:
+                    mock_evaluate.side_effect = [mock_eval_failing, mock_eval_failing, mock_eval_passing]
+                    context = {
+                        "voice": "", "world": "", "characters": "", "outline": "",
+                        "canon": "", "anti_patterns": "",
+                        "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "",
+                                        "beat": "", "position": "", "emotional_arc": "",
+                                        "try_fail": "", "scene_beats": [], "foreshadow_plants": [],
+                                        "payoff_payoffs": [], "word_target": 3200},
+                        "next_chapter_hint": "", "prev_ending": "",
+                    }
+                    result = draft_chapter(1, context=context, max_retries=3)
+
+        assert result["attempts"] == 3
+        assert result["score"] == 7.0
+        assert mock_client.generate.call_count == 3
+
+    def test_draft_chapter_saves_to_file(self, tmp_path):
+        """Drafted chapter is written to chapters/ch_NN.md."""
+        from src.drafting.draft_chapter import draft_chapter
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "A wonderful chapter that scores well." * 100
+
+        mock_eval = {"overall_score": 7.5, "voice_adherence": 7.5,
+                     "beat_coverage": 7.5, "character_voice": 7.5, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                    context = {
+                        "voice": "", "world": "", "characters": "", "outline": "",
+                        "canon": "", "anti_patterns": "",
+                        "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "",
+                                        "beat": "", "position": "", "emotional_arc": "",
+                                        "try_fail": "", "scene_beats": [], "foreshadow_plants": [],
+                                        "payoff_payoffs": [], "word_target": 3200},
+                        "next_chapter_hint": "", "prev_ending": "",
+                    }
+                    result = draft_chapter(1, context=context)
+
+        saved_file = chapters_dir / "ch_01.md"
+        assert saved_file.exists()
+        assert saved_file.read_text() == mock_client.generate.return_value
+
+    def test_draft_chapter_raises_on_api_error_last_retry(self, tmp_path):
+        """API error on last retry raises the exception."""
+        from src.drafting.draft_chapter import draft_chapter
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        mock_client = MagicMock()
+        mock_client.generate.side_effect = [Exception("API error"), Exception("API error")]
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                context = {
+                    "voice": "", "world": "", "characters": "", "outline": "",
+                    "canon": "", "anti_patterns": "",
+                    "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "",
+                                    "beat": "", "position": "", "emotional_arc": "",
+                                    "try_fail": "", "scene_beats": [], "foreshadow_plants": [],
+                                    "payoff_payoffs": [], "word_target": 3200},
+                    "next_chapter_hint": "", "prev_ending": "",
+                }
+                with pytest.raises(Exception, match="API error"):
+                    draft_chapter(1, context=context, max_retries=2)
+
+    def test_draft_chapter_returns_best_after_max_retries(self, tmp_path):
+        """After max retries with no passing score, returns best result seen."""
+        from src.drafting.draft_chapter import draft_chapter
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        mock_client = MagicMock()
+        mock_client.generate.side_effect = ["Low attempt." * 50, "Better attempt." * 50]
+
+        mock_eval_failing = {"overall_score": 5.0, "voice_adherence": 5.0,
+                              "beat_coverage": 5.0, "character_voice": 5.0, "slop_penalty": 0.0}
+        mock_eval_better = {"overall_score": 5.8, "voice_adherence": 5.8,
+                             "beat_coverage": 5.8, "character_voice": 5.8, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter") as mock_evaluate:
+                    mock_evaluate.side_effect = [mock_eval_failing, mock_eval_better]
+                    context = {
+                        "voice": "", "world": "", "characters": "", "outline": "",
+                        "canon": "", "anti_patterns": "",
+                        "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "",
+                                        "beat": "", "position": "", "emotional_arc": "",
+                                        "try_fail": "", "scene_beats": [], "foreshadow_plants": [],
+                                        "payoff_payoffs": [], "word_target": 3200},
+                        "next_chapter_hint": "", "prev_ending": "",
+                    }
+                    result = draft_chapter(1, context=context, max_retries=2, min_score=6.0)
+
+        assert result["score"] == 5.8
+        assert result["attempts"] == 2
+
+    def test_draft_chapter_without_context_calls_build_context_package(self, tmp_path, monkeypatch):
+        """When context is None, build_context_package is called to construct it."""
+        from src.drafting.draft_chapter import draft_chapter, build_context_package
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        # Create a minimal outline so build_context_package can read it
+        (tmp_path / "outline.md").write_text(
+            "# Novel\n\n## Chapter 1\nPOV: Sarah\n\nScene Beats:\n- Beat one\n"
+        )
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "A valid chapter text." * 100
+
+        mock_eval = {"overall_score": 7.0, "voice_adherence": 7.0,
+                     "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                    # Call WITHOUT context - should call build_context_package internally
+                    result = draft_chapter(1)
+
+        assert result["word_count"] > 0
+        assert result["score"] == 7.0
+
+    def test_draft_chapter_above_max_words_warns(self, tmp_path, capsys):
+        """When generated chapter exceeds MAX_CHAPTER_WORDS, warning is printed."""
+        from src.drafting.draft_chapter import draft_chapter, MAX_CHAPTER_WORDS
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        # Generate text longer than MAX_CHAPTER_WORDS (4500 by default)
+        long_text = "A very long chapter with plenty of words. " * 600  # ~4800 words
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = long_text
+
+        mock_eval = {"overall_score": 7.0, "voice_adherence": 7.0,
+                     "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                    context = {
+                        "voice": "", "world": "", "characters": "", "outline": "",
+                        "canon": "", "anti_patterns": "",
+                        "chapter_brief": {"title": "Ch 1", "pov": "Sarah", "location": "",
+                                        "beat": "", "position": "", "emotional_arc": "",
+                                        "try_fail": "", "scene_beats": [], "foreshadow_plants": [],
+                                        "payoff_payoffs": [], "word_target": 3200},
+                        "next_chapter_hint": "", "prev_ending": "",
+                    }
+                    result = draft_chapter(1, context=context)
+
+        captured = capsys.readouterr()
+        assert f"WARNING: Above maximum" in captured.out
+        assert result["word_count"] > MAX_CHAPTER_WORDS
+
+
+class TestDraftAllChapters:
+    """Tests for draft_all_chapters() with mocked dependencies."""
+
+    def test_resumes_from_existing_chapters(self, tmp_path):
+        """When 2 chapters exist, starts from chapter 3."""
+        from src.drafting.draft_chapter import draft_all_chapters
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+        (chapters_dir / "ch_01.md").write_text("Chapter 1 content.")
+        (chapters_dir / "ch_02.md").write_text("Chapter 2 content.")
+
+        # Create outline with exactly 3 chapters so only chapter 3 gets drafted
+        (tmp_path / "outline.md").write_text(
+            "# Novel\n\n## Chapter 1\nPOV: Sarah\n\nScene Beats:\n- Beat one\n\n## Chapter 2\nPOV: Marcus\n\nScene Beats:\n- Beat two\n\n## Chapter 3\nPOV: Sarah\n\nScene Beats:\n- Beat three\n"
+        )
+
+        dotnovel = tmp_path / ".novelforge"
+        dotnovel.mkdir()
+        (dotnovel / "state.json").write_text('{"phase": "drafting", "current_chapter": 2}')
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "Generated chapter content." * 50
+
+        mock_eval = {"overall_score": 7.0, "voice_adherence": 7.0,
+                     "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                    results = draft_all_chapters()
+
+        assert len(results) == 1
+        assert results[0]["chapter_num"] == 3
+
+    def test_updates_state_after_each_chapter(self, tmp_path):
+        """State file is updated with chapter score after each chapter."""
+        import json
+        from src.drafting.draft_chapter import draft_all_chapters
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        (tmp_path / "outline.md").write_text(
+            "# Novel\n\n## Chapter 1\nPOV: Sarah\n\nScene Beats:\n- Beat one\n"
+        )
+
+        dotnovel = tmp_path / ".novelforge"
+        dotnovel.mkdir()
+        dotnovel.joinpath("state.json").write_text('{"phase": "drafting"}')
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "Generated chapter content." * 50
+
+        mock_eval = {"overall_score": 7.0, "voice_adherence": 7.0,
+                     "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.draft_chapter.DOTNOVEL", dotnovel):
+                    with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                        draft_all_chapters()
+
+        state_content = (dotnovel / "state.json").read_text()
+        state = json.loads(state_content)
+        assert state["current_chapter"] == 1
+        assert "ch_01" in state.get("chapter_scores", {})
+
+    def test_no_chapters_exist_drafts_all(self, tmp_path):
+        """With no existing chapters and outline present, drafts all chapters from outline count."""
+        from src.drafting.draft_chapter import draft_all_chapters
+        import re as re_module
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        (tmp_path / "outline.md").write_text(
+            "# Novel\n\n## Chapter 1\nPOV: Sarah\n\nScene Beats:\n- Beat one\n\n## Chapter 2\nPOV: Marcus\n\nScene Beats:\n- Beat two\n"
+        )
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "Generated chapter content." * 50
+
+        mock_eval = {"overall_score": 7.0, "voice_adherence": 7.0,
+                     "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                    results = draft_all_chapters()
+
+        # Outline has 2 chapters
+        assert len(results) == 2
+        assert results[0]["chapter_num"] == 1
+        assert results[1]["chapter_num"] == 2
+
+    def test_outline_with_no_chapters_uses_chapter_target_env(self, tmp_path, monkeypatch):
+        """When outline exists but has no chapter headers, CHAPTER_TARGET env is used."""
+        from src.drafting.draft_chapter import draft_all_chapters
+
+        chapters_dir = tmp_path / "chapters"
+        chapters_dir.mkdir()
+
+        # Outline with no chapter headers at all
+        (tmp_path / "outline.md").write_text(
+            "# Novel\n\nSome text with no chapter headers.\n"
+        )
+
+        mock_client = MagicMock()
+        mock_client.generate.return_value = "Generated chapter content." * 50
+
+        mock_eval = {"overall_score": 7.0, "voice_adherence": 7.0,
+                     "beat_coverage": 7.0, "character_voice": 7.0, "slop_penalty": 0.0}
+
+        # Override CHAPTER_TARGET to 2 so we get exactly 2 chapters
+        monkeypatch.setenv("CHAPTER_TARGET", "2")
+
+        with patch("src.common.api.get_client", return_value=mock_client):
+            with patch("src.drafting.draft_chapter.NOVEL_DIR", tmp_path):
+                with patch("src.drafting.evaluate.evaluate_chapter", return_value=mock_eval):
+                    results = draft_all_chapters()
+
+        # With CHAPTER_TARGET=2 and no chapter headers in outline, should draft 2 chapters
+        assert len(results) == 2
+        assert results[0]["chapter_num"] == 1
+        assert results[1]["chapter_num"] == 2
+
+
+class TestGetClient:
+    """Tests for get_client() lazy import."""
+
+    def test_returns_client_from_common_api(self):
+        """get_client delegates to src.common.api.get_client."""
+        with patch("src.common.api.get_client") as mock_api_client:
+            mock_api_client.return_value = "mock_client"
+            result = get_client()
+            assert result == "mock_client"
+            mock_api_client.assert_called_once()
+
+
+class TestMainBlock:
+    """Tests for the if __name__ == '__main__' block via subprocess."""
+
+    def test_main_block_calls_draft_chapter_with_arg(self, monkeypatch):
+        """The __main__ block calls draft_chapter with the argv[1] chapter number."""
+        import subprocess
+        # Write a minimal test script that imports the module and checks argv
+        test_script = '''
+import sys
+sys.path.insert(0, "src")
+from unittest.mock import patch, MagicMock
+
+# Mock draft_chapter to capture calls
+called = []
+def mock_draft(n, **kwargs):
+    called.append(n)
+    return {"word_count": 500, "score": 7.0}
+
+with patch("src.drafting.draft_chapter.draft_chapter", mock_draft):
+    # Simulate the __main__ block
+    chapter_num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+    mock_draft(chapter_num)
+
+print(f"CALLED_WITH:{chapter_num}")
+'''
+        result = subprocess.run(
+            [sys.executable, "-c", test_script, "5"],
+            cwd="/Users/tiankuo/workspace/novel_agent",
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, f"stderr: {result.stderr}"
+        assert "CALLED_WITH:5" in result.stdout
+
+    def test_main_block_defaults_to_chapter_1(self, monkeypatch):
+        """Without CLI args, __main__ block defaults to chapter 1."""
+        import subprocess
+        test_script = '''
+import sys
+sys.path.insert(0, "src")
+from unittest.mock import patch, MagicMock
+
+called = []
+def mock_draft(n, **kwargs):
+    called.append(n)
+    return {"word_count": 500, "score": 7.0}
+
+with patch("src.drafting.draft_chapter.draft_chapter", mock_draft):
+    chapter_num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+    mock_draft(chapter_num)
+
+print(f"CALLED_WITH:{chapter_num}")
+'''
+        result = subprocess.run(
+            [sys.executable, "-c", test_script],
+            cwd="/Users/tiankuo/workspace/novel_agent",
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, f"stderr: {result.stderr}"
+        assert "CALLED_WITH:1" in result.stdout

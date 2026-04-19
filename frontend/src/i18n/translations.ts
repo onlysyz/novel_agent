@@ -10,6 +10,8 @@ export const translations = {
     // Dashboard
     dashboard_title: "Dashboard",
     dashboard_new_project: "New Project",
+    generate_title: "Generate Title",
+    generating: "Generating...",
     phase: "Phase",
     phase_not_started: "Not started",
     chapters: "Chapters",
@@ -19,7 +21,7 @@ export const translations = {
     world: "World",
     characters: "Characters",
     outline: "Outline",
-    canon: "Canon",
+    canon: "Story Settings",
     voice: "Voice",
     chapter_progress: "Chapter Progress",
     run_pipeline: "Run Pipeline",
@@ -28,6 +30,24 @@ export const translations = {
     continue_review: "Continue Review",
     export: "Export",
     run_full_pipeline: "Run Full Pipeline",
+    ready_to_start: "Ready to Start",
+    foundation_desc: "Generate world, characters, outline, and story structure before writing chapters.",
+    // Phase stepper
+    step_foundation: "Foundation",
+    step_drafting: "Drafting",
+    step_review: "Review",
+    step_export: "Export",
+    start_foundation: "Start Foundation",
+    continue_foundation: "Continue Foundation",
+    foundation_in_progress: "Complete world-building, characters, outline, and story structure.",
+    foundation_not_started: "Generate world-building, characters, outline, and story structure.",
+    start_generating: "Start Generating",
+    running: "Running...",
+    drafting_phase: "Drafting Phase",
+    chapters_written: "{n} chapters written",
+    review_phase: "Review Phase",
+    export_phase: "Export Phase",
+    total_words_written: "{n} words written",
 
     // ChapterList
     chapters_title: "Chapters",
@@ -64,11 +84,25 @@ export const translations = {
     novelforge_desc: "Autonomous novel writing powered by dual-agent AI",
     seed_saved: "Seed saved!",
     error_saving: "Error saving",
+    ai_config: "AI Configuration",
+    api_key: "API Key",
+    api_key_placeholder: "sk-ant-api03-...",
+    base_url: "Base URL",
+    base_url_placeholder: "https://api.anthropic.com (leave empty for default)",
+    model: "Writing Model",
+    opus_model: "Review Model (Opus)",
+    saved: "Saved!",
+    project_settings: "Project Settings",
+    target_words: "Target Word Count",
+    chapter_target: "Chapter Count Target",
+    output_dir: "Output Directory",
+    output_dir_placeholder: "/path/to/novels (leave empty for project dir)",
 
     // NewProjectView
     start_your_novel: "Start Your Novel",
     tagline: "Describe your story concept, and watch it unfold.",
     novel_concept: "Novel Concept",
+    novel_language: "Novel Language",
     seed_placeholder: "A retired assassin is forced back into service when her daughter is kidnapped by the same criminal syndicate she once worked for...",
     hint: "The more specific your concept, the better the AI can craft your story.",
     create_novel_project: "Create Novel Project",
@@ -93,6 +127,7 @@ export const translations = {
 
     // General
     loading_novelforge: "Loading NovelForge...",
+    cancel: "Cancel",
   },
   zh: {
     // App shell
@@ -105,6 +140,8 @@ export const translations = {
     // Dashboard
     dashboard_title: "仪表盘",
     dashboard_new_project: "新建项目",
+    generate_title: "生成标题",
+    generating: "生成中...",
     phase: "阶段",
     phase_not_started: "未开始",
     chapters: "章节",
@@ -114,7 +151,7 @@ export const translations = {
     world: "世界观",
     characters: "角色",
     outline: "大纲",
-    canon: "正典",
+    canon: "故事设定",
     voice: "文风",
     chapter_progress: "章节进度",
     run_pipeline: "运行流水线",
@@ -123,6 +160,24 @@ export const translations = {
     continue_review: "继续审核",
     export: "导出",
     run_full_pipeline: "运行完整流水线",
+    ready_to_start: "准备开始",
+    foundation_desc: "先生成世界观、角色、大纲等设定，再开始撰写章节。",
+    // Phase stepper
+    step_foundation: "设定",
+    step_drafting: "撰写",
+    step_review: "审核",
+    step_export: "导出",
+    start_foundation: "开始生成设定",
+    continue_foundation: "继续生成设定",
+    foundation_in_progress: "完成世界观、角色、大纲等设定",
+    foundation_not_started: "生成世界观、角色、大纲等故事设定",
+    start_generating: "开始生成",
+    running: "运行中...",
+    drafting_phase: "撰写阶段",
+    chapters_written: "已写 {n} 章",
+    review_phase: "审核阶段",
+    export_phase: "导出阶段",
+    total_words_written: "共 {n} 字",
 
     // ChapterList
     chapters_title: "章节",
@@ -159,11 +214,25 @@ export const translations = {
     novelforge_desc: "由双AI代理驱动的自主小说写作工具",
     seed_saved: "种子已保存！",
     error_saving: "保存错误",
+    ai_config: "AI 配置",
+    api_key: "API 密钥",
+    api_key_placeholder: "sk-ant-api03-...",
+    base_url: "Base URL",
+    base_url_placeholder: "https://api.anthropic.com (留空使用默认)",
+    model: "写作模型",
+    opus_model: "审核模型 (Opus)",
+    saved: "已保存！",
+    project_settings: "项目设置",
+    target_words: "目标字数",
+    chapter_target: "目标章节数",
+    output_dir: "输出目录",
+    output_dir_placeholder: "/path/to/novels (留空使用项目目录)",
 
     // NewProjectView
     start_your_novel: "开始你的小说",
     tagline: "描述你的故事概念，看它徐徐展开。",
     novel_concept: "小说概念",
+    novel_language: "小说语言",
     seed_placeholder: "一位退休刺客在女儿被曾效力的犯罪集团绑架后被迫重返江湖...",
     hint: "概念越具体，AI 就越能创作出你的故事。",
     create_novel_project: "创建小说项目",
@@ -188,6 +257,7 @@ export const translations = {
 
     // General
     loading_novelforge: "NovelForge 加载中...",
+    cancel: "取消",
   },
 } as const;
 

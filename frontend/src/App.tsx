@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { View, PipelineState } from "./types";
 import { I18nProvider, useTranslation } from "./i18n";
 import Dashboard from "./components/Dashboard";
@@ -10,6 +11,12 @@ import SettingsView from "./components/SettingsView";
 import ExportView from "./components/ExportView";
 import NewProjectView from "./components/NewProjectView";
 
+interface PipelineProgress {
+  phase: string;
+  step: string;
+  message: string;
+}
+
 function AppInner() {
   const { t, lang, setLang } = useTranslation();
   const [view, setView] = useState<View>("dashboard");
@@ -18,9 +25,44 @@ function AppInner() {
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [cwd, setCwd] = useState<string>("");
+  const [pipelineRunning, setPipelineRunning] = useState(false);
+  const [pipelineMessage, setPipelineMessage] = useState("");
 
   useEffect(() => {
     initProject();
+
+    // Listen for pipeline events
+    const unlistenStarted = listen("pipeline-started", (event) => {
+      console.log("Pipeline started:", event.payload);
+      setPipelineRunning(true);
+      setPipelineMessage(t("running"));
+    });
+
+    const unlistenProgress = listen<PipelineProgress>("pipeline-progress", (event) => {
+      console.log("Pipeline progress:", event.payload);
+      setPipelineMessage(event.payload.message);
+    });
+
+    const unlistenComplete = listen("pipeline-complete", async (event) => {
+      console.log("Pipeline complete:", event.payload);
+      setPipelineRunning(false);
+      setPipelineMessage("");
+      await loadState();
+    });
+
+    const unlistenError = listen<string>("pipeline-error", (event) => {
+      console.error("Pipeline error:", event.payload);
+      setPipelineRunning(false);
+      setPipelineMessage("");
+      alert(`Pipeline error: ${event.payload}`);
+    });
+
+    return () => {
+      unlistenStarted.then((f) => f());
+      unlistenProgress.then((f) => f());
+      unlistenComplete.then((f) => f());
+      unlistenError.then((f) => f());
+    };
   }, []);
 
   const initProject = async () => {
@@ -54,9 +96,20 @@ function AppInner() {
     setView("settings");
   };
 
-  const handleProjectCreated = () => {
+  const handleProjectCreated = async () => {
+    try {
+      // Reset state for new project
+      await invoke("reset_project_state", { cwd });
+    } catch (e) {
+      console.error("Error resetting state:", e);
+    }
     setHasProject(true);
-    loadState(cwd);
+    await loadState(cwd);
+    setView("dashboard");
+  };
+
+  const handleCancelNewProject = () => {
+    setHasProject(true);
     setView("dashboard");
   };
 
@@ -77,20 +130,11 @@ function AppInner() {
 
   const handleRunPhase = async (phase: string) => {
     try {
+      // Invoke returns immediately, pipeline runs in background
+      // State is loaded when pipeline-complete event is received
       await invoke("run_pipeline_phase", { phase, cwd });
-      await loadState();
     } catch (e) {
       console.error("Error running phase:", e);
-      throw e;
-    }
-  };
-
-  const handleRunFull = async () => {
-    try {
-      await invoke("run_full_pipeline", { cwd });
-      await loadState();
-    } catch (e) {
-      console.error("Error running pipeline:", e);
       throw e;
     }
   };
@@ -103,6 +147,7 @@ function AppInner() {
     return (
       <NewProjectView
         onProjectCreated={handleProjectCreated}
+        onCancel={handleCancelNewProject}
       />
     );
   }
@@ -159,8 +204,9 @@ function AppInner() {
           <Dashboard
             state={state}
             onRunPhase={handleRunPhase}
-            onRunFull={handleRunFull}
             onNewProject={handleNewProject}
+            pipelineRunning={pipelineRunning}
+            pipelineMessage={pipelineMessage}
           />
         )}
         {view === "chapters" && (

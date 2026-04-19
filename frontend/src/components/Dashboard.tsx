@@ -1,31 +1,61 @@
+import { useState, useEffect } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import { PipelineState } from "../types";
 import { useTranslation } from "../i18n";
 
 interface Props {
   state: PipelineState;
   onRunPhase: (phase: string) => Promise<void>;
-  onRunFull: () => Promise<void>;
   onNewProject: () => void;
+  pipelineRunning?: boolean;
+  pipelineMessage?: string;
 }
 
-export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }: Props) {
+export default function Dashboard({ state, onRunPhase, onNewProject, pipelineRunning = false, pipelineMessage = "" }: Props) {
   const { t } = useTranslation();
+  const [isRunning, setIsRunning] = useState(false);
+  const [novelTitle, setNovelTitle] = useState("");
+  const [cwd, setCwd] = useState("");
+
+  useEffect(() => {
+    loadConfig();
+  }, []);
+
+  const loadConfig = async () => {
+    try {
+      const path = await invoke<string>("get_project_path");
+      setCwd(path);
+      const config = await invoke<any>("read_ai_config", { cwd: path });
+      if (config.novel_title) {
+        setNovelTitle(config.novel_title);
+      }
+    } catch (e) {
+      console.error("Error loading config:", e);
+    }
+  };
+
+  const handleGenerateTitle = async () => {
+    setIsRunning(true);
+    try {
+      const title = await invoke<string>("generate_title", { cwd });
+      setNovelTitle(title);
+    } catch (e) {
+      console.error("Error generating title:", e);
+      alert(`Error: ${e}`);
+    } finally {
+      setIsRunning(false);
+    }
+  };
 
   const handleRun = async (phase: string) => {
+    setIsRunning(true);
     try {
       await onRunPhase(phase);
     } catch (e) {
       console.error(e);
       alert(`Error running ${phase}: ${e}`);
-    }
-  };
-
-  const handleRunAll = async () => {
-    try {
-      await onRunFull();
-    } catch (e) {
-      console.error(e);
-      alert(`Error: ${e}`);
+    } finally {
+      setIsRunning(false);
     }
   };
 
@@ -34,17 +64,98 @@ export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }
     ? state.chapters.reduce((sum, ch) => sum + (ch.score || 0), 0) / state.chapters.length
     : 0;
 
+  // Determine current phase step
+  const currentPhase = state.phase || "none";
+  const hasFoundation = state.foundation_scores && (
+    state.foundation_scores.world > 0 ||
+    state.foundation_scores.characters > 0 ||
+    state.foundation_scores.outline > 0
+  );
+
   return (
     <div className="dashboard">
       <header className="page-header">
-        <h1>{t("dashboard_title")}</h1>
+        <div>
+          <h1>{novelTitle || t("dashboard_title")}</h1>
+          {!novelTitle && hasFoundation && (
+            <button className="btn-secondary btn-small" onClick={handleGenerateTitle} disabled={isRunning}>
+              {isRunning ? t("generating") : t("generate_title")}
+            </button>
+          )}
+        </div>
         <button className="btn-secondary" onClick={onNewProject}>{t("dashboard_new_project")}</button>
       </header>
+
+      {/* Phase Stepper - Always visible */}
+      <div className="phase-stepper">
+        <div className={`step ${currentPhase !== "none" ? "done" : "active"}`}>
+          <span className="step-num">1</span>
+          <span className="step-label">{t("step_foundation")}</span>
+        </div>
+        <div className="step-line" />
+        <div className={`step ${currentPhase === "drafting" || currentPhase === "review" || currentPhase === "export" || currentPhase === "complete" ? "active" : ""} ${hasFoundation ? "done" : ""}`}>
+          <span className="step-num">2</span>
+          <span className="step-label">{t("step_drafting")}</span>
+        </div>
+        <div className="step-line" />
+        <div className={`step ${currentPhase === "review" || currentPhase === "export" || currentPhase === "complete" ? "active" : ""} ${currentPhase === "review" || currentPhase === "export" || currentPhase === "complete" ? "done" : ""}`}>
+          <span className="step-num">3</span>
+          <span className="step-label">{t("step_review")}</span>
+        </div>
+        <div className="step-line" />
+        <div className={`step ${currentPhase === "export" || currentPhase === "complete" ? "active" : ""} ${currentPhase === "export" || currentPhase === "complete" ? "done" : ""}`}>
+          <span className="step-num">4</span>
+          <span className="step-label">{t("step_export")}</span>
+        </div>
+      </div>
+
+      {/* Action Card - Context sensitive */}
+      <div className="action-card">
+        {pipelineRunning ? (
+          <>
+            <h2>{pipelineMessage || t("running")}</h2>
+            <div className="running-indicator">
+              <div className="spinner"></div>
+            </div>
+          </>
+        ) : currentPhase === "none" || currentPhase === "foundation" ? (
+          <>
+            <h2>{hasFoundation ? t("continue_foundation") : t("start_foundation")}</h2>
+            <p>{hasFoundation ? t("foundation_in_progress") : t("foundation_not_started")}</p>
+            <button className="btn-primary btn-large" onClick={() => handleRun("foundation")} disabled={isRunning}>
+              {isRunning ? t("running") : (hasFoundation ? t("run_foundation") : t("start_generating"))}
+            </button>
+          </>
+        ) : currentPhase === "drafting" ? (
+          <>
+            <h2>{t("drafting_phase")}</h2>
+            <p>{t("chapters_written", { n: state.chapters.length })}</p>
+            <button className="btn-primary btn-large" onClick={() => handleRun("drafting")} disabled={isRunning}>
+              {isRunning ? t("running") : t("continue_drafting")}
+            </button>
+          </>
+        ) : currentPhase === "review" ? (
+          <>
+            <h2>{t("review_phase")}</h2>
+            <button className="btn-primary btn-large" onClick={() => handleRun("review")} disabled={isRunning}>
+              {isRunning ? t("running") : t("continue_review")}
+            </button>
+          </>
+        ) : currentPhase === "export" || currentPhase === "complete" ? (
+          <>
+            <h2>{t("export_phase")}</h2>
+            <p>{t("total_words_written", { n: totalWords })}</p>
+            <button className="btn-primary btn-large" onClick={() => handleRun("export")} disabled={isRunning}>
+              {isRunning ? t("running") : t("export")}
+            </button>
+          </>
+        ) : null}
+      </div>
 
       <div className="stats-grid">
         <div className="stat-card">
           <h3>{t("phase")}</h3>
-          <p className="stat-value phase">{state.phase || t("phase_not_started")}</p>
+          <p className="stat-value phase">{t(currentPhase) || t("phase_not_started")}</p>
         </div>
         <div className="stat-card">
           <h3>{t("chapters")}</h3>
@@ -60,7 +171,7 @@ export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }
         </div>
       </div>
 
-      {state.foundation_scores && (
+      {hasFoundation && (
         <section className="section">
           <h2>{t("foundation_scores")}</h2>
           <div className="foundation-scores">
@@ -116,35 +227,6 @@ export default function Dashboard({ state, onRunPhase, onRunFull, onNewProject }
           </div>
         </section>
       )}
-
-      <section className="section actions">
-        <h2>{t("run_pipeline")}</h2>
-        <div className="action-buttons">
-          {state.phase === "none" || state.phase === "foundation" ? (
-            <button className="btn-primary" onClick={() => handleRun("foundation")}>
-              {t("run_foundation")}
-            </button>
-          ) : null}
-          {state.phase === "drafting" ? (
-            <button className="btn-primary" onClick={() => handleRun("drafting")}>
-              {t("continue_drafting")}
-            </button>
-          ) : null}
-          {state.phase === "review" ? (
-            <button className="btn-primary" onClick={() => handleRun("review")}>
-              {t("continue_review")}
-            </button>
-          ) : null}
-          {state.phase === "export" ? (
-            <button className="btn-primary" onClick={() => handleRun("export")}>
-              {t("export")}
-            </button>
-          ) : null}
-          <button className="btn-secondary" onClick={handleRunAll}>
-            {t("run_full_pipeline")}
-          </button>
-        </div>
-      </section>
     </div>
   );
 }

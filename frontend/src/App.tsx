@@ -10,6 +10,7 @@ import FoundationView from "./components/FoundationView";
 import SettingsView from "./components/SettingsView";
 import ExportView from "./components/ExportView";
 import NewProjectView from "./components/NewProjectView";
+import PipelineConsole from "./components/PipelineConsole";
 
 interface PipelineProgress {
   phase: string;
@@ -37,16 +38,19 @@ function AppInner() {
 
     // Pipeline event listeners
     const unlistenStarted = listen("pipeline-started", () => {
+      console.log("[App] pipeline-started event received");
       setPipelineRunning(true);
       setPipelineMessage(t("running"));
       setPipelineLog([]);
     });
 
     const unlistenProgress = listen<PipelineProgress>("pipeline-progress", (event) => {
+      console.log("[App] pipeline-progress:", event.payload);
       setPipelineMessage(event.payload.message);
     });
 
     const unlistenLog = listen<string>("pipeline-log", (event) => {
+      console.log("[App] pipeline-log:", event.payload);
       setPipelineLog((prev) => {
         const next = [...prev, event.payload];
         return next.length > 500 ? next.slice(next.length - 500) : next;
@@ -54,12 +58,14 @@ function AppInner() {
     });
 
     const unlistenComplete = listen("pipeline-complete", async () => {
+      console.log("[App] pipeline-complete event received");
       setPipelineRunning(false);
       setPipelineMessage("");
       await loadState();
     });
 
     const unlistenError = listen<string>("pipeline-error", (event) => {
+      console.log("[App] pipeline-error:", event.payload);
       setPipelineRunning(false);
       setPipelineMessage("");
       alert(`Pipeline error: ${event.payload}`);
@@ -78,8 +84,10 @@ function AppInner() {
     try {
       // get_project_path() always returns the output_dir (novel files directory)
       const dir = await invoke<string>("get_project_path");
+      console.log("[App] get_project_path returned:", dir);
       setOutputDir(dir);
       const exists = await invoke<boolean>("project_exists", { outputDir: dir });
+      console.log("[App] project_exists:", exists);
       setHasProject(exists);
       if (exists) {
         await loadState(dir);
@@ -139,10 +147,13 @@ function AppInner() {
 
   // Runs a pipeline phase; outputDir is passed so Python knows where to write files
   const handleRunPhase = async (phase: string) => {
+    console.log("[App] handleRunPhase called, phase:", phase, "outputDir:", outputDir);
     try {
-      await invoke("run_pipeline_phase", { phase, outputDir });
+      const result = await invoke("run_pipeline_phase", { phase, outputDir });
+      console.log("[App] run_pipeline_phase returned:", result);
     } catch (e) {
-      console.error("Error running phase:", e);
+      console.error("[App] run_pipeline_phase error:", e);
+      alert(`启动失败: ${e}`);
       throw e;
     }
   };
@@ -196,6 +207,12 @@ function AppInner() {
       </nav>
 
       <main className="content">
+        {/* GLOBAL TEST BUTTON */}
+        <div style={{position: "fixed", top: 0, left: 0, background: "yellow", zIndex: 99999, padding: "20px"}}>
+          <button onClick={() => { document.title = "GLOBAL TEST OK"; alert("Global test works!"); console.log("GLOBAL BUTTON CLICKED"); }}>
+            全局测试按钮
+          </button>
+        </div>
         {view === "dashboard" && state && (
           <Dashboard
             state={state}
@@ -232,6 +249,14 @@ function AppInner() {
           <SettingsView outputDir={outputDir} onNewProject={handleNewProject} />
         )}
       </main>
+
+      {(pipelineRunning || pipelineLog.length > 0) && (
+        <PipelineConsole
+          pipelineRunning={pipelineRunning}
+          pipelineMessage={pipelineMessage}
+          pipelineLog={pipelineLog}
+        />
+      )}
     </div>
   );
 }

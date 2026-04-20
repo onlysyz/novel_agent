@@ -263,13 +263,14 @@ def run_foundation(state: dict) -> dict:
     print_header("FOUNDATION PHASE")
 
     sys.path.insert(0, str(Path(__file__).parent))
+    import src.common.prompts as _prompts
     import src.foundation.gen_world as _gw
     import src.foundation.gen_characters as _gc
     import src.foundation.gen_outline as _go
     import src.foundation.gen_canon as _gca
     import src.foundation.voice_fingerprint as _gv
     # Point every generator at the correct output directory
-    for _mod in [_gw, _gc, _go, _gca, _gv]:
+    for _mod in [_prompts, _gw, _gc, _go, _gca, _gv]:
         _mod.NOVEL_DIR = NOVEL_DIR
     generate_world      = _gw.generate_world
     generate_characters = _gc.generate_characters

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { FoundationDoc } from "../types";
 import { useTranslation } from "../i18n";
@@ -28,6 +28,10 @@ export default function FoundationView({ outputDir }: Props) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadDoc("world");
+  }, []);
 
   const docs: { key: DocName; labelKey: string }[] = [
     { key: "world", labelKey: "world_bible" },

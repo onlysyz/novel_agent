@@ -130,6 +130,15 @@ export const translations = {
     open: "Open",
     download: "Download",
 
+    // Keyboard shortcuts
+    keyboard_shortcuts: "Keyboard Shortcuts",
+    shortcut_save: "Save (Settings / Foundation)",
+    shortcut_run_phase: "Run current phase (Dashboard)",
+    shortcut_navigate_chapters: "Navigate chapter list",
+    shortcut_select_chapter: "Select highlighted chapter",
+    shortcut_close_editor: "Close editor / Cancel",
+    shortcut_show_help: "Show keyboard shortcuts",
+
     // General
     loading_novelforge: "Loading NovelForge...",
     cancel: "Cancel",
@@ -263,6 +272,15 @@ export const translations = {
     truncated: "...（已截断）",
     open: "打开",
     download: "下载",
+
+    // Keyboard shortcuts
+    keyboard_shortcuts: "键盘快捷键",
+    shortcut_save: "保存（设置/设定）",
+    shortcut_run_phase: "运行当前阶段（仪表盘）",
+    shortcut_navigate_chapters: "导航章节列表",
+    shortcut_select_chapter: "选择高亮章节",
+    shortcut_close_editor: "关闭编辑器/取消",
+    shortcut_show_help: "显示键盘快捷键",
 
     // General
     loading_novelforge: "NovelForge 加载中...",

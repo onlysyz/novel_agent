@@ -14,6 +14,7 @@ const FoundationView = lazy(() => import("./components/FoundationView"));
 const ExportView = lazy(() => import("./components/ExportView"));
 const SettingsView = lazy(() => import("./components/SettingsView"));
 const NewProjectView = lazy(() => import("./components/NewProjectView"));
+const KeyboardHelp = lazy(() => import("./components/KeyboardHelp"));
 
 interface PipelineProgress {
   phase: string;
@@ -36,9 +37,8 @@ function AppInner() {
   const [pipelineMessage, setPipelineMessage] = useState("");
   const [pipelineLog, setPipelineLog] = useState<string[]>([]);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
   const { triggerSave } = useSaveContext();
-
-  // Global Cmd+S handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const mod = e.metaKey || e.ctrlKey;
@@ -50,6 +50,21 @@ function AppInner() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [triggerSave]);
+
+  // Global ? and Cmd+/ to show keyboard help
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (e.key === "?" || (mod && e.key === "/")) {
+        const tag = (e.target as HTMLElement).tagName;
+        if (tag === "TEXTAREA" || tag === "INPUT") return;
+        e.preventDefault();
+        setShowKeyboardHelp((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     initProject();
@@ -298,6 +313,11 @@ function AppInner() {
 
       {alertMessage && (
         <AlertModal message={alertMessage} onClose={() => setAlertMessage(null)} />
+      )}
+      {showKeyboardHelp && (
+        <Suspense fallback={null}>
+          <KeyboardHelp onClose={() => setShowKeyboardHelp(false)} />
+        </Suspense>
       )}
     </div>
   );

@@ -1242,6 +1242,63 @@ body {
   color: var(--on-surface);
 }
 
+.doc-body {
+  font-family: Georgia, serif;
+  line-height: 1.8;
+  color: var(--on-surface);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.doc-body h1, .doc-body h2, .doc-body h3, .doc-body h4 {
+  color: var(--primary);
+  margin: 1.5em 0 0.5em;
+  font-weight: 600;
+}
+.doc-body h1 { font-size: 1.5rem; }
+.doc-body h2 { font-size: 1.25rem; }
+.doc-body h3 { font-size: 1.1rem; }
+.doc-body p { margin: 0.8em 0; }
+.doc-body ul, .doc-body ol { padding-left: 1.5rem; margin: 0.8em 0; }
+.doc-body li { margin: 0.3em 0; }
+.doc-body code {
+  background: rgba(255,255,255,0.08);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.875em;
+}
+.doc-body pre {
+  background: rgba(255,255,255,0.05);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+.doc-body pre code {
+  background: none;
+  padding: 0;
+}
+.doc-body blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+  margin: 1em 0;
+  color: var(--on-surface-variant);
+}
+.doc-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+.doc-body th, .doc-body td {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.doc-body th { background: rgba(255,255,255,0.05); }
+.doc-body hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 1.5em 0; }
+.doc-body a { color: var(--primary); }
+.doc-body strong { font-weight: 600; color: var(--primary); }
+
 /* Settings View */
 .setting-item {
   margin-bottom: 1rem;

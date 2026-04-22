@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { marked } from "marked";
 import { FoundationDoc } from "../types";
 import { useTranslation } from "../i18n";
 
@@ -14,6 +15,17 @@ export default function FoundationView({ outputDir }: Props) {
   const [selectedDoc, setSelectedDoc] = useState<DocName>("world");
   const [doc, setDoc] = useState<FoundationDoc | null>(null);
   const [loading, setLoading] = useState(false);
+  const [docHtml, setDocHtml] = useState("");
+
+  // Render markdown content whenever doc changes
+  useEffect(() => {
+    if (doc?.content) {
+      const html = marked(doc.content) as string;
+      setDocHtml(html);
+    } else {
+      setDocHtml("");
+    }
+  }, [doc]);
 
   const loadDoc = async (name: DocName) => {
     setLoading(true);
@@ -65,7 +77,7 @@ export default function FoundationView({ outputDir }: Props) {
             <div className="doc-header">
               <h2>{doc.name.charAt(0).toUpperCase() + doc.name.slice(1)}</h2>
             </div>
-            <pre className="doc-text">{doc.content}</pre>
+            <div className="doc-body" dangerouslySetInnerHTML={{ __html: docHtml }} />
           </div>
         ) : (
           <p className="empty-state">{t("select_doc_to_view")}</p>

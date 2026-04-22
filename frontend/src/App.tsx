@@ -256,9 +256,18 @@ function AppInner() {
         </div>
         {state && (
           <div className="status">
-            <div className="phase">{state.phase}</div>
-            {state.phase === "drafting" && (
-              <div className="progress">Ch {state.chapters.length}/?</div>
+            {pipelineRunning && pipelineMessage ? (
+              <div className="phase-status running">
+                <div className="phase-dot" />
+                <span className="phase-msg">{pipelineMessage}</span>
+              </div>
+            ) : (
+              <>
+                <div className="phase">{state.phase}</div>
+                {state.phase === "drafting" && (
+                  <div className="progress">Ch {state.chapters.length}/?</div>
+                )}
+              </>
             )}
           </div>
         )}

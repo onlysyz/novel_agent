@@ -51,6 +51,31 @@ This project follows the 5-layer novel architecture from bottom to top:
 - Layer 4: `world.md` — World bible
 - Layer 5: `voice.md` — Writing style
 
+## Testing
+
+```bash
+# Run pre-commit hook tests (fast, skips @pytest.mark.slow)
+bash scripts/pre-commit.sh
+
+# Run full test suite including slow tests (CI)
+bash scripts/ci_all_tests.sh
+
+# Run specific test file
+uv run pytest tests/test_pipeline_integration.py -v
+
+# Mark slow tests with @pytest.mark.slow decorator
+@pytest.mark.slow
+def test_slow_integration():
+    ...
+```
+
+**Test Files:**
+- `tests/test_pipeline_integration.py` — 23 tests, ~108s, covers pipeline phases
+- `tests/test_foundation_generators.py` — Foundation generators (fast)
+- `tests/test_draft_chapter.py` — Chapter drafting
+- `tests/test_review.py` — Review phase
+- `tests/test_export.py` — Export functionality
+
 ## Anti-Patterns
 
 See `ANTI-PATTERNS.md` for writing rules the AI must follow.

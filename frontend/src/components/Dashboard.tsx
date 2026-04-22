@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { PipelineState } from "../types";
 import { useTranslation } from "../i18n";
 import AlertModal from "./AlertModal";
+import PipelineConsole from "./PipelineConsole";
 
 interface Props {
   state: PipelineState;
@@ -62,10 +63,13 @@ export default function Dashboard({
   const [isRunning, setIsRunning] = useState(false);
   const [novelTitle, setNovelTitle] = useState("");
   const [outputDirLoaded, setOutputDirLoaded] = useState(false);
-  const [showFullLog, setShowFullLog] = useState(false);
+  const [showConsole, setShowConsole] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [consoleHeight, setConsoleHeight] = useState(320);
   const logRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
+  const dragStartY = useRef(0);
+  const dragStartHeight = useRef(320);
 
 useEffect(() => {
     if (outputDir) { setOutputDirLoaded(true); loadTitle(); }
@@ -119,6 +123,30 @@ useEffect(() => {
   const currentPhase = state.phase || "none";
   const hasFoundation = state.foundation_scores &&
     (state.foundation_scores.world > 0 || state.foundation_scores.characters > 0 || state.foundation_scores.outline > 0);
+
+  // Drag-to-resize handlers for console panel
+  const handleDragStart = (e: React.MouseEvent) => {
+    dragStartY.current = e.clientY;
+    dragStartHeight.current = consoleHeight;
+    document.body.style.cursor = "ns-resize";
+    document.body.style.userSelect = "none";
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const delta = dragStartY.current - moveEvent.clientY;
+      const newHeight = Math.min(Math.max(160, dragStartHeight.current + delta), 640);
+      setConsoleHeight(newHeight);
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
 
   return (
     <div className="dashboard">
@@ -195,45 +223,40 @@ useEffect(() => {
         ) : null}
       </div>
 
-      {/* Progress Panel – visible whenever there are log lines */}
-      {pipelineLog.length > 0 && (
-        <div className="progress-panel">
-          <div className="progress-panel-header">
-            <span className="progress-panel-title">
-              {pipelineRunning ? "⏳ Running…" : "✓ Last run"}
+      {/* Collapsible Pipeline Console Panel */}
+      {(pipelineRunning || pipelineLog.length > 0) && (
+        <div className={`console-panel${showConsole ? " expanded" : ""}`}>
+          <button
+            className="console-panel-header"
+            onClick={() => setShowConsole(v => !v)}
+            aria-expanded={showConsole}
+          >
+            <span className="console-panel-title">
+              {pipelineRunning
+                ? `⏳ ${pipelineMessage || "Running…"}`
+                : pipelineLog.length > 0
+                  ? "✓ Pipeline output"
+                  : "Pipeline console"}
             </span>
-            <div className="progress-panel-actions">
-              <button className="log-toggle" onClick={() => setShowFullLog(v => !v)}>
-                {showFullLog ? "Hide raw log" : "Raw log"}
-              </button>
-            </div>
-          </div>
+            <span className="console-panel-chevron">{showConsole ? "▼" : "▶"}</span>
+          </button>
 
-          {/* Structured steps */}
-          <div className="progress-steps" ref={stepsRef}>
-            {steps.map((step, i) => (
-              <div key={i} className={`progress-step step-${step.type}`}>
-                {step.type === "foundation" && <span className="step-icon">⚙</span>}
-                {step.type === "chapter"    && <span className="step-icon">✍</span>}
-                {step.type === "review"     && <span className="step-icon">🔍</span>}
-                {step.type === "score"      && <span className="step-icon">★</span>}
-                {step.type === "complete"   && <span className="step-icon">✅</span>}
-                {step.type === "git"        && <span className="step-icon">💾</span>}
-                {step.type === "info"       && <span className="step-icon">ℹ</span>}
-                <span className="step-text">{step.label}</span>
-              </div>
-            ))}
-            {pipelineRunning && <div className="step-cursor">▌</div>}
-          </div>
-
-          {/* Raw log (collapsible) */}
-          {showFullLog && (
-            <div className="raw-log" ref={logRef}>
-              {pipelineLog.map((line, i) => (
-                <div key={i} className={`log-line${line.startsWith("[err]") ? " log-err" : ""}`}>{line}</div>
-              ))}
+          <div
+            className="console-panel-body"
+            style={showConsole ? { maxHeight: consoleHeight } : { maxHeight: 0 }}
+          >
+            <div className="console-panel-grip" title="Drag to resize" onMouseDown={handleDragStart}>
+              <span className="console-panel-grip-dot" />
+              <span className="console-panel-grip-dot" />
+              <span className="console-panel-grip-dot" />
             </div>
-          )}
+            <PipelineConsole
+              pipelineRunning={pipelineRunning}
+              pipelineMessage={pipelineMessage}
+              pipelineLog={pipelineLog}
+              docked
+            />
+          </div>
         </div>
       )}
 

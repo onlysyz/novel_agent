@@ -643,6 +643,113 @@ body {
   color: #ffb3b3;
 }
 
+/* Collapsible Console Panel (Dashboard) */
+.console-panel {
+  background: var(--surface-container);
+  border: 1px solid rgba(218, 226, 253, 0.05);
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.console-panel-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface-container-highest);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.console-panel-header:hover {
+  background: var(--surface-container-highest);
+  filter: brightness(1.08);
+}
+
+.console-panel-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.console-panel-chevron {
+  font-size: 0.625rem;
+  color: var(--on-surface-variant);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.console-panel.expanded .console-panel-chevron {
+  transform: rotate(0deg);
+}
+
+.console-panel:not(.expanded) .console-panel-chevron {
+  transform: rotate(-90deg);
+}
+
+.console-panel-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.console-panel.expanded .console-panel-body {
+  /* max-height controlled via JS inline style for resize support */
+}
+
+.console-panel-grip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px;
+  cursor: ns-resize;
+  background: var(--surface-container-low);
+  border-top: 1px solid rgba(218, 226, 253, 0.05);
+  flex-shrink: 0;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.console-panel-grip:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.console-panel-grip:active {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.console-panel-grip-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  transition: background 0.15s;
+}
+
+.console-panel-grip:hover .console-panel-grip-dot {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.console-panel-body .pipeline-console {
+  position: static;
+  width: 100%;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid rgba(218, 226, 253, 0.05);
+  box-shadow: none;
+}
+
 /* Current step */
 .action-card .current-step {
   font-size: 0.8125rem;
@@ -1214,15 +1321,38 @@ body {
   bottom: 1.5rem;
   right: 1.5rem;
   width: 560px;
-  max-height: 360px;
+  max-height: 400px;
   background: var(--surface-container);
-  border: 1px solid rgba(218, 226, 253, 0.1);
-  border-radius: 0.75rem;
+  border: 1px solid rgba(218, 226, 253, 0.08);
+  border-radius: 1rem;
   display: flex;
   flex-direction: column;
   z-index: 1000;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(20px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  backdrop-filter: blur(24px);
+  overflow: hidden;
+}
+
+.pipeline-console--docked {
+  position: static !important;
+  width: 100% !important;
+  max-height: none !important;
+  height: 100% !important;
+  flex: 1 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pipeline-console--docked .console-body {
+  flex: 1 !important;
+  max-height: none !important;
 }
 
 .pipeline-console.minimized {
@@ -1234,74 +1364,152 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(218, 226, 253, 0.05);
-  background: var(--surface-container-highest);
-  border-radius: 0.75rem 0.75rem 0 0;
+  padding: 0.625rem 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border-bottom: 1px solid rgba(218, 226, 253, 0.06);
   flex-shrink: 0;
+  gap: 0.5rem;
 }
 
 .console-title {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--on-surface);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.console-title::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--surface-container-highest);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.pipeline-running .console-title::before {
+  background: var(--primary-container);
+  border-color: var(--primary-container);
+  box-shadow: 0 0 8px rgba(255, 81, 106, 0.6);
+  animation: dot-pulse 1.5s ease-in-out infinite;
 }
 
 .console-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.375rem;
 }
 
 .console-spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid var(--border);
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid rgba(255, 81, 106, 0.25);
   border-top-color: var(--primary-container);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
 }
 
 .console-close {
   background: none;
   border: none;
   color: var(--text-muted);
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0 0.25rem;
+  padding: 0.125rem 0.375rem;
   line-height: 1;
+  border-radius: 4px;
+  transition: all 0.15s;
 }
 
 .console-close:hover {
   color: var(--on-surface);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .console-body {
   flex: 1;
   overflow-y: auto;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0;
   font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: 0.72rem;
-  line-height: 1.5;
+  font-size: 0.7rem;
+  line-height: 1.6;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  /* Scroll shadow hint at top */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 14px
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 14px
+  );
+}
+
+.console-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.console-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.console-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.console-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.console-body.log-flash {
+  animation: flash-update 0.5s ease-out;
 }
 
 .console-line {
   white-space: pre-wrap;
   word-break: break-all;
-  color: var(--on-surface-variant);
+  color: rgba(255, 255, 255, 0.65);
+  padding: 0.15rem 1rem;
+  border-left: 2px solid transparent;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.console-line:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .console-line.console-err {
   color: #ffb3b3;
+  border-left-color: rgba(255, 100, 100, 0.5);
+  background: rgba(255, 50, 50, 0.05);
 }
 
 .console-line.console-info {
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.4);
   font-style: italic;
+  border-left-color: transparent;
 }
 
 .console-line.console-cursor {
   color: var(--primary-container);
+  padding-top: 0.25rem;
 }
 
 .cursor-blink {
@@ -1311,6 +1519,108 @@ body {
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 81, 106, 0.4); }
+  50% { box-shadow: 0 0 12px rgba(255, 81, 106, 0.8); }
+}
+
+@keyframes step-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+@keyframes line-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes flash-update {
+  0%   { background: rgba(255, 81, 106, 0.12); }
+  100% { background: transparent; }
+}
+
+/* Mini Phase Stepper (PipelineConsole) */
+.mini-stepper {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem 0;
+  gap: 0;
+}
+
+.mini-step-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.mini-step {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  opacity: 0.4;
+  transition: opacity 0.25s;
+}
+
+.mini-step.active {
+  opacity: 1;
+}
+
+.mini-step.done {
+  opacity: 0.75;
+}
+
+.mini-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface-container-highest);
+  border: 1.5px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+.mini-step.active .mini-step-dot {
+  background: var(--primary-container);
+  border-color: var(--primary-container);
+  animation: dot-pulse 2s ease-in-out infinite, step-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.mini-step.done .mini-step-dot {
+  background: var(--tertiary);
+  border-color: var(--tertiary);
+  animation: step-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.mini-step-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+
+.mini-step.active .mini-step-label {
+  color: var(--on-surface);
+}
+
+.mini-step-line {
+  flex: 1;
+  min-width: 16px;
+  max-width: 32px;
+  height: 1.5px;
+  background: var(--border);
+  margin: 0 4px;
+  transition: background 0.3s, transform 0.3s;
+  transform-origin: left;
+}
+
+.mini-step-line.done {
+  background: var(--tertiary);
+  transform: scaleX(1);
+  animation: line-fill 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Modal Overlay */

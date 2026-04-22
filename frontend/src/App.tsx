@@ -5,7 +5,6 @@ import { View, PipelineState } from "./types";
 import { I18nProvider, useTranslation } from "./i18n";
 import Dashboard from "./components/Dashboard";
 import ChapterList from "./components/ChapterList";
-import PipelineConsole from "./components/PipelineConsole";
 import AlertModal from "./components/AlertModal";
 
 const ChapterEditor = lazy(() => import("./components/ChapterEditor"));
@@ -265,14 +264,6 @@ function AppInner() {
           </Suspense>
         )}
       </main>
-
-      {(pipelineRunning || pipelineLog.length > 0) && (
-        <PipelineConsole
-          pipelineRunning={pipelineRunning}
-          pipelineMessage={pipelineMessage}
-          pipelineLog={pipelineLog}
-        />
-      )}
 
       {alertMessage && (
         <AlertModal message={alertMessage} onClose={() => setAlertMessage(null)} />

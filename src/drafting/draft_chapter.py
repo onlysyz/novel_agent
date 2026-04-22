@@ -240,20 +240,25 @@ def build_context_package(chapter_num: int) -> dict:
 
     Returns a dict with all context texts needed for chapter generation.
     """
+    # Guard against unset or invalid NOVEL_DIR
+    _novel_dir = Path(".") if NOVEL_DIR is None else NOVEL_DIR
+    if not isinstance(_novel_dir, Path):
+        _novel_dir = Path(".")
+
     # Read all layer files
-    voice = (NOVEL_DIR / "voice.md").read_text() if (NOVEL_DIR / "voice.md").exists() else ""
-    world = (NOVEL_DIR / "world.md").read_text() if (NOVEL_DIR / "world.md").exists() else ""
-    characters = (NOVEL_DIR / "characters.md").read_text() if (NOVEL_DIR / "characters.md").exists() else ""
-    outline = (NOVEL_DIR / "outline.md").read_text() if (NOVEL_DIR / "outline.md").exists() else ""
-    canon = (NOVEL_DIR / "canon.md").read_text() if (NOVEL_DIR / "canon.md").exists() else ""
-    anti_patterns = (NOVEL_DIR / "ANTI-PATTERNS.md").read_text() if (NOVEL_DIR / "ANTI-PATTERNS.md").exists() else ""
+    voice = (_novel_dir / "voice.md").read_text() if (_novel_dir / "voice.md").exists() else ""
+    world = (_novel_dir / "world.md").read_text() if (_novel_dir / "world.md").exists() else ""
+    characters = (_novel_dir / "characters.md").read_text() if (_novel_dir / "characters.md").exists() else ""
+    outline = (_novel_dir / "outline.md").read_text() if (_novel_dir / "outline.md").exists() else ""
+    canon = (_novel_dir / "canon.md").read_text() if (_novel_dir / "canon.md").exists() else ""
+    anti_patterns = (_novel_dir / "ANTI-PATTERNS.md").read_text() if (_novel_dir / "ANTI-PATTERNS.md").exists() else ""
 
     # Extract chapter-specific info from outline
     chapter_brief = extract_chapter_brief(outline, chapter_num)
     next_chapter_hint = extract_next_chapter_opener(outline, chapter_num)
 
     # Get previous chapter ending
-    chapters_dir = NOVEL_DIR / "chapters"
+    chapters_dir = _novel_dir / "chapters"
     prev_ending = get_previous_chapter_ending(chapters_dir, chapter_num)
 
     return {

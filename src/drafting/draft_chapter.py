@@ -7,6 +7,7 @@ Handles continuity with previous chapters and adherence to outline beats.
 import os
 import re
 import sys
+import json
 from pathlib import Path
 
 
@@ -17,6 +18,42 @@ def get_client():
 
 DOTNOVEL = Path(".novelforge")
 NOVEL_DIR = Path(".")
+
+
+def _load_state() -> dict:
+    """Load state from state.json, returning empty dict if missing."""
+    state_path = DOTNOVEL / "state.json"
+    if state_path.exists():
+        try:
+            return json.loads(state_path.read_text())
+        except Exception:
+            return {}
+    return {}
+
+
+def _save_state(state: dict):
+    """Save state to state.json."""
+    DOTNOVEL.mkdir(parents=True, exist_ok=True)
+    (DOTNOVEL / "state.json").write_text(json.dumps(state, indent=2))
+
+
+def _update_drafting_state(chapter_num: int, score: float, word_count: int, attempts: int, error: str = None):
+    """Update drafting section of state after a chapter completes (success or failure)."""
+    state = _load_state()
+    drafting = state.get("drafting", {})
+    drafting["current_chapter"] = chapter_num
+    drafting["chapter_scores"] = drafting.get("chapter_scores", {})
+    drafting["chapter_scores"][f"ch_{chapter_num:02d}"] = score
+    drafting["drafting_errors"] = drafting.get("drafting_errors", {})
+
+    if error:
+        drafting["failed_chapters"] = drafting.get("failed_chapters", [])
+        if chapter_num not in drafting["failed_chapters"]:
+            drafting["failed_chapters"].append(chapter_num)
+        drafting["drafting_errors"][str(chapter_num)] = error
+
+    state["drafting"] = drafting
+    _save_state(state)
 
 # Chapter word count targets
 TARGET_WORDS_PER_CHAPTER = int(os.getenv("TARGET_WORDS_PER_CHAPTER", "3200"))
@@ -563,6 +600,14 @@ def draft_chapter(
             print(f"  API error: {e}")
             _log_progress("drafting", f"Chapter {chapter_num}: API error - {e}", "error")
             if attempt == max_retries:
+                # Save state with error before re-raising so run_pipeline can recover
+                _update_drafting_state(
+                    chapter_num,
+                    best_result["score"] if best_result else 0.0,
+                    best_result["word_count"] if best_result else 0,
+                    attempt,
+                    error=str(e),
+                )
                 raise
             continue
 
@@ -611,6 +656,27 @@ def draft_chapter(
     if best_result:
         output_path.write_text(best_result["text"])
         print(f"\n  Saved to: {output_path}")
+
+    # Persist state after chapter completes (success or exhausted retries)
+    result_for_state = best_result
+    error_msg = None
+    if not best_result:
+        error_msg = f"Max retries ({max_retries}) exceeded"
+        result_for_state = {
+            "text": "",
+            "word_count": 0,
+            "chapter_num": chapter_num,
+            "score": 0.0,
+            "attempts": max_retries,
+            "evaluation": {},
+        }
+    _update_drafting_state(
+        chapter_num,
+        result_for_state["score"],
+        result_for_state["word_count"],
+        result_for_state["attempts"],
+        error=error_msg,
+    )
 
     return best_result or {
         "text": "",

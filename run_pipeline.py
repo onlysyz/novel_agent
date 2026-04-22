@@ -170,6 +170,7 @@ def load_state() -> dict:
             "total_words": 0,
             "total_attempts": 0,
             "failed_chapters": [],
+            "drafting_errors": {},
         },
         "review": {
             "revision_cycles": 0,
@@ -535,10 +536,7 @@ def run_drafting(state: dict) -> dict:
         except Exception as e:
             print(f"  ERROR: {e}")
             log_progress("drafting", f"  ERROR: {e}", "error")
-            state["drafting"]["current_chapter"] = chapter_num
-            if chapter_num not in state["drafting"].get("failed_chapters", []):
-                state["drafting"].setdefault("failed_chapters", []).append(chapter_num)
-            save_state(state)
+            # draft_chapter already saved state with failed_chapters and drafting_errors
             continue
 
     # Summary

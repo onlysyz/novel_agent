@@ -732,7 +732,7 @@ def run_export(state: dict) -> dict:
     manuscript_parts = []
     total_words = 0
 
-    for chapter_file in chapters:
+    for idx, chapter_file in enumerate(chapters, 1):
         content = chapter_file.read_text().strip()
         # Check for revised version
         revised_file = chapter_file.parent / f"{chapter_file.stem}_revised.md"
@@ -742,6 +742,7 @@ def run_export(state: dict) -> dict:
         chapter_num = int(chapter_file.stem.split("_")[1])
         manuscript_parts.append(f"\n\n# Chapter {chapter_num}\n\n{content}")
         total_words += len(content.split())
+        log_progress("export", f"  Assembling chapter {idx}/{chapter_count}...", "running")
 
     manuscript = "\n".join(manuscript_parts)
 

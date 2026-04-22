@@ -169,6 +169,7 @@ def load_state() -> dict:
             "chapter_scores": {},
             "total_words": 0,
             "total_attempts": 0,
+            "failed_chapters": [],
         },
         "review": {
             "revision_cycles": 0,
@@ -464,7 +465,21 @@ def run_drafting(state: dict) -> dict:
     chapters_dir = NOVEL_DIR / "chapters"
     chapters_dir.mkdir(exist_ok=True)
     existing = sorted(chapters_dir.glob("ch_*.md"))
-    start_chapter = state.get("drafting", {}).get("current_chapter", 0) + 1
+
+    # Determine starting chapter: skip completed chapters (in chapter_scores)
+    # but INCLUDE failed chapters so they get retried
+    chapter_scores = state.get("drafting", {}).get("chapter_scores", {})
+    completed_chapters = set(chapter_scores.keys())  # e.g. {"ch_01", "ch_02", ...}
+
+    # Find the first chapter that doesn't have a score yet
+    start_chapter = 1
+    for ch in range(1, chapter_count + 1):
+        score_key = f"ch_{ch:02d}"
+        if score_key not in completed_chapters:
+            start_chapter = ch
+            break
+    else:
+        start_chapter = chapter_count  # all complete, stay at end
 
     if start_chapter > 1:
         print(f"Resuming from chapter {start_chapter} ({len(existing)} chapters exist)")
@@ -521,6 +536,8 @@ def run_drafting(state: dict) -> dict:
             print(f"  ERROR: {e}")
             log_progress("drafting", f"  ERROR: {e}", "error")
             state["drafting"]["current_chapter"] = chapter_num
+            if chapter_num not in state["drafting"].get("failed_chapters", []):
+                state["drafting"].setdefault("failed_chapters", []).append(chapter_num)
             save_state(state)
             continue
 

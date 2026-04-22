@@ -100,6 +100,7 @@ pub struct ChapterSummary {
     pub title: String,
     pub word_count: u32,
     pub score: Option<f32>,
+    pub status: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -395,6 +396,11 @@ fn read_state(output_dir: String) -> Result<PipelineState, String> {
 
     let drafting = state.get("drafting").cloned().unwrap_or_default();
     let chapter_scores = drafting.get("chapter_scores").cloned().unwrap_or_default();
+    let failed_chapters: std::collections::HashSet<u32> = drafting
+        .get("failed_chapters")
+        .and_then(|f| f.as_array())
+        .map(|arr| arr.iter().filter_map(|v| v.as_u64().map(|n| n as u32)).collect())
+        .unwrap_or_default();
     let chapters_dir = base.join("chapters");
     let mut chapters: Vec<ChapterSummary> = Vec::new();
     if let Some(obj) = chapter_scores.as_object() {
@@ -406,11 +412,17 @@ fn read_state(output_dir: String) -> Result<PipelineState, String> {
                         let cp = chapters_dir.join(format!("ch_{:02}.md", num));
                         fs::read_to_string(&cp).map(|c| count_chars(&c) as u32).unwrap_or(0)
                     } else { 0 };
+                    let status = if failed_chapters.contains(&num) {
+                        Some("failed".to_string())
+                    } else {
+                        Some("done".to_string())
+                    };
                     chapters.push(ChapterSummary {
                         number: num,
                         title: format!("Chapter {}", num),
                         word_count,
                         score: Some(score as f32),
+                        status,
                     });
                 }
             }
@@ -485,6 +497,21 @@ fn list_chapters(output_dir: String) -> Result<Vec<ChapterSummary>, String> {
         }
     };
 
+    let failed_chapters: std::collections::HashSet<u32> = {
+        let state_path = base.join(".novelforge/state.json");
+        if state_path.exists() {
+            let content = fs::read_to_string(&state_path).unwrap_or_default();
+            let json: serde_json::Value = serde_json::from_str(&content).unwrap_or_default();
+            json.get("drafting")
+                .and_then(|d| d.get("failed_chapters"))
+                .and_then(|f| f.as_array())
+                .map(|arr| arr.iter().filter_map(|v| v.as_u64().map(|n| n as u32)).collect())
+                .unwrap_or_default()
+        } else {
+            std::collections::HashSet::new()
+        }
+    };
+
     let mut chapters: Vec<ChapterSummary> = Vec::new();
     for entry in fs::read_dir(&chapters_dir).map_err(|e| e.to_string())? {
         let entry = entry.map_err(|e| e.to_string())?;
@@ -497,7 +524,14 @@ fn list_chapters(output_dir: String) -> Result<Vec<ChapterSummary>, String> {
                 let title = extract_title(&content).unwrap_or_else(|| format!("Chapter {}", num));
                 let score_key = format!("ch_{:02}", num);
                 let score = chapter_scores.get(&score_key).map(|&s| s as f32);
-                chapters.push(ChapterSummary { number: num, title, word_count, score });
+                let status = if failed_chapters.contains(&num) {
+                    Some("failed".to_string())
+                } else if score.is_some() {
+                    Some("done".to_string())
+                } else {
+                    None
+                };
+                chapters.push(ChapterSummary { number: num, title, word_count, score, status });
             }
         }
     }

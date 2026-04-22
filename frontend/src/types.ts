@@ -26,11 +26,14 @@ export interface FoundationScores {
   voice: number;
 }
 
+export type ChapterStatus = "pending" | "writing" | "done" | "failed";
+
 export interface ChapterSummary {
   number: number;
   title: string;
   word_count: number;
   score: number | null;
+  status?: ChapterStatus;
 }
 
 export interface PipelineState {

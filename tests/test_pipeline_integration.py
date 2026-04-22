@@ -153,16 +153,21 @@ class TestFoundationPhaseNormal:
         run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
         run_pipeline.USE_STREAMING = False
 
+        def write_file_mock(path, content):
+            """Side effect: actually write content to the path like the real function does."""
+            path.write_text(content)
+            return {"score": 8.0, "iterations": 1, "text": content, "path": path}
+
         with patch("src.foundation.gen_world.generate_world") as mock_gw:
             with patch("src.foundation.gen_characters.generate_characters") as mock_gc:
                 with patch("src.foundation.gen_outline.generate_outline") as mock_go:
                     with patch("src.foundation.gen_canon.generate_canon") as mock_gca:
                         with patch("src.foundation.voice_fingerprint.generate_voice") as mock_gv:
-                            mock_gw.return_value = {"score": 8.0, "iterations": 1, "text": "# World", "path": mock_novedir / "world.md"}
-                            mock_gc.return_value = {"score": 8.0, "iterations": 1, "text": "# Characters", "path": mock_novedir / "characters.md"}
-                            mock_go.return_value = {"score": 8.0, "iterations": 1, "text": "# Outline", "path": mock_novedir / "outline.md"}
-                            mock_gca.return_value = {"score": 8.0, "iterations": 1, "text": "# Canon", "path": mock_novedir / "canon.md"}
-                            mock_gv.return_value = {"score": 8.0, "iterations": 1, "text": "# Voice", "path": mock_novedir / "voice.md"}
+                            mock_gw.side_effect = lambda **kw: write_file_mock(mock_novedir / "world.md", "# World\nA world.")
+                            mock_gc.side_effect = lambda **kw: write_file_mock(mock_novedir / "characters.md", "# Characters\nSarah and Marcus.")
+                            mock_go.side_effect = lambda **kw: write_file_mock(mock_novedir / "outline.md", "# Outline\n## Chapter 1")
+                            mock_gca.side_effect = lambda **kw: write_file_mock(mock_novedir / "canon.md", "# Canon\nFacts.")
+                            mock_gv.side_effect = lambda **kw: write_file_mock(mock_novedir / "voice.md", "# Voice\nLiterary style.")
 
                             state = {"phase": "foundation", "completed_phases": []}
                             results = run_pipeline.run_foundation(state)
@@ -209,17 +214,24 @@ class TestFoundationPhaseExceptions:
         run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
         run_pipeline.USE_STREAMING = False
 
+        def write_file_mock(path, content):
+            path.write_text(content)
+            return {"score": 8.0, "iterations": 1, "text": content, "path": path}
+
         with patch("src.foundation.gen_world.generate_world") as mock_gw:
             with patch("src.foundation.gen_characters.generate_characters") as mock_gc:
                 with patch("src.foundation.gen_outline.generate_outline") as mock_go:
                     with patch("src.foundation.gen_canon.generate_canon") as mock_gca:
                         with patch("src.foundation.voice_fingerprint.generate_voice") as mock_gv:
-                            # First call raises, second succeeds
-                            mock_gw.side_effect = [Exception("API timeout"), {"score": 8.0, "iterations": 2, "text": "# World", "path": mock_novedir / "world.md"}]
-                            mock_gc.return_value = {"score": 8.0, "iterations": 1, "text": "# Characters", "path": mock_novedir / "characters.md"}
-                            mock_go.return_value = {"score": 8.0, "iterations": 1, "text": "# Outline", "path": mock_novedir / "outline.md"}
-                            mock_gca.return_value = {"score": 8.0, "iterations": 1, "text": "# Canon", "path": mock_novedir / "canon.md"}
-                            mock_gv.return_value = {"score": 8.0, "iterations": 1, "text": "# Voice", "path": mock_novedir / "voice.md"}
+                            # First call raises, second succeeds (and writes file)
+                            mock_gw.side_effect = [
+                                Exception("API timeout"),
+                                write_file_mock(mock_novedir / "world.md", "# World\nA world."),
+                            ]
+                            mock_gc.side_effect = lambda **kw: write_file_mock(mock_novedir / "characters.md", "# Characters\nSarah.")
+                            mock_go.side_effect = lambda **kw: write_file_mock(mock_novedir / "outline.md", "# Outline\n## Chapter 1")
+                            mock_gca.side_effect = lambda **kw: write_file_mock(mock_novedir / "canon.md", "# Canon\nFacts.")
+                            mock_gv.side_effect = lambda **kw: write_file_mock(mock_novedir / "voice.md", "# Voice\nStyle.")
 
                             state = {"phase": "foundation", "completed_phases": []}
                             results = run_pipeline.run_foundation(state)
@@ -500,7 +512,8 @@ class TestDraftingPhaseExceptions:
         assert call_count[1] == 1
         assert call_count[2] == 1
 
-    def test_drafting_quota_exceeded_raises(self, mock_novedir_with_foundation):
+    def test_drafting_quota_exceeded_logs_error_and_continues(self, mock_novedir_with_foundation):
+        """API quota exceeded on first chapter - error is logged but continues to next chapter."""
         import run_pipeline
 
         run_pipeline.NOVEL_DIR = mock_novedir_with_foundation
@@ -509,8 +522,18 @@ class TestDraftingPhaseExceptions:
         run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
         run_pipeline.USE_STREAMING = False
 
+        call_count = {}
+
         def mock_chapter(ch_num, context=None):
-            raise RuntimeError("API quota exceeded. Please check your Anthropic account usage at https://console.anthropic.com/")
+            call_count[ch_num] = call_count.get(ch_num, 0) + 1
+            if ch_num == 1:
+                raise RuntimeError("API quota exceeded. Please check your Anthropic account usage at https://console.anthropic.com/")
+            return {
+                "chapter_num": ch_num,
+                "word_count": 3200,
+                "score": 7.5,
+                "attempts": 1,
+            }
 
         mock_build_ctx = MagicMock()
         mock_build_ctx.return_value = {
@@ -537,10 +560,17 @@ class TestDraftingPhaseExceptions:
 
         with patch("src.drafting.draft_chapter.draft_chapter", mock_chapter):
             with patch("src.drafting.draft_chapter.build_context_package", mock_build_ctx):
-                with pytest.raises(RuntimeError, match="API quota exceeded"):
-                    run_pipeline.run_drafting(state)
+                stats = run_pipeline.run_drafting(state)
 
-    def test_drafting_context_too_long_raises(self, mock_novedir_with_foundation):
+        # Chapter 1 failed with quota error, chapter 2 succeeded
+        assert call_count[1] == 1
+        assert call_count[2] == 1
+        # State saved with chapter 1 as current (failed)
+        saved_state = json.loads(run_pipeline.STATE_FILE.read_text())
+        assert saved_state["drafting"]["current_chapter"] == 1
+
+    def test_drafting_context_too_long_logs_error_and_continues(self, mock_novedir_with_foundation):
+        """Context too long on first chapter - error is logged but continues to next chapter."""
         import run_pipeline
 
         run_pipeline.NOVEL_DIR = mock_novedir_with_foundation
@@ -549,8 +579,18 @@ class TestDraftingPhaseExceptions:
         run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
         run_pipeline.USE_STREAMING = False
 
+        call_count = {}
+
         def mock_chapter(ch_num, context=None):
-            raise ValueError("Content too long for model context. Please reduce input size.")
+            call_count[ch_num] = call_count.get(ch_num, 0) + 1
+            if ch_num == 1:
+                raise ValueError("Content too long for model context. Please reduce input size.")
+            return {
+                "chapter_num": ch_num,
+                "word_count": 3200,
+                "score": 7.5,
+                "attempts": 1,
+            }
 
         mock_build_ctx = MagicMock()
         mock_build_ctx.return_value = {
@@ -577,8 +617,11 @@ class TestDraftingPhaseExceptions:
 
         with patch("src.drafting.draft_chapter.draft_chapter", mock_chapter):
             with patch("src.drafting.draft_chapter.build_context_package", mock_build_ctx):
-                with pytest.raises(ValueError, match="Content too long"):
-                    run_pipeline.run_drafting(state)
+                stats = run_pipeline.run_drafting(state)
+
+        # Chapter 1 failed with context error, chapter 2 succeeded
+        assert call_count[1] == 1
+        assert call_count[2] == 1
 
 
 # ─── Review Phase Tests ─────────────────────────────────────────────────────

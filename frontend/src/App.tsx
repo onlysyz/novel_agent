@@ -74,12 +74,18 @@ function AppInner() {
       setAlertMessage(`Pipeline error: ${event.payload}`);
     });
 
+    const unlistenCancelled = listen("pipeline-cancelled", () => {
+      setPipelineRunning(false);
+      setPipelineMessage("");
+    });
+
     return () => {
       unlistenStarted.then((f) => f());
       unlistenProgress.then((f) => f());
       unlistenLog.then((f) => f());
       unlistenComplete.then((f) => f());
       unlistenError.then((f) => f());
+      unlistenCancelled.then((f) => f());
     };
   }, []);
 

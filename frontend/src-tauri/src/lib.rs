@@ -636,7 +636,7 @@ fn default_ai_config() -> AIConfig {
 
 // Mutex to prevent multiple pipelines from running simultaneously
 static PIPELINE_RUNNING: Mutex<bool> = Mutex::new(false);
-static PIPELINE_CHILD: Mutex<Option<Arc<Mutex<Option<Child>>>> = Mutex::new(None);
+static PIPELINE_CHILD: Mutex<Option<Arc<Mutex<Option<Child>>>>> = Mutex::new(None);
 
 // ── Pipeline PID file management for crash recovery ────────────────────────────
 
@@ -909,22 +909,6 @@ async fn run_full_pipeline(
             message: "Running full pipeline...".to_string(),
         });
 
-        let child = match Command::new(&python)
-            .env("PYTHONPATH", app_root.to_str().unwrap_or(""))
-            .args(&args)
-            .current_dir(&app_root)
-            .spawn()
-        {
-            Ok(c) => c,
-            Err(e) => {
-                *PIPELINE_RUNNING.lock().unwrap() = false;
-                remove_pid_file(&output_path);
-                let _ = app_handle.emit("pipeline-error",
-                    format!("Failed to start Python ({}): {}", python, e));
-                return;
-            }
-        };
-
         // Spawn child process with stdout captured for SSE streaming
         let child = match Command::new(&python)
             .env("PYTHONPATH", app_root.to_str().unwrap_or(""))
@@ -948,14 +932,14 @@ async fn run_full_pipeline(
             }
         };
 
-        let child: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
-        let child_stream = child.clone();
-        let child_wait = child.clone();
+        let child_arc: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
+        let child_stream = child_arc.clone();
+        let child_wait = child_arc.clone();
 
         // Store child handle for cancel support
         {
             let mut cached = PIPELINE_CHILD.lock().unwrap();
-            *cached = Some(child.clone());
+            *cached = Some(child_arc.clone());
         }
 
         // SSE streaming thread: read stdout line by line and emit events

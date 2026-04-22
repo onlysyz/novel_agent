@@ -108,6 +108,15 @@ useEffect(() => {
     console.log("[Dashboard] onRunPhase returned");
   };
 
+  const handleCancel = async () => {
+    console.log("[Dashboard] cancelling pipeline...");
+    try {
+      await invoke("cancel_pipeline");
+    } catch (e) {
+      console.error("[Dashboard] cancel failed:", e);
+    }
+  };
+
   // Parse log into structured steps (only meaningful lines)
   const steps = useMemo(() =>
     pipelineLog.map(parseLine).filter((s): s is ParsedStep => s !== null),
@@ -254,6 +263,7 @@ useEffect(() => {
               pipelineRunning={pipelineRunning}
               pipelineMessage={pipelineMessage}
               pipelineLog={pipelineLog}
+              onCancel={handleCancel}
               docked
             />
           </div>

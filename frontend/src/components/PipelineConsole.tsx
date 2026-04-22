@@ -6,6 +6,7 @@ interface Props {
   pipelineLog: string[];
   pipelineMessage: string;
   onClose?: () => void;
+  onCancel?: () => void;
   docked?: boolean;
 }
 
@@ -41,7 +42,7 @@ function parseLine(line: string): ParsedStep | null {
   return null;
 }
 
-export default function PipelineConsole({ pipelineRunning, pipelineLog, pipelineMessage, onClose, docked = false }: Props) {
+export default function PipelineConsole({ pipelineRunning, pipelineLog, pipelineMessage, onClose, onCancel, docked = false }: Props) {
   const { t } = useTranslation();
   const logRef = useRef<HTMLDivElement>(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -117,6 +118,15 @@ export default function PipelineConsole({ pipelineRunning, pipelineLog, pipeline
         </span>
         <div className="console-actions">
           {pipelineRunning && <div className="console-spinner" />}
+          {pipelineRunning && (
+            <button
+              className="console-cancel"
+              onClick={onCancel}
+              title={t("cancel")}
+            >
+              ✕
+            </button>
+          )}
           <button className="log-toggle" onClick={() => setShowRawLog(v => !v)}>
             {showRawLog ? "Steps" : "Raw"}
           </button>

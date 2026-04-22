@@ -635,7 +635,6 @@ fn default_ai_config() -> AIConfig {
 }
 
 // Mutex to prevent multiple pipelines from running simultaneously
-use std::sync::{Arc, Mutex};
 static PIPELINE_RUNNING: Mutex<bool> = Mutex::new(false);
 static PIPELINE_CHILD: Mutex<Option<Arc<Mutex<Option<Child>>>> = Mutex::new(None);
 

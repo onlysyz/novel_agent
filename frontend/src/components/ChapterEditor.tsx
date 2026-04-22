@@ -24,6 +24,22 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
     loadChapter();
   }, [chapterNum]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key === "s") {
+        e.preventDefault();
+        if (hasChanges && !saving) handleSave();
+      }
+      if (e.key === "Escape" && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [hasChanges, saving, content]);
+
   const loadChapter = async () => {
     try {
       const ch = await invoke<Chapter>("read_chapter", { outputDir, chapterNum });

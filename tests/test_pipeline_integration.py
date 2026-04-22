@@ -278,7 +278,8 @@ class TestFoundationPhaseExceptions:
 class TestDraftingPhaseNormal:
     """Drafting phase: successful chapter writing."""
 
-    def test_drafting_writes_all_chapters(self, mock_novedir_with_foundation):
+    def test_drafting_calls_draft_chapter_for_each_chapter(self, mock_novedir_with_foundation):
+        """Verifies draft_chapter is called once per chapter in the outline."""
         import run_pipeline
 
         run_pipeline.NOVEL_DIR = mock_novedir_with_foundation
@@ -287,13 +288,19 @@ class TestDraftingPhaseNormal:
         run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
         run_pipeline.USE_STREAMING = False
 
-        mock_chapter = MagicMock()
-        mock_chapter.return_value = {
-            "chapter_num": 1,
-            "word_count": 3200,
-            "score": 7.5,
-            "attempts": 1,
-        }
+        called_chapters = []
+
+        def mock_chapter(ch_num, context=None):
+            called_chapters.append(ch_num)
+            chapters_dir = run_pipeline.NOVEL_DIR / "chapters"
+            chapters_dir.mkdir(exist_ok=True)
+            (chapters_dir / f"ch_{ch_num:02d}.md").write_text(f"Chapter {ch_num} content.")
+            return {
+                "chapter_num": ch_num,
+                "word_count": 3200,
+                "score": 7.5,
+                "attempts": 1,
+            }
 
         mock_build_ctx = MagicMock()
         mock_build_ctx.return_value = {
@@ -335,7 +342,8 @@ class TestDraftingPhaseNormal:
             with patch("src.drafting.draft_chapter.build_context_package", mock_build_ctx):
                 stats = run_pipeline.run_drafting(state)
 
-        assert mock_chapter.call_count == 2  # 2 chapters in outline
+        assert len(called_chapters) == 2  # 2 chapters in outline
+        assert called_chapters == [1, 2]
         chapters_dir = mock_novedir_with_foundation / "chapters"
         assert (chapters_dir / "ch_01.md").exists()
         assert (chapters_dir / "ch_02.md").exists()
@@ -567,9 +575,11 @@ class TestDraftingPhaseExceptions:
         # Chapter 1 failed with quota error, chapter 2 succeeded
         assert call_count[1] == 1
         assert call_count[2] == 1
-        # State saved with chapter 1 as current (failed)
+        # State reflects that chapter 2 was the last attempted (chapter 1 failed silently)
         saved_state = json.loads(run_pipeline.STATE_FILE.read_text())
-        assert saved_state["drafting"]["current_chapter"] == 1
+        assert saved_state["drafting"]["current_chapter"] == 2
+        # Chapter 1 has no score since it failed
+        assert "ch_01" not in saved_state["drafting"]["chapter_scores"]
 
     def test_drafting_context_too_long_logs_error_and_continues(self, mock_novedir_with_foundation):
         """Context too long on first chapter - error is logged but continues to next chapter."""

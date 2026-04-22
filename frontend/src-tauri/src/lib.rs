@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 use std::process::{Command, Child};
+use std::sync::{Arc, Mutex};
 #[cfg(unix)]
 use std::os::unix::process::ExitStatusExt;
 use tauri::Emitter;

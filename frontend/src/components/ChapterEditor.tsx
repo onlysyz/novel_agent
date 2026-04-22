@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { Chapter } from "../types";
 import { useTranslation } from "../i18n";
+import { useToast } from "./Toast";
 
 interface Props {
   outputDir: string;
@@ -12,6 +13,7 @@ interface Props {
 
 export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }: Props) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [content, setContent] = useState("");
   const [hasChanges, setHasChanges] = useState(false);
@@ -63,6 +65,7 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
         setHasChanges(false);
       } catch (e) {
         console.error("Auto-save failed:", e);
+        showToast(`${t("error_saving")}: ${e}`, "error");
       } finally {
         setAutoSaving(false);
       }
@@ -91,9 +94,10 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
       await onSave(content);
       lastSavedContent.current = content;
       setHasChanges(false);
+      showToast(t("doc_saved"), "success");
     } catch (e) {
       console.error("Error saving:", e);
-      alert(`Error saving: ${e}`);
+      showToast(`${t("error_saving")}: ${e}`, "error");
     } finally {
       setSaving(false);
     }

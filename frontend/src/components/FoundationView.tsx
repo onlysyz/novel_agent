@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { marked } from "marked";
 import { FoundationDoc } from "../types";
 import { useTranslation } from "../i18n";
+import { useToast } from "./Toast";
 
 type DocName = "world" | "characters" | "outline" | "canon" | "voice";
 
@@ -12,6 +13,7 @@ interface Props {
 
 export default function FoundationView({ outputDir }: Props) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [selectedDoc, setSelectedDoc] = useState<DocName>("world");
   const [doc, setDoc] = useState<FoundationDoc | null>(null);
   const [loading, setLoading] = useState(false);
@@ -67,10 +69,10 @@ export default function FoundationView({ outputDir }: Props) {
       await invoke("save_foundation_doc", { outputDir, name: doc.name, content: editedContent });
       setDoc({ ...doc, content: editedContent });
       setIsEditing(false);
-      alert(t("doc_saved") || "Document saved");
+      showToast(t("doc_saved"), "success");
     } catch (e) {
       console.error("Error saving doc:", e);
-      alert(`Error saving: ${e}`);
+      showToast(`${t("error_saving")}: ${e}`, "error");
     } finally {
       setSaving(false);
     }

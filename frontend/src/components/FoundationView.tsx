@@ -149,7 +149,15 @@ export default function FoundationView({ outputDir }: Props) {
       </div>
       <div className="foundation-content">
         {loading ? (
-          <p>{t("loading")}</p>
+          <div className="foundation-skeleton">
+            <div className="skeleton-line w-2_3" style={{ height: '1.5rem', marginBottom: '1rem' }} />
+            <div className="skeleton-line w-full" style={{ marginBottom: '0.5rem' }} />
+            <div className="skeleton-line w-5_6" style={{ marginBottom: '0.5rem' }} />
+            <div className="skeleton-line w-full" style={{ marginBottom: '0.5rem' }} />
+            <div className="skeleton-line w-3_4" style={{ marginBottom: '0.5rem' }} />
+            <div className="skeleton-line w-5_6" style={{ marginBottom: '0.5rem' }} />
+            <div className="skeleton-line w-1_2" />
+          </div>
         ) : doc ? (
           <div className="doc-view">
             <div className="doc-header">

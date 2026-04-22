@@ -2354,6 +2354,14 @@ body {
 .w-1_3 { width: 33%; }
 .w-1_2 { width: 50%; }
 .w-2_3 { width: 66%; }
+.w-5_6 { width: 83%; }
+.w-full { width: 100%; }
+
+.foundation-skeleton {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
 
 @keyframes skeleton-shimmer {
   0% { background-position: 200% 0; }

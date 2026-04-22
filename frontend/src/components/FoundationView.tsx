@@ -4,6 +4,7 @@ import { marked } from "marked";
 import { FoundationDoc } from "../types";
 import { useTranslation } from "../i18n";
 import { useToast } from "./Toast";
+import { useSaveContext } from "../contexts/SaveContext";
 
 type DocName = "world" | "characters" | "outline" | "canon" | "voice";
 
@@ -14,6 +15,7 @@ interface Props {
 export default function FoundationView({ outputDir }: Props) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { registerSaveHandler } = useSaveContext();
   const [selectedDoc, setSelectedDoc] = useState<DocName>("world");
   const [doc, setDoc] = useState<FoundationDoc | null>(null);
   const [loading, setLoading] = useState(false);
@@ -118,6 +120,7 @@ export default function FoundationView({ outputDir }: Props) {
 
   useEffect(() => {
     loadDoc("world");
+    registerSaveHandler(null); // FoundationView has no global save action
   }, []);
 
   const docs: { key: DocName; labelKey: string }[] = [

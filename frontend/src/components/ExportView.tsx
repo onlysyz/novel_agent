@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
 import { useToast } from "./Toast";
+import { useSaveContext } from "../contexts/SaveContext";
 
 interface Props {
   outputDir: string;
@@ -18,6 +19,7 @@ interface ExportFile {
 export default function ExportView({ outputDir }: Props) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { registerSaveHandler } = useSaveContext();
   const [manuscript, setManuscript] = useState("");
   const [exportFiles, setExportFiles] = useState<ExportFile[]>([]);
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ export default function ExportView({ outputDir }: Props) {
   useEffect(() => {
     loadManuscript();
     loadExportFiles();
+    registerSaveHandler(null); // ExportView has no save action
   }, [outputDir]);
 
   const loadManuscript = async () => {

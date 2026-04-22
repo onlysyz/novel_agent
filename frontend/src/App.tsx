@@ -4,6 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 import { View, PipelineState } from "./types";
 import { I18nProvider, useTranslation } from "./i18n";
 import { ToastProvider } from "./components/Toast";
+import { SaveProvider, useSaveContext } from "./contexts/SaveContext";
 import Dashboard from "./components/Dashboard";
 import ChapterList from "./components/ChapterList";
 import AlertModal from "./components/AlertModal";
@@ -35,6 +36,20 @@ function AppInner() {
   const [pipelineMessage, setPipelineMessage] = useState("");
   const [pipelineLog, setPipelineLog] = useState<string[]>([]);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const { triggerSave } = useSaveContext();
+
+  // Global Cmd+S handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key === "s") {
+        e.preventDefault();
+        triggerSave();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [triggerSave]);
 
   useEffect(() => {
     initProject();
@@ -292,7 +307,9 @@ export default function App() {
   return (
     <I18nProvider>
       <ToastProvider>
-        <AppInner />
+        <SaveProvider>
+          <AppInner />
+        </SaveProvider>
       </ToastProvider>
     </I18nProvider>
   );

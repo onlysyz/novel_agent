@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
 import { useToast } from "./Toast";
+import { useSaveContext } from "../contexts/SaveContext";
 
 interface Props {
   outputDir: string;
@@ -22,6 +23,7 @@ interface AIConfig {
 export default function SettingsView({ outputDir, onNewProject }: Props) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { registerSaveHandler } = useSaveContext();
   const [seed, setSeed] = useState("");
   const [aiConfig, setAiConfig] = useState<AIConfig>({
     api_key: "",
@@ -38,6 +40,7 @@ export default function SettingsView({ outputDir, onNewProject }: Props) {
   useEffect(() => {
     loadSeed();
     loadAIConfig();
+    registerSaveHandler(handleSaveAIConfig);
   }, [outputDir]);
 
   const loadSeed = async () => {

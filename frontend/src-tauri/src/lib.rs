@@ -940,10 +940,15 @@ async fn run_full_pipeline(
             }
         };
 
-        use std::sync::{Arc, Mutex};
         let child: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
         let child_stream = child.clone();
         let child_wait = child.clone();
+
+        // Store child handle for cancel support
+        {
+            let mut cached = PIPELINE_CHILD.lock().unwrap();
+            *cached = Some(child.clone());
+        }
 
         // SSE streaming thread: read stdout line by line and emit events
         let app_handle_clone = app_handle.clone();

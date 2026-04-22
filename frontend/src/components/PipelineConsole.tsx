@@ -12,9 +12,10 @@ interface Props {
 
 // ── Parse a raw log line into a structured step (reused from Dashboard) ──
 interface ParsedStep {
-  type: "foundation" | "chapter" | "review" | "score" | "complete" | "git" | "info";
+  type: "foundation" | "chapter" | "review" | "score" | "complete" | "git" | "info" | "export";
   label: string;
   detail?: string;
+  pct?: number;
 }
 
 function parseLine(line: string): ParsedStep | null {
@@ -38,6 +39,9 @@ function parseLine(line: string): ParsedStep | null {
   if (/^\[Git\]/.test(line)) return { type: "git", label: line.trim() };
 
   if (/\d+ words/.test(line)) return { type: "info", label: line.trim() };
+
+  const exportM = line.match(/Assembling chapter (\d+)\/(\d+)\.\.\.\s+\((\d+)%\)/);
+  if (exportM) return { type: "export", label: `Chapter ${exportM[1]} / ${exportM[2]}`, pct: parseInt(exportM[3]) };
 
   return null;
 }
@@ -176,7 +180,13 @@ export default function PipelineConsole({ pipelineRunning, pipelineLog, pipeline
               {step.type === "complete"   && <span className="step-icon">✅</span>}
               {step.type === "git"        && <span className="step-icon">💾</span>}
               {step.type === "info"       && <span className="step-icon">ℹ</span>}
+              {step.type === "export"     && <span className="step-icon">📦</span>}
               <span className="step-text">{step.label}</span>
+              {step.type === "export" && step.pct !== undefined && (
+                <span className="export-progress-bar">
+                  <span className="export-progress-fill" style={{ width: `${step.pct}%` }} />
+                </span>
+              )}
             </div>
           ))}
           {pipelineRunning && <div className="step-cursor">▌</div>}

@@ -83,6 +83,8 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     onClose();
   };
+
+  const handleSave = async () => {
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     setSaving(true);
     try {

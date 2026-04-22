@@ -837,6 +837,8 @@ Examples:
     # Enable streaming mode if requested
     global USE_STREAMING
     USE_STREAMING = args.stream
+    if args.stream:
+        os.environ["NOVELFORGE_STREAM"] = "1"
 
     # Initialize paths based on output directory
     init_paths(args.output_dir)

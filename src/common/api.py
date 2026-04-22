@@ -81,6 +81,7 @@ class AnthropicClient:
         temperature: Optional[float] = None,
         use_cache: bool = True,
         stream: bool = False,
+        progress_callback=None,
     ) -> str:
         """Generate text with optional caching and retry logic.
 
@@ -91,6 +92,7 @@ class AnthropicClient:
             temperature: Temperature for generation
             use_cache: Whether to use cached responses
             stream: Whether to use streaming (required for long operations >10min)
+            progress_callback: Optional callback(chunk: str, accumulated: str) for streaming progress
         """
         import hashlib
 
@@ -120,7 +122,7 @@ class AnthropicClient:
                         stream=True,
                     )
                     # Handle streaming response
-                    text = self._handle_streaming_response(response)
+                    text = self._handle_streaming_response(response, progress_callback)
                 else:
                     response = self.client.messages.create(
                         model=self.model,
@@ -159,19 +161,50 @@ class AnthropicClient:
             except ValueError:
                 raise
             except Exception as e:
+                error_type = type(e).__name__
+                error_str = str(e)
+
+                # Classify error for user-friendly handling
+                if "timeout" in error_str.lower() or error_type in ("TimeoutError", "asyncio.TimeoutError"):
+                    error_category = "timeout"
+                elif "rate_limit" in error_str.lower() or "quota" in error_str.lower() or error_type in ("RateLimitError", "OverloadedError"):
+                    error_category = "quota"
+                elif "overloaded" in error_str.lower() or "overload" in error_str.lower():
+                    error_category = "overloaded"
+                elif "context" in error_str.lower() and "length" in error_str.lower():
+                    error_category = "context_length"
+                elif "api_key" in error_str.lower() or "authentication" in error_str.lower():
+                    error_category = "auth"
+                else:
+                    error_category = "unknown"
+
                 if attempt == 2:
                     logger.error(
                         f"API exhausted retries | attempt={attempt + 1}/3 | "
-                        f"error_type={type(e).__name__} | error={str(e)[:100]}"
+                        f"error_type={error_type} | error_category={error_category} | "
+                        f"error={error_str[:200]}"
                     )
-                    raise
+                    # Raise a more descriptive error
+                    if error_category == "timeout":
+                        raise TimeoutError(f"API request timed out after 3 attempts. The model may be slow to respond. Try again later or reduce content size.")
+                    elif error_category == "quota":
+                        raise RuntimeError(f"API quota exceeded. Please check your Anthropic account usage at https://console.anthropic.com/")
+                    elif error_category == "overloaded":
+                        raise RuntimeError(f"API is overloaded. Please wait a moment and try again.")
+                    elif error_category == "context_length":
+                        raise ValueError(f"Content too long for model context. Please reduce input size.")
+                    elif error_category == "auth":
+                        raise PermissionError(f"API authentication failed. Please check your ANTHROPIC_API_KEY.")
+                    else:
+                        raise
                 backoff = (2 ** attempt) + (hash(cache_key) % 10) * 0.1
                 logger.warning(
                     f"API attempt failed | attempt={attempt + 1}/3 | "
-                    f"error_type={type(e).__name__} | error={str(e)[:100]} | "
+                    f"error_category={error_category} | "
+                    f"error_type={error_type} | error={error_str[:100]} | "
                     f"backoff={backoff:.1f}s"
                 )
-                print(f"API attempt {attempt + 1} failed: {e}, retrying in {backoff:.1f}s...")
+                print(f"[{error_category}] API attempt {attempt + 1} failed: {e}, retrying in {backoff:.1f}s...")
                 time.sleep(backoff)
 
         raise RuntimeError("Should not reach here")
@@ -197,10 +230,11 @@ class AnthropicClient:
             return "\n".join(thinking_parts)
         return ""
 
-    def _handle_streaming_response(self, response) -> str:
-        """Extract text from streaming API response."""
+    def _handle_streaming_response(self, response, progress_callback=None) -> str:
+        """Extract text from streaming API response with optional progress callbacks."""
         text_parts = []
         thinking_parts = []
+        accumulated = ""
 
         for event in response:
             # Handle content block delta events
@@ -209,9 +243,20 @@ class AnthropicClient:
                 if delta:
                     if hasattr(delta, 'type'):
                         if delta.type == 'text_delta':
-                            text_parts.append(getattr(delta, 'text', ''))
+                            text = getattr(delta, 'text', '')
+                            text_parts.append(text)
+                            accumulated += text
+                            # Emit progress every ~500 chars
+                            if progress_callback and len(accumulated) >= 500:
+                                progress_callback(text, accumulated)
+                                accumulated = ""
                         elif delta.type == 'thinking_delta':
-                            thinking_parts.append(getattr(delta, 'thinking', ''))
+                            thinking = getattr(delta, 'thinking', '')
+                            thinking_parts.append(thinking)
+
+        # Final callback with remaining accumulated text
+        if progress_callback and accumulated:
+            progress_callback("", accumulated)
 
         if text_parts:
             return "\n".join(text_parts)

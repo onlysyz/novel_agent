@@ -12,11 +12,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.common.api import get_client
 from src.common.prompts import build_voice_prompt, read_seed, read_language
 from src.common.scoring import score_foundation, iteration_summary
+from src.common.constants import get_foundation_config
 
 DOTNOVEL = Path(".novelforge")
 NOVEL_DIR = Path(".")
-MIN_SCORE = float(os.getenv("MIN_FOUNDATION_SCORE", "7.0"))
-MAX_ITERATIONS = int(os.getenv("MAX_FOUNDATION_ITERATIONS", "10"))
+
+config = get_foundation_config("voice")
+MIN_SCORE = float(os.getenv("MIN_FOUNDATION_SCORE", str(config["min_score"])))
+MAX_ITERATIONS = int(os.getenv("MAX_FOUNDATION_ITERATIONS", str(config["max_iterations"])))
 
 # Default sample texts for when user hasn't provided any
 DEFAULT_SAMPLES = [

@@ -182,42 +182,13 @@ def convert_markdown_to_latex(markdown_text: str) -> str:
 
 def load_chapters() -> list[tuple[int, str, str]]:
     """Load all chapters from the chapters directory."""
-    chapters_dir = NOVEL_DIR / "chapters"
-    if not chapters_dir.exists():
-        return []
+    from src.common.utils import load_chapters_simple
+    return [(num, title, _strip_title(content)) for num, title, content in load_chapters_simple(NOVEL_DIR)]
 
-    chapters = []
-    for entry in sorted(chapters_dir.glob("ch_*.md")):
-        # Skip revised versions for now
-        if "_revised" in entry.stem:
-            continue
 
-        num_str = entry.stem.replace("ch_", "")
-        try:
-            num = int(num_str)
-        except ValueError:
-            continue
-
-        content = entry.read_text()
-
-        # Check for revised version
-        revised_path = chapters_dir / f"ch_{num:02}_revised.md"
-        if revised_path.exists():
-            content = revised_path.read_text()
-
-        # Extract title from first heading
-        title = f"Chapter {num}"
-        for line in content.split("\n"):
-            if line.strip().startswith("# "):
-                title = line.strip()[2:].strip()
-                break
-
-        # Remove title from content for LaTeX
-        content = re.sub(r"^# .+?\n", "", content, count=1)
-
-        chapters.append((num, title, content))
-
-    return chapters
+def _strip_title(content: str) -> str:
+    """Remove title line from chapter content for LaTeX."""
+    return re.sub(r"^# .+?\n", "", content, count=1)
 
 
 def get_novel_metadata() -> dict:

@@ -21,7 +21,7 @@ NOVEL_DIR = Path(".")
 # Chapter word count targets
 TARGET_WORDS_PER_CHAPTER = int(os.getenv("TARGET_WORDS_PER_CHAPTER", "3200"))
 MIN_CHAPTER_WORDS = int(os.getenv("MIN_CHAPTER_WORDS", "2500"))
-MAX_CHAPTER_WORDS = int(os.getenv("MAX_CHAPTER_WORDS", "4500"))
+MAX_CHAPTER_WORDS = int(os.getenv("MAX_CHAPTER_WORDS", "8000"))
 
 # Writing rules to inject into every chapter prompt
 WRITING_RULES = """
@@ -478,6 +478,30 @@ def parse_chapter_content(text: str) -> dict:
     return result
 
 
+def _log_progress(phase: str, message: str, step: str = "running"):
+    """Write a progress entry to stdout (SSE format)."""
+    import os
+    from datetime import datetime
+    import json
+
+    entry = {
+        "phase": phase,
+        "step": step,
+        "message": message,
+        "timestamp": datetime.now().isoformat(),
+    }
+
+    if os.getenv("NOVELFORGE_STREAM", "0") == "1":
+        print(f"data: {json.dumps(entry)}", flush=True)
+        return
+
+    try:
+        with open(".novelforge/progress.jsonl", "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception:
+        pass
+
+
 def draft_chapter(
     chapter_num: int,
     context: dict = None,
@@ -511,6 +535,7 @@ def draft_chapter(
     print(f"\n[Chapter {chapter_num}] {brief['title']}")
     print(f"  POV: {brief['pov']}, Beat: {brief['beat']}")
     print(f"  Target: ~{target} words")
+    _log_progress("drafting", f"Starting chapter {chapter_num}: {brief['title']}", "running")
     print()
 
     # Import evaluate lazily to avoid circular imports
@@ -522,13 +547,21 @@ def draft_chapter(
 
     for attempt in range(1, max_retries + 1):
         print(f"[Chapter {chapter_num}] Attempt {attempt}/{max_retries}")
+        _log_progress("drafting", f"Chapter {chapter_num} attempt {attempt}/{max_retries}...", "running")
 
         system, user = build_chapter_prompt(context, chapter_num)
 
+        def chapter_progress_callback(chunk: str, accumulated: str):
+            """Emit streaming progress every ~500 chars."""
+            if accumulated:
+                _log_progress("drafting", f"Chapter {chapter_num} writing: {len(accumulated)} chars...", "running")
+
         try:
-            text = client.generate(system, user, max_tokens=8192, temperature=0.5)
+            _log_progress("drafting", f"Chapter {chapter_num}: Generating prose (streaming)...", "running")
+            text = client.generate(system, user, max_tokens=8192, temperature=0.5, stream=True, progress_callback=chapter_progress_callback)
         except Exception as e:
             print(f"  API error: {e}")
+            _log_progress("drafting", f"Chapter {chapter_num}: API error - {e}", "error")
             if attempt == max_retries:
                 raise
             continue
@@ -543,6 +576,7 @@ def draft_chapter(
             print(f"  WARNING: Above maximum ({word_count} > {MAX_CHAPTER_WORDS})")
 
         # Evaluate the chapter
+        _log_progress("drafting", f"Chapter {chapter_num}: Evaluating (score so far: {best_score:.1f})...", "running")
         print(f"  Evaluating...")
         eval_result = evaluate_chapter(text, context)
 

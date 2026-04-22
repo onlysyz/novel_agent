@@ -168,7 +168,7 @@ export default function PipelineConsole({ pipelineRunning, pipelineLog, pipeline
       ) : (
         <div className={`console-body progress-steps${flashing ? " log-flash" : ""}`} key={showRawLog ? "raw" : "steps"} ref={logRef} onScroll={handleScroll}>
           {steps.map((step, i) => (
-            <div key={i} className={`progress-step step-${step.type}`}>
+            <div key={i} className={`progress-step step-${step.type}`} style={{ animationDelay: `${i * 25}ms` }}>
               {step.type === "foundation" && <span className="step-icon">⚙</span>}
               {step.type === "chapter"    && <span className="step-icon">✍</span>}
               {step.type === "review"     && <span className="step-icon">🔍</span>}

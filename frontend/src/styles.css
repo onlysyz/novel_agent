@@ -595,7 +595,14 @@ body {
   gap: 0.5rem;
   padding: 0.3rem 1rem;
   font-size: 0.8125rem;
-  transition: background 0.1s;
+  transition: background 0.15s, opacity 0.3s;
+  animation: step-enter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes step-enter {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 .progress-step:hover {
@@ -1423,7 +1430,9 @@ body {
   right: 1.5rem;
   width: 560px;
   max-height: 400px;
-  background: var(--surface-container);
+  background: rgba(23, 31, 51, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(218, 226, 253, 0.08);
   border-radius: 1rem;
   display: flex;
@@ -1432,8 +1441,15 @@ body {
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.03) inset;
-  backdrop-filter: blur(24px);
-  overflow: hidden;
+  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s;
+}
+
+.pipeline-running {
+  box-shadow:
+    0 8px 40px rgba(255, 81, 106, 0.2),
+    0 0 0 1px rgba(255, 81, 106, 0.15) inset,
+    0 12px 48px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 81, 106, 0.2);
 }
 
 .pipeline-console--docked {
@@ -1581,20 +1597,20 @@ body {
 }
 
 .console-body::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 
 .console-body::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .console-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
 }
 
 .console-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .console-body.log-flash {

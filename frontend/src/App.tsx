@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { View, PipelineState } from "./types";
 import { I18nProvider, useTranslation } from "./i18n";
+import { ToastProvider } from "./components/Toast";
 import Dashboard from "./components/Dashboard";
 import ChapterList from "./components/ChapterList";
 import AlertModal from "./components/AlertModal";
@@ -290,7 +291,9 @@ function AppInner() {
 export default function App() {
   return (
     <I18nProvider>
-      <AppInner />
+      <ToastProvider>
+        <AppInner />
+      </ToastProvider>
     </I18nProvider>
   );
 }

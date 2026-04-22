@@ -11,8 +11,36 @@ use tauri::Emitter;
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn count_chars(text: &str) -> usize {
-    // Count all non-whitespace characters
-    text.chars().filter(|c| !c.is_whitespace()).count()
+    // Count CJK characters individually; count English words (space-separated)
+    let mut count = 0;
+
+    for seg in text.split_whitespace() {
+        let seg_chars: Vec<char> = seg.chars().collect();
+        let mut i = 0;
+        while i < seg_chars.len() {
+            let c = seg_chars[i];
+            let code = c as u32;
+            let is_cjk = (0x3000..=0x303F).contains(&code)
+                || (0x4E00..=0x9FFF).contains(&code)
+                || (0x3400..=0x4DBF).contains(&code)
+                || (0x3040..=0x309F).contains(&code)
+                || (0x30A0..=0x30FF).contains(&code)
+                || (0xF900..=0xFAFF).contains(&code)
+                || (0xFF00..=0xFFEF).contains(&code);
+            if is_cjk {
+                count += 1;
+                i += 1;
+            } else if c.is_ascii_alphabetic() {
+                count += 1;
+                while i < seg_chars.len() && seg_chars[i].is_ascii_alphabetic() {
+                    i += 1;
+                }
+            } else {
+                i += 1;
+            }
+        }
+    }
+    count
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

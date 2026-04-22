@@ -321,8 +321,22 @@ Write the full chapter now. Output ONLY the chapter prose, nothing else."""
 
 
 def count_words(text: str) -> int:
-    """Count words in text - all non-whitespace characters (correct for CJK)."""
-    return len([c for c in text if not c.isspace()])
+    """Count words in text.
+    - CJK characters: each counts as 1 (字)
+    - English words: each space-separated token counts as 1
+    """
+    import re
+    # CJK character ranges
+    cjk_pattern = re.compile(r'[\u3000-\u303f\u4e00-\u9fff\u3400-\u4dbf\uff00-\uffef]+')
+    # English words
+    en_pattern = re.compile(r'[a-zA-Z]+')
+
+    # Count CJK characters (each char = 1 word)
+    cjk_count = sum(len(m.group()) for m in cjk_pattern.finditer(text))
+    # Count English words (each word = 1)
+    en_count = len(en_pattern.findall(text))
+
+    return cjk_count + en_count
 
 
 def _extract_scenes(text: str) -> list[str]:

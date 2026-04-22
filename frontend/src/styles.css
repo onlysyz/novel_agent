@@ -240,6 +240,18 @@ body {
   margin-left: 256px;
   position: relative;
   min-height: 100vh;
+  animation: view-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Background glows */

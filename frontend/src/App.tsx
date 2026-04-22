@@ -233,7 +233,7 @@ function AppInner() {
         )}
       </nav>
 
-      <main className="content">
+      <main className="content" key={view}>
         {view === "dashboard" && state && (
           <Dashboard
             state={state}

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { PipelineState } from "../types";
 import { useTranslation } from "../i18n";
+import AlertModal from "./AlertModal";
 
 interface Props {
   state: PipelineState;
@@ -58,16 +59,18 @@ export default function Dashboard({
   pipelineRunning = false, pipelineMessage = "", pipelineLog = [],
 }: Props) {
   const { t } = useTranslation();
-  const [isRunningTitle, setIsRunningTitle] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const [novelTitle, setNovelTitle] = useState("");
   const [outputDirLoaded, setOutputDirLoaded] = useState(false);
   const [showFullLog, setShowFullLog] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+useEffect(() => {
     if (outputDir) { setOutputDirLoaded(true); loadTitle(); }
   }, [outputDir]);
+
 
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
@@ -82,18 +85,23 @@ export default function Dashboard({
   };
 
   const handleGenerateTitle = async () => {
-    setIsRunningTitle(true);
+    setIsRunning(true);
     try {
       const title = await invoke<string>("generate_title", { outputDir });
       setNovelTitle(title);
-    } catch (e) { alert(`Error: ${e}`); }
-    finally { setIsRunningTitle(false); }
+    } catch (e) { setAlertMessage(`Error: ${e}`); }
+    finally { setIsRunning(false); }
   };
 
   const handleRun = async (phase: string) => {
-    alert(`点击了handleRun: ${phase}, outputDir=${outputDir}`);
-    try { await onRunPhase(phase); }
-    catch (e) { alert(`Error running ${phase}: ${e}`); }
+    console.log("[Dashboard] handleRun called, phase:", phase, "onRunPhase type:", typeof onRunPhase);
+    if (!onRunPhase) {
+      console.error("[Dashboard] onRunPhase is not defined!");
+      return;
+    }
+    console.log("[Dashboard] calling onRunPhase...");
+    await onRunPhase(phase);
+    console.log("[Dashboard] onRunPhase returned");
   };
 
   // Parse log into structured steps (only meaningful lines)
@@ -112,16 +120,14 @@ export default function Dashboard({
   const hasFoundation = state.foundation_scores &&
     (state.foundation_scores.world > 0 || state.foundation_scores.characters > 0 || state.foundation_scores.outline > 0);
 
-  console.log("[Dashboard] render, outputDir:", outputDir, "outputDirLoaded:", outputDirLoaded, "pipelineRunning:", pipelineRunning);
-
   return (
     <div className="dashboard">
       <header className="page-header">
         <div>
           <h1>{novelTitle || t("dashboard_title")}</h1>
           {!novelTitle && hasFoundation && (
-            <button className="btn-secondary btn-small" onClick={handleGenerateTitle} disabled={isRunningTitle}>
-              {isRunningTitle ? t("generating") : t("generate_title")}
+            <button className="btn-secondary btn-small" onClick={handleGenerateTitle} disabled={isRunning}>
+              {isRunning ? t("generating") : t("generate_title")}
             </button>
           )}
         </div>
@@ -149,10 +155,6 @@ export default function Dashboard({
 
       {/* Action Card */}
       <div className="action-card">
-        {/* TEST BUTTON - remove after testing */}
-        <button onClick={() => { document.title = "TEST CLICKED"; console.log("TEST CLICKED"); }} style={{background: "red", color: "white", padding: "20px", margin: "20px", display: "block", zIndex: 9999, position: "relative"}}>
-          测试按钮 - 点击改变标题
-        </button>
         {pipelineRunning ? (
           <>
             <h2>{pipelineMessage || t("running")}</h2>
@@ -163,8 +165,8 @@ export default function Dashboard({
           <>
             <h2>{hasFoundation ? t("continue_foundation") : t("start_foundation")}</h2>
             <p>{hasFoundation ? t("foundation_in_progress") : t("foundation_not_started")}</p>
-            <button className="btn-primary btn-large" onClick={() => handleRun("foundation")}>
-              {pipelineRunning ? t("running") : hasFoundation ? t("run_foundation") : t("start_generating")}
+            <button className="btn-primary btn-large" onClick={() => handleRun("foundation")} disabled={pipelineRunning || !outputDirLoaded}>
+              {!outputDirLoaded ? t("loading") : pipelineRunning ? t("running") : hasFoundation ? t("run_foundation") : t("start_generating")}
             </button>
           </>
         ) : currentPhase === "drafting" ? (
@@ -281,6 +283,10 @@ export default function Dashboard({
             ))}
           </div>
         </section>
+      )}
+
+      {alertMessage && (
+        <AlertModal message={alertMessage} onClose={() => setAlertMessage(null)} />
       )}
     </div>
   );

@@ -321,8 +321,8 @@ Write the full chapter now. Output ONLY the chapter prose, nothing else."""
 
 
 def count_words(text: str) -> int:
-    """Count words in text."""
-    return len(text.split())
+    """Count words in text - all non-whitespace characters (correct for CJK)."""
+    return len([c for c in text if not c.isspace()])
 
 
 def _extract_scenes(text: str) -> list[str]:

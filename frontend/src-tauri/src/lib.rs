@@ -1,9 +1,19 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::io::BufRead;
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{Command, Child};
+#[cfg(unix)]
+use std::os::unix::process::ExitStatusExt;
 use tauri::Emitter;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Utilities
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn count_chars(text: &str) -> usize {
+    // Count all non-whitespace characters
+    text.chars().filter(|c| !c.is_whitespace()).count()
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data types
@@ -365,7 +375,7 @@ fn read_state(output_dir: String) -> Result<PipelineState, String> {
                 if let (Ok(num), Some(score)) = (num_str.parse::<u32>(), value.as_f64()) {
                     let word_count = if chapters_dir.exists() {
                         let cp = chapters_dir.join(format!("ch_{:02}.md", num));
-                        fs::read_to_string(&cp).map(|c| c.split_whitespace().count() as u32).unwrap_or(0)
+                        fs::read_to_string(&cp).map(|c| count_chars(&c) as u32).unwrap_or(0)
                     } else { 0 };
                     chapters.push(ChapterSummary {
                         number: num,
@@ -398,7 +408,7 @@ fn read_chapter(output_dir: String, chapter_num: u32) -> Result<Chapter, String>
     let content = fs::read_to_string(&chapter_path).map_err(|e| e.to_string())?;
     let revision_path = base.join(format!("chapters/ch_{:02}_revised.md", chapter_num));
     let has_revision = revision_path.exists();
-    let word_count = content.split_whitespace().count() as u32;
+    let word_count = count_chars(&content) as u32;
     let title = extract_title(&content).unwrap_or_else(|| format!("Chapter {}", chapter_num));
     Ok(Chapter { number: chapter_num, title, content, word_count, score: None, has_revision })
 }
@@ -454,7 +464,7 @@ fn list_chapters(output_dir: String) -> Result<Vec<ChapterSummary>, String> {
             let num_str = filename.strip_prefix("ch_").unwrap().strip_suffix(".md").unwrap();
             if let Ok(num) = num_str.parse::<u32>() {
                 let content = fs::read_to_string(entry.path()).unwrap_or_default();
-                let word_count = content.split_whitespace().count() as u32;
+                let word_count = count_chars(&content) as u32;
                 let title = extract_title(&content).unwrap_or_else(|| format!("Chapter {}", num));
                 let score_key = format!("ch_{:02}", num);
                 let score = chapter_scores.get(&score_key).map(|&s| s as f32);
@@ -599,6 +609,56 @@ fn default_ai_config() -> AIConfig {
 use std::sync::Mutex;
 static PIPELINE_RUNNING: Mutex<bool> = Mutex::new(false);
 
+// ── Pipeline PID file management for crash recovery ────────────────────────────
+
+fn get_pid_file(output_dir: &PathBuf) -> PathBuf {
+    output_dir.join(".novelforge").join("pipeline.pid")
+}
+
+fn write_pid_file(output_dir: &PathBuf) -> std::io::Result<()> {
+    let pid_file = get_pid_file(output_dir);
+    let pid = std::process::id().to_string();
+    fs::write(&pid_file, pid)?;
+    Ok(())
+}
+
+fn remove_pid_file(output_dir: &PathBuf) {
+    let pid_file = get_pid_file(output_dir);
+    let _ = fs::remove_file(&pid_file);
+}
+
+fn is_pid_running(pid: u32) -> bool {
+    // On macOS, check if process exists using `ps`
+    match Command::new("ps").args(["-p", &pid.to_string()]).output() {
+        Ok(output) => output.status.success(),
+        Err(_) => false,
+    }
+}
+
+/// Check if a pipeline is currently running (from a previous session)
+fn check_previous_pipeline(output_dir: &PathBuf) -> bool {
+    let pid_file = get_pid_file(output_dir);
+    if pid_file.exists() {
+        if let Ok(pid_str) = fs::read_to_string(&pid_file) {
+            if let Ok(pid) = pid_str.trim().parse::<u32>() {
+                if is_pid_running(pid) {
+                    return true;
+                }
+            }
+        }
+        // PID file exists but process is not running - clean up
+        let _ = fs::remove_file(&pid_file);
+    }
+    false
+}
+
+/// Check if a pipeline is currently running (for crash recovery)
+#[tauri::command]
+fn check_pipeline_status(output_dir: String) -> bool {
+    let output_path = PathBuf::from(&output_dir);
+    check_previous_pipeline(&output_path)
+}
+
 /// Run a specific pipeline phase.
 /// - app_root   (internal): where run_pipeline.py and .venv live
 /// - output_dir (from frontend): where generated novel files are written
@@ -616,14 +676,19 @@ async fn run_pipeline_phase(
 
     app_handle.emit("pipeline-started", &phase).map_err(|e| e.to_string())?;
 
+    // Write PID file for crash recovery
+    let output_path = PathBuf::from(&output_dir);
+    if let Err(e) = write_pid_file(&output_path) {
+        eprintln!("[Rust] Warning: failed to write PID file: {}", e);
+    }
+
     std::thread::spawn(move || {
         let app_root = find_app_root();
         let python = find_python(&app_root);
         let script = app_root.join("run_pipeline.py");
+        let progress_file = output_path.join(".novelforge").join("progress.jsonl");
 
-        // -u = unbuffered stdout/stderr so lines arrive in real-time (not after 8KB buffer fills)
         let args = vec![
-            "-u".to_string(),
             script.to_string_lossy().to_string(),
             "--phase".to_string(), phase.clone(),
             "--output-dir".to_string(), output_dir.clone(),
@@ -635,42 +700,94 @@ async fn run_pipeline_phase(
             message: format!("Running {} phase...", phase),
         });
 
-        let mut child = match Command::new(&python)
+        // Spawn child process without capturing stdout/stderr
+        let child = match Command::new(&python)
             .env("PYTHONPATH", app_root.to_str().unwrap_or(""))
-            .env("PYTHONUNBUFFERED", "1")
             .args(&args)
-            .current_dir(&app_root)          // script execution always from app_root
-            .stdout(std::process::Stdio::piped())
-            .stderr(std::process::Stdio::piped())
+            .current_dir(&app_root)
             .spawn()
         {
             Ok(c) => c,
             Err(e) => {
                 *PIPELINE_RUNNING.lock().unwrap() = false;
+                remove_pid_file(&output_path);
                 let _ = app_handle.emit("pipeline-error",
                     format!("Failed to start Python ({}): {}", python, e));
                 return;
             }
         };
 
-        let stdout = child.stdout.take().unwrap();
-        let stderr = child.stderr.take().unwrap();
-        let app1 = app_handle.clone();
-        let app2 = app_handle.clone();
-        let t1 = std::thread::spawn(move || {
-            for line in std::io::BufReader::new(stdout).lines().flatten() {
-                let _ = app1.emit("pipeline-log", &line);
+        // Use Arc<Mutex<Option<Child>>> so the poll thread can check exit status
+        use std::sync::{Arc, Mutex};
+        let child: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
+        let child_poll = child.clone();
+        let child_wait = child.clone();
+
+        // File-polling thread: read progress.jsonl and emit events
+        let app_handle_clone = app_handle.clone();
+        let progress_file_clone = progress_file.clone();
+        let phase_clone = phase.clone();
+        let poll_thread = std::thread::spawn(move || {
+            let mut last_pos = 0u64;
+            for _ in 0..50 {
+                if progress_file_clone.exists() { break; }
+                std::thread::sleep(std::time::Duration::from_millis(100));
             }
-        });
-        let t2 = std::thread::spawn(move || {
-            for line in std::io::BufReader::new(stderr).lines().flatten() {
-                let _ = app2.emit("pipeline-log", format!("[err] {}", line));
+
+            loop {
+                // Check if process exited
+                let child_guard = child_poll.lock().unwrap();
+                if child_guard.is_none() {
+                    break;
+                }
+                drop(child_guard);
+
+                if progress_file_clone.exists() {
+                    if let Ok(metadata) = progress_file_clone.metadata() {
+                        let current_size = metadata.len();
+                        if current_size > last_pos {
+                            if let Ok(mut file) = fs::File::open(&progress_file_clone) {
+                                use std::io::{Seek, BufRead, BufReader};
+                                if file.seek(std::io::SeekFrom::Start(last_pos)).is_ok() {
+                                    let reader = BufReader::new(file);
+                                    for line_result in reader.lines() {
+                                        if let Ok(line) = line_result {
+                                            if !line.is_empty() {
+                                                if let Ok(json) = serde_json::from_str::<serde_json::Value>(&line) {
+                                                    let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("");
+                                                    let step = json.get("step").and_then(|v| v.as_str()).unwrap_or("running");
+                                                    let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+                                                        phase: phase_clone.clone(),
+                                                        step: step.to_string(),
+                                                        message: msg.to_string(),
+                                                    });
+                                                    if step == "complete" {
+                                                        let _ = app_handle_clone.emit("pipeline-complete", &phase_clone);
+                                                    } else if step == "error" {
+                                                        let _ = app_handle_clone.emit("pipeline-error", msg);
+                                                    }
+                                                }
+                                            }
+                                            last_pos += line.len() as u64 + 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                std::thread::sleep(std::time::Duration::from_millis(300));
             }
         });
 
-        let status = child.wait();
-        let _ = t1.join();
-        let _ = t2.join();
+        let status = {
+            let mut child_guard = child_wait.lock().unwrap();
+            child_guard.take().map(|mut c| c.wait()).unwrap_or_else(|| {
+                Ok(std::process::ExitStatus::from_raw(0))
+            })
+        };
+        let _ = poll_thread.join();
         *PIPELINE_RUNNING.lock().unwrap() = false;
 
         match status {
@@ -681,16 +798,16 @@ async fn run_pipeline_phase(
                 });
                 let _ = app_handle.emit("pipeline-complete", &phase);
             }
-            Ok(_) => { let _ = app_handle.emit("pipeline-error", "Pipeline exited with error — see log above"); }
+            Ok(_) => { let _ = app_handle.emit("pipeline-error", "Pipeline exited with error"); }
             Err(e) => { let _ = app_handle.emit("pipeline-error", format!("Process wait error: {}", e)); }
         }
+
+        remove_pid_file(&output_path);
     });
 
     Ok(())
 }
 
-/// Run the full pipeline end-to-end.
-/// Same app_root / output_dir split as run_pipeline_phase.
 #[tauri::command]
 async fn run_full_pipeline(
     output_dir: String,
@@ -704,13 +821,18 @@ async fn run_full_pipeline(
 
     app_handle.emit("pipeline-started", "full").map_err(|e| e.to_string())?;
 
+    let output_path = PathBuf::from(&output_dir);
+    if let Err(e) = write_pid_file(&output_path) {
+        eprintln!("[Rust] Warning: failed to write PID file: {}", e);
+    }
+
     std::thread::spawn(move || {
         let app_root = find_app_root();
         let python = find_python(&app_root);
         let script = app_root.join("run_pipeline.py");
+        let progress_file = output_path.join(".novelforge").join("progress.jsonl");
 
         let args = vec![
-            "-u".to_string(),
             script.to_string_lossy().to_string(),
             "--full".to_string(),
             "--output-dir".to_string(), output_dir.clone(),
@@ -721,42 +843,90 @@ async fn run_full_pipeline(
             message: "Running full pipeline...".to_string(),
         });
 
-        let mut child = match Command::new(&python)
-            .env("PYTHONUNBUFFERED", "1")
+        let child = match Command::new(&python)
             .env("PYTHONPATH", app_root.to_str().unwrap_or(""))
             .args(&args)
             .current_dir(&app_root)
-            .stdout(std::process::Stdio::piped())
-            .stderr(std::process::Stdio::piped())
             .spawn()
         {
             Ok(c) => c,
             Err(e) => {
                 *PIPELINE_RUNNING.lock().unwrap() = false;
+                remove_pid_file(&output_path);
                 let _ = app_handle.emit("pipeline-error",
                     format!("Failed to start Python ({}): {}", python, e));
                 return;
             }
         };
 
-        let stdout = child.stdout.take().unwrap();
-        let stderr = child.stderr.take().unwrap();
-        let app1 = app_handle.clone();
-        let app2 = app_handle.clone();
-        let t1 = std::thread::spawn(move || {
-            for line in std::io::BufReader::new(stdout).lines().flatten() {
-                let _ = app1.emit("pipeline-log", &line);
+        use std::sync::{Arc, Mutex};
+        let child: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
+        let child_poll = child.clone();
+        let child_wait = child.clone();
+
+        // File-polling thread: read progress.jsonl and emit events
+        let app_handle_clone = app_handle.clone();
+        let progress_file_clone = progress_file.clone();
+        let poll_thread = std::thread::spawn(move || {
+            let mut last_pos = 0u64;
+            for _ in 0..50 {
+                if progress_file_clone.exists() { break; }
+                std::thread::sleep(std::time::Duration::from_millis(100));
             }
-        });
-        let t2 = std::thread::spawn(move || {
-            for line in std::io::BufReader::new(stderr).lines().flatten() {
-                let _ = app2.emit("pipeline-log", format!("[err] {}", line));
+
+            loop {
+                let child_guard = child_poll.lock().unwrap();
+                if child_guard.is_none() {
+                    break;
+                }
+                drop(child_guard);
+
+                if progress_file_clone.exists() {
+                    if let Ok(metadata) = progress_file_clone.metadata() {
+                        let current_size = metadata.len();
+                        if current_size > last_pos {
+                            if let Ok(mut file) = fs::File::open(&progress_file_clone) {
+                                use std::io::{Seek, BufRead, BufReader};
+                                if file.seek(std::io::SeekFrom::Start(last_pos)).is_ok() {
+                                    let reader = BufReader::new(file);
+                                    for line_result in reader.lines() {
+                                        if let Ok(line) = line_result {
+                                            if !line.is_empty() {
+                                                if let Ok(json) = serde_json::from_str::<serde_json::Value>(&line) {
+                                                    let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("");
+                                                    let step = json.get("step").and_then(|v| v.as_str()).unwrap_or("running");
+                                                    let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+                                                        phase: "full".to_string(),
+                                                        step: step.to_string(),
+                                                        message: msg.to_string(),
+                                                    });
+                                                    if step == "complete" {
+                                                        let _ = app_handle_clone.emit("pipeline-complete", "full");
+                                                    } else if step == "error" {
+                                                        let _ = app_handle_clone.emit("pipeline-error", msg);
+                                                    }
+                                                }
+                                            }
+                                            last_pos += line.len() as u64 + 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                std::thread::sleep(std::time::Duration::from_millis(300));
             }
         });
 
-        let status = child.wait();
-        let _ = t1.join();
-        let _ = t2.join();
+        let status = {
+            let mut child_guard = child_wait.lock().unwrap();
+            child_guard.take().map(|mut c| c.wait()).unwrap_or_else(|| {
+                Ok(std::process::ExitStatus::from_raw(0))
+            })
+        };
+        let _ = poll_thread.join();
         *PIPELINE_RUNNING.lock().unwrap() = false;
 
         match status {
@@ -767,9 +937,11 @@ async fn run_full_pipeline(
                 });
                 let _ = app_handle.emit("pipeline-complete", "full");
             }
-            Ok(_) => { let _ = app_handle.emit("pipeline-error", "Pipeline exited with error — see log above"); }
+            Ok(_) => { let _ = app_handle.emit("pipeline-error", "Pipeline exited with error"); }
             Err(e) => { let _ = app_handle.emit("pipeline-error", format!("Process wait error: {}", e)); }
         }
+
+        remove_pid_file(&output_path);
     });
 
     Ok(())
@@ -853,6 +1025,7 @@ pub fn run() {
             read_state,
             read_chapter,
             read_foundation_doc,
+            check_pipeline_status,
             run_pipeline_phase,
             run_full_pipeline,
             save_chapter,

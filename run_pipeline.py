@@ -39,9 +39,27 @@ DOTNOVEL = None
 NOVEL_DIR = None
 STATE_FILE = None
 CONFIG_FILE = None
+PROGRESS_FILE = None
 
 # Phase order for sequential execution
 PHASE_ORDER = ["foundation", "drafting", "review", "export"]
+
+
+def log_progress(phase: str, message: str, step: str = "running"):
+    """Write a progress entry to the progress JSONL file."""
+    if PROGRESS_FILE is None:
+        return
+    entry = {
+        "phase": phase,
+        "step": step,
+        "message": message,
+        "timestamp": datetime.now().isoformat(),
+    }
+    try:
+        with open(PROGRESS_FILE, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception:
+        pass
 
 
 def load_project_config() -> dict:
@@ -66,11 +84,13 @@ def load_project_config() -> dict:
 
 def init_paths(output_dir: str = "."):
     """Initialize paths based on output directory."""
-    global DOTNOVEL, NOVEL_DIR, STATE_FILE, CONFIG_FILE
+    global DOTNOVEL, NOVEL_DIR, STATE_FILE, CONFIG_FILE, PROGRESS_FILE
     NOVEL_DIR = Path(output_dir) if output_dir and output_dir != "." else Path.cwd()
     DOTNOVEL = NOVEL_DIR / ".novelforge"
+    DOTNOVEL.mkdir(parents=True, exist_ok=True)
     STATE_FILE = DOTNOVEL / "state.json"
     CONFIG_FILE = DOTNOVEL / "config.json"
+    PROGRESS_FILE = DOTNOVEL / "progress.jsonl"
 
 
 # =============================================================================
@@ -315,11 +335,13 @@ def run_foundation(state: dict) -> dict:
     print(f"Novel concept: {seed[:80]}{'...' if len(seed) > 80 else ''}")
     print(f"Language: {language}")
     print()
+    log_progress("foundation", f"Novel concept: {seed[:80]}...", "running")
 
     results = {}
 
     # Step 1: World Bible
     print("[1/5] World Bible...")
+    log_progress("foundation", "[1/5] World Bible...", "running")
     start = time.time()
     result = generate_world(seed=seed, language=language)
     results["world"] = {
@@ -328,9 +350,11 @@ def run_foundation(state: dict) -> dict:
         "duration": time.time() - start,
     }
     print(f"  Score: {result['score']:.1f}, Iterations: {result['iterations']}")
+    log_progress("foundation", f"  World score: {result['score']:.1f}", "running")
 
     # Step 2: Character Profiles
     print("[2/5] Character Profiles...")
+    log_progress("foundation", "[2/5] Character Profiles...", "running")
     start = time.time()
     world = (NOVEL_DIR / "world.md").read_text()
     result = generate_characters(seed=seed, world=world, language=language)
@@ -340,9 +364,11 @@ def run_foundation(state: dict) -> dict:
         "duration": time.time() - start,
     }
     print(f"  Score: {result['score']:.1f}, Iterations: {result['iterations']}")
+    log_progress("foundation", f"  Characters score: {result['score']:.1f}", "running")
 
     # Step 3: Story Outline
     print("[3/5] Story Outline...")
+    log_progress("foundation", "[3/5] Story Outline...", "running")
     start = time.time()
     characters = (NOVEL_DIR / "characters.md").read_text()
     result = generate_outline(seed=seed, world=world, characters=characters, language=language)
@@ -352,9 +378,11 @@ def run_foundation(state: dict) -> dict:
         "duration": time.time() - start,
     }
     print(f"  Score: {result['score']:.1f}, Iterations: {result['iterations']}")
+    log_progress("foundation", f"  Outline score: {result['score']:.1f}", "running")
 
     # Step 4: Canonical Facts
     print("[4/5] Canonical Facts...")
+    log_progress("foundation", "[4/5] Canonical Facts...", "running")
     start = time.time()
     outline = (NOVEL_DIR / "outline.md").read_text()
     result = generate_canon(seed=seed, world=world, characters=characters, outline=outline, language=language)
@@ -364,9 +392,11 @@ def run_foundation(state: dict) -> dict:
         "duration": time.time() - start,
     }
     print(f"  Score: {result['score']:.1f}, Iterations: {result['iterations']}")
+    log_progress("foundation", f"  Canon score: {result['score']:.1f}", "running")
 
     # Step 5: Voice Fingerprint
     print("[5/5] Voice Fingerprint...")
+    log_progress("foundation", "[5/5] Voice Fingerprint...", "running")
     start = time.time()
     result = generate_voice(seed=seed, language=language)
     results["voice"] = {
@@ -375,6 +405,7 @@ def run_foundation(state: dict) -> dict:
         "duration": time.time() - start,
     }
     print(f"  Score: {result['score']:.1f}, Iterations: {result['iterations']}")
+    log_progress("foundation", f"  Voice score: {result['score']:.1f}", "running")
 
     # Calculate total duration
     total_duration = sum(r["duration"] for r in results.values())
@@ -382,6 +413,7 @@ def run_foundation(state: dict) -> dict:
 
     print(f"\nTotal duration: {total_duration:.1f}s")
     print(f"Average score: {total_score:.2f}")
+    log_progress("foundation", f"Foundation complete. Avg score: {total_score:.2f}", "complete")
 
     # Git commit
     print("\n[Git] Committing foundation phase...")
@@ -419,6 +451,7 @@ def run_drafting(state: dict) -> dict:
 
     print(f"Target: {chapter_count} chapters")
     print()
+    log_progress("drafting", f"Target: {chapter_count} chapters", "running")
 
     # Check for resume
     chapters_dir = NOVEL_DIR / "chapters"
@@ -456,6 +489,7 @@ def run_drafting(state: dict) -> dict:
     for chapter_num in range(start_chapter, chapter_count + 1):
         ch_start = time.time()
         print(f"\n[Chapter {chapter_num}/{chapter_count}]")
+        log_progress("drafting", f"[Chapter {chapter_num}/{chapter_count}]", "running")
 
         try:
             context = context_cache.get(chapter_num, build_context_package(chapter_num))
@@ -474,9 +508,11 @@ def run_drafting(state: dict) -> dict:
 
             ch_duration = time.time() - ch_start
             print(f"  {result['word_count']} words, score: {result['score']:.1f}, time: {ch_duration:.1f}s")
+            log_progress("drafting", f"  Ch {chapter_num}: {result['word_count']} words, score: {result['score']:.1f}", "running")
 
         except Exception as e:
             print(f"  ERROR: {e}")
+            log_progress("drafting", f"  ERROR: {e}", "error")
             state["drafting"]["current_chapter"] = chapter_num
             save_state(state)
             continue
@@ -494,6 +530,7 @@ def run_drafting(state: dict) -> dict:
     }
 
     print_phase_summary("Drafting", total_duration, stats)
+    log_progress("drafting", f"Drafting complete. {total_words} words, avg score: {avg_score:.2f}", "complete")
 
     # Git commit
     print("\n[Git] Committing chapters...")
@@ -533,9 +570,11 @@ def run_review(state: dict) -> dict:
 
     chapter_count = len(chapters)
     print(f"Target: {chapter_count} chapters")
+    log_progress("review", f"Target: {chapter_count} chapters", "running")
 
     max_cycles = int(os.getenv("MAX_REVIEW_CYCLES", "3"))
     print(f"Max revision cycles: {max_cycles}")
+    log_progress("review", f"Max revision cycles: {max_cycles}", "running")
 
     revision_cycles = state.get("review", {}).get("revision_cycles", 0)
     chapters_reviewed = state.get("review", {}).get("chapters_reviewed", [])
@@ -546,6 +585,7 @@ def run_review(state: dict) -> dict:
         print(f"\n{'='*60}")
         print(f"REVISION CYCLE {cycle}/{max_cycles}")
         print(f"{'='*60}")
+        log_progress("review", f"Revision cycle {cycle}/{max_cycles}", "running")
 
         cycle_improvements = 0
 
@@ -558,6 +598,7 @@ def run_review(state: dict) -> dict:
                 continue
 
             print(f"\n--- Chapter {chapter_num:02d} ---")
+            log_progress("review", f"--- Chapter {chapter_num:02d} ---", "running")
 
             chapter_text = chapter_file.read_text()
             context = build_context_package(chapter_num)
@@ -617,6 +658,7 @@ def run_review(state: dict) -> dict:
     }
 
     print_phase_summary("Review", total_duration, stats)
+    log_progress("review", f"Review complete. {revision_cycles} revision cycles.", "complete")
 
     # Git commit
     print("\n[Git] Committing review phase...")
@@ -655,6 +697,7 @@ def run_export(state: dict) -> dict:
     chapter_count = len(chapters)
     print(f"Found {chapter_count} chapters")
     print()
+    log_progress("export", f"Found {chapter_count} chapters", "running")
 
     # Assemble manuscript (basic, always done)
     print("Assembling manuscript...")
@@ -678,6 +721,7 @@ def run_export(state: dict) -> dict:
     manuscript_path = NOVEL_DIR / "manuscript.md"
     manuscript_path.write_text(manuscript)
     print(f"  Saved: manuscript.md ({total_words:,} words)")
+    log_progress("export", f"  manuscript.md saved ({total_words:,} words)", "running")
 
     # Build results file
     results_path = DOTNOVEL / "results.tsv"
@@ -730,6 +774,7 @@ def run_export(state: dict) -> dict:
     }
 
     print_phase_summary("Export", 0, stats)
+    log_progress("export", f"Export complete. {total_words:,} words.", "complete")
 
     # Git commit
     print("\n[Git] Committing export...")
@@ -782,6 +827,12 @@ Examples:
 
     # Initialize paths based on output directory
     init_paths(args.output_dir)
+
+    # Clear progress file for new run
+    if PROGRESS_FILE and PROGRESS_FILE.exists():
+        PROGRESS_FILE.unlink()
+    log_progress("init", "Pipeline started", "running")
+
     print(f"Output directory: {NOVEL_DIR}")
 
     # Handle seed override

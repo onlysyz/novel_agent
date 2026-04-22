@@ -11,6 +11,7 @@ import SettingsView from "./components/SettingsView";
 import ExportView from "./components/ExportView";
 import NewProjectView from "./components/NewProjectView";
 import PipelineConsole from "./components/PipelineConsole";
+import AlertModal from "./components/AlertModal";
 
 interface PipelineProgress {
   phase: string;
@@ -32,25 +33,24 @@ function AppInner() {
   const [pipelineRunning, setPipelineRunning] = useState(false);
   const [pipelineMessage, setPipelineMessage] = useState("");
   const [pipelineLog, setPipelineLog] = useState<string[]>([]);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   useEffect(() => {
     initProject();
 
     // Pipeline event listeners
     const unlistenStarted = listen("pipeline-started", () => {
-      console.log("[App] pipeline-started event received");
+      console.log("[App] Received pipeline-started event!");
       setPipelineRunning(true);
       setPipelineMessage(t("running"));
       setPipelineLog([]);
     });
 
     const unlistenProgress = listen<PipelineProgress>("pipeline-progress", (event) => {
-      console.log("[App] pipeline-progress:", event.payload);
       setPipelineMessage(event.payload.message);
     });
 
     const unlistenLog = listen<string>("pipeline-log", (event) => {
-      console.log("[App] pipeline-log:", event.payload);
       setPipelineLog((prev) => {
         const next = [...prev, event.payload];
         return next.length > 500 ? next.slice(next.length - 500) : next;
@@ -58,17 +58,15 @@ function AppInner() {
     });
 
     const unlistenComplete = listen("pipeline-complete", async () => {
-      console.log("[App] pipeline-complete event received");
       setPipelineRunning(false);
       setPipelineMessage("");
       await loadState();
     });
 
     const unlistenError = listen<string>("pipeline-error", (event) => {
-      console.log("[App] pipeline-error:", event.payload);
       setPipelineRunning(false);
       setPipelineMessage("");
-      alert(`Pipeline error: ${event.payload}`);
+      setAlertMessage(`Pipeline error: ${event.payload}`);
     });
 
     return () => {
@@ -82,15 +80,24 @@ function AppInner() {
 
   const initProject = async () => {
     try {
-      // get_project_path() always returns the output_dir (novel files directory)
       const dir = await invoke<string>("get_project_path");
-      console.log("[App] get_project_path returned:", dir);
       setOutputDir(dir);
       const exists = await invoke<boolean>("project_exists", { outputDir: dir });
-      console.log("[App] project_exists:", exists);
       setHasProject(exists);
       if (exists) {
         await loadState(dir);
+        // Check if a pipeline is already running (from crash recovery)
+        console.log("[App] Checking pipeline status for:", dir);
+        try {
+          const pipelineAlreadyRunning = await invoke<boolean>("check_pipeline_status", { outputDir: dir });
+          console.log("[App] Pipeline already running:", pipelineAlreadyRunning);
+          if (pipelineAlreadyRunning) {
+            setPipelineRunning(true);
+            setPipelineMessage("Resuming...");
+          }
+        } catch (e) {
+          console.error("[App] check_pipeline_status error:", e);
+        }
       }
     } catch (e) {
       console.error("Error initialising project:", e);
@@ -147,13 +154,12 @@ function AppInner() {
 
   // Runs a pipeline phase; outputDir is passed so Python knows where to write files
   const handleRunPhase = async (phase: string) => {
-    console.log("[App] handleRunPhase called, phase:", phase, "outputDir:", outputDir);
+    console.log("[App] handleRunPhase starting, phase:", phase, "outputDir:", outputDir);
     try {
       const result = await invoke("run_pipeline_phase", { phase, outputDir });
-      console.log("[App] run_pipeline_phase returned:", result);
+      console.log("[App] handleRunPhase completed, result:", result);
     } catch (e) {
-      console.error("[App] run_pipeline_phase error:", e);
-      alert(`启动失败: ${e}`);
+      console.error("[App] handleRunPhase failed:", e);
       throw e;
     }
   };
@@ -207,12 +213,6 @@ function AppInner() {
       </nav>
 
       <main className="content">
-        {/* GLOBAL TEST BUTTON */}
-        <div style={{position: "fixed", top: 0, left: 0, background: "yellow", zIndex: 99999, padding: "20px"}}>
-          <button onClick={() => { document.title = "GLOBAL TEST OK"; alert("Global test works!"); console.log("GLOBAL BUTTON CLICKED"); }}>
-            全局测试按钮
-          </button>
-        </div>
         {view === "dashboard" && state && (
           <Dashboard
             state={state}
@@ -256,6 +256,10 @@ function AppInner() {
           pipelineMessage={pipelineMessage}
           pipelineLog={pipelineLog}
         />
+      )}
+
+      {alertMessage && (
+        <AlertModal message={alertMessage} onClose={() => setAlertMessage(null)} />
       )}
     </div>
   );

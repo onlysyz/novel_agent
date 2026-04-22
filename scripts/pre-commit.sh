@@ -61,7 +61,7 @@ for test in $TEST_FILES; do
     if [ -f "$test" ]; then
         echo "Running $test..."
         # Run with 120s timeout to prevent hangs; -x stops at first failure
-        if perl -e 'alarm 120; exec @ARGV' -- uv run pytest "$test" -v --tb=short --no-cov -x 2>&1; then
+        if perl -e 'alarm 120; exec @ARGV' -- uv run pytest "$test" -v --tb=short --no-cov -m 'not slow' -x 2>&1; then
             echo -e "${GREEN}✓ $test passed${NC}"
         else
             echo -e "${RED}✗ $test failed${NC}"

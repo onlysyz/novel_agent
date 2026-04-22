@@ -1269,6 +1269,19 @@ body {
   font-style: italic;
 }
 
+.console-line.console-cursor {
+  color: var(--primary-container);
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* Modal Overlay */
 .modal-overlay {
   position: fixed;

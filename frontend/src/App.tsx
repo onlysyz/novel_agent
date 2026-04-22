@@ -48,6 +48,11 @@ function AppInner() {
 
     const unlistenProgress = listen<PipelineProgress>("pipeline-progress", (event) => {
       setPipelineMessage(event.payload.message);
+      // Append to pipelineLog for streaming console display
+      setPipelineLog((prev) => {
+        const next = [...prev, event.payload.message];
+        return next.length > 500 ? next.slice(next.length - 500) : next;
+      });
     });
 
     const unlistenLog = listen<string>("pipeline-log", (event) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { Chapter } from "../types";
 import { useTranslation } from "../i18n";
@@ -16,6 +16,9 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
   const [content, setContent] = useState("");
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [autoSaving, setAutoSaving] = useState(false);
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSavedContent = useRef<string>("");
 
   useEffect(() => {
     loadChapter();
@@ -27,20 +30,42 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
       setChapter(ch);
       setContent(ch.content);
       setHasChanges(false);
+      lastSavedContent.current = ch.content;
     } catch (e) {
       console.error("Error loading chapter:", e);
     }
   };
 
+  const scheduleAutoSave = () => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(async () => {
+      if (!hasChanges) return;
+      setAutoSaving(true);
+      try {
+        await onSave(content);
+        lastSavedContent.current = content;
+        setHasChanges(false);
+      } catch (e) {
+        console.error("Auto-save failed:", e);
+      } finally {
+        setAutoSaving(false);
+      }
+    }, 3000);
+  };
+
   const handleContentChange = (newContent: string) => {
     setContent(newContent);
-    setHasChanges(newContent !== chapter?.content);
+    const changed = newContent !== lastSavedContent.current;
+    setHasChanges(changed);
+    if (changed) scheduleAutoSave();
   };
 
   const handleSave = async () => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     setSaving(true);
     try {
       await onSave(content);
+      lastSavedContent.current = content;
       setHasChanges(false);
     } catch (e) {
       console.error("Error saving:", e);
@@ -61,7 +86,8 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
         </div>
         <div className="editor-actions">
           <span className="word-count">{wordCount.toLocaleString()} {t("words_count")}</span>
-          {hasChanges && <span className="unsaved">{t("unsaved")}</span>}
+          {autoSaving && <span className="auto-saving">Auto-saving...</span>}
+          {hasChanges && !autoSaving && <span className="unsaved">{t("unsaved")}</span>}
           <button className="btn-secondary" onClick={onClose}>{t("close")}</button>
           <button
             className="btn-primary"

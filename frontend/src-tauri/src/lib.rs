@@ -546,6 +546,41 @@ fn project_exists(output_dir: String) -> bool {
     base.join("seed.txt").exists() || base.join(".novelforge/state.json").exists()
 }
 
+/// Retry a failed chapter by removing it from failed_chapters and re-running drafting.
+#[tauri::command]
+async fn retry_chapter(output_dir: String, chapter_num: u32) -> Result<(), String> {
+    let state_path = PathBuf::from(&output_dir).join(".novelforge/state.json");
+    if !state_path.exists() {
+        return Err("No project state found".to_string());
+    }
+
+    let content = fs::read_to_string(&state_path).map_err(|e| e.to_string())?;
+    let mut state: serde_json::Value = serde_json::from_str(&content).map_err(|e| e.to_string())?;
+
+    // Remove chapter from failed_chapters list
+    if let Some(drafting) = state.get_mut("drafting") {
+        if let Some(failed) = drafting.get_mut("failed_chapters").and_then(|f| f.as_array_mut()) {
+            failed.retain(|v| v.as_u64().map(|n| n as u32) != Some(chapter_num));
+        }
+        // Also remove from chapter_scores so it will be re-drafted
+        if let Some(scores) = drafting.get_mut("chapter_scores").and_then(|s| s.as_object_mut()) {
+            let key = format!("ch_{:02}", chapter_num);
+            scores.remove(&key);
+        }
+        // Set current_chapter back so pipeline resumes at this chapter
+        if let Some(cur) = drafting.get("current_chapter").and_then(|c| c.as_u64()) {
+            if cur as u32 >= chapter_num {
+                drafting["current_chapter"] = serde_json::Value::Number(serde_json::Number::from(chapter_num.saturating_sub(1)));
+            }
+        }
+    }
+
+    let json_str = serde_json::to_string_pretty(&state).map_err(|e| e.to_string())?;
+    fs::write(&state_path, json_str).map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
 /// Read manuscript.md from output_dir.
 #[tauri::command]
 fn get_manuscript(output_dir: String) -> Result<String, String> {

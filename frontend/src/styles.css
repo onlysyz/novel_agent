@@ -972,6 +972,32 @@ body {
   font-weight: 600;
 }
 
+.chapter-card.failed {
+  border-color: var(--error);
+  background: rgba(239, 83, 80, 0.05);
+}
+
+.chapter-card.failed .chapter-number,
+.chapter-card.failed .chapter-title {
+  color: var(--error);
+}
+
+.retry-btn {
+  background: var(--error);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.retry-btn:hover {
+  background: var(--on-error);
+}
+
 /* Foundation View */
 .foundation-tabs {
   display: flex;

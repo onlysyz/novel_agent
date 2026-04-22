@@ -26,6 +26,16 @@ export default function ChapterList({ outputDir, selectedChapter, onSelectChapte
     }
   };
 
+  const handleRetry = async (e: React.MouseEvent, chapter_num: number) => {
+    e.stopPropagation();
+    try {
+      await invoke("retry_chapter", { outputDir, chapterNum: chapter_num });
+      await loadChapters();
+    } catch (err) {
+      console.error("Error retrying chapter:", err);
+    }
+  };
+
   return (
     <div className="chapter-list">
       <header className="page-header">
@@ -38,7 +48,7 @@ export default function ChapterList({ outputDir, selectedChapter, onSelectChapte
           chapters.map((ch) => (
             <button
               key={ch.number}
-              className={`chapter-card ${selectedChapter === ch.number ? 'selected' : ''}`}
+              className={`chapter-card ${selectedChapter === ch.number ? 'selected' : ''} ${ch.status === 'failed' ? 'failed' : ''}`}
               onClick={() => onSelectChapter(ch.number)}
             >
               <div className="chapter-number">{t("chapter", { n: ch.number })}</div>
@@ -47,6 +57,14 @@ export default function ChapterList({ outputDir, selectedChapter, onSelectChapte
                 <span>{ch.word_count.toLocaleString()} {t("words_count")}</span>
                 {ch.score !== null && (
                   <span className="score">{t("score_label")}: {ch.score.toFixed(1)}</span>
+                )}
+                {ch.status === "failed" && (
+                  <button
+                    className="retry-btn"
+                    onClick={(e) => handleRetry(e, ch.number)}
+                  >
+                    {t("retry") || "Retry"}
+                  </button>
                 )}
               </div>
             </button>

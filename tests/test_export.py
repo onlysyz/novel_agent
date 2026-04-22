@@ -710,46 +710,50 @@ class TestExportManuscriptTxt:
         """# and ## headers are stripped from output."""
         from src.export.export import export_manuscript_txt
 
-        with patch("src.export.export.Path.read_text", return_value="# Title\n\n## Section\n\ncontent"):
-            with patch("src.export.export.Path.write_text") as mock_write:
-                export_manuscript_txt(tmp_path)
-                written = mock_write.call_args[0][0]
-                assert "# Title" not in written
-                assert "## Section" not in written
-                assert "content" in written
+        with patch("src.export.export.Path.exists", return_value=True):
+            with patch("src.export.export.Path.read_text", return_value="# Title\n\n## Section\n\ncontent"):
+                with patch("src.export.export.Path.write_text") as mock_write:
+                    export_manuscript_txt(tmp_path)
+                    written = mock_write.call_args[0][0]
+                    assert "# Title" not in written
+                    assert "## Section" not in written
+                    assert "content" in written
 
     def test_removes_bold_formatting(self, tmp_path):
         """**bold** becomes just 'bold' in output."""
         from src.export.export import export_manuscript_txt
 
-        with patch("src.export.export.Path.read_text", return_value="This is **bold** text"):
-            with patch("src.export.export.Path.write_text") as mock_write:
-                export_manuscript_txt(tmp_path)
-                written = mock_write.call_args[0][0]
-                assert "**bold**" not in written
-                assert "bold" in written
+        with patch("src.export.export.Path.exists", return_value=True):
+            with patch("src.export.export.Path.read_text", return_value="This is **bold** text"):
+                with patch("src.export.export.Path.write_text") as mock_write:
+                    export_manuscript_txt(tmp_path)
+                    written = mock_write.call_args[0][0]
+                    assert "**bold**" not in written
+                    assert "bold" in written
 
     def test_removes_italic_formatting(self, tmp_path):
         """*italic* becomes just 'italic' in output."""
         from src.export.export import export_manuscript_txt
 
-        with patch("src.export.export.Path.read_text", return_value="This is *italic* text"):
-            with patch("src.export.export.Path.write_text") as mock_write:
-                export_manuscript_txt(tmp_path)
-                written = mock_write.call_args[0][0]
-                assert "*italic*" not in written
-                assert "italic" in written
+        with patch("src.export.export.Path.exists", return_value=True):
+            with patch("src.export.export.Path.read_text", return_value="This is *italic* text"):
+                with patch("src.export.export.Path.write_text") as mock_write:
+                    export_manuscript_txt(tmp_path)
+                    written = mock_write.call_args[0][0]
+                    assert "*italic*" not in written
+                    assert "italic" in written
 
     def test_removes_links(self, tmp_path):
         """[text](url) becomes just 'text' in output."""
         from src.export.export import export_manuscript_txt
 
-        with patch("src.export.export.Path.read_text", return_value="Visit [my site](https://example.com) now"):
-            with patch("src.export.export.Path.write_text") as mock_write:
-                export_manuscript_txt(tmp_path)
-                written = mock_write.call_args[0][0]
-                assert "[my site](https://example.com)" not in written
-                assert "my site" in written
+        with patch("src.export.export.Path.exists", return_value=True):
+            with patch("src.export.export.Path.read_text", return_value="Visit [my site](https://example.com) now"):
+                with patch("src.export.export.Path.write_text") as mock_write:
+                    export_manuscript_txt(tmp_path)
+                    written = mock_write.call_args[0][0]
+                    assert "[my site](https://example.com)" not in written
+                    assert "my site" in written
 
     def test_returns_error_when_manuscript_missing(self, tmp_path):
         """When manuscript.md does not exist, returns dict with 'error' key."""
@@ -763,10 +767,11 @@ class TestExportManuscriptTxt:
         """Result includes correct word_count for the cleaned text."""
         from src.export.export import export_manuscript_txt
 
-        with patch("src.export.export.Path.read_text", return_value="one two three"):
-            with patch("src.export.export.Path.write_text"):
-                result = export_manuscript_txt(tmp_path)
-                assert result["word_count"] == 3
+        with patch("src.export.export.Path.exists", return_value=True):
+            with patch("src.export.export.Path.read_text", return_value="one two three"):
+                with patch("src.export.export.Path.write_text"):
+                    result = export_manuscript_txt(tmp_path)
+                    assert result["word_count"] == 3
 
     def test_multiple_formatting_types_removed(self, tmp_path):
         """Bold, italic, and links all removed; content preserved."""
@@ -776,26 +781,28 @@ class TestExportManuscriptTxt:
             "# Header\n\n"
             "**bold** and *italic* and [a link](https://example.com)."
         )
-        with patch("src.export.export.Path.read_text", return_value=content):
-            with patch("src.export.export.Path.write_text") as mock_write:
-                export_manuscript_txt(tmp_path)
-                written = mock_write.call_args[0][0]
-                assert "**" not in written
-                assert "*" not in written or "italic" not in written
-                assert "[a link]" not in written
-                assert "bold" in written
-                assert "italic" in written
-                assert "a link" in written
+        with patch("src.export.export.Path.exists", return_value=True):
+            with patch("src.export.export.Path.read_text", return_value=content):
+                with patch("src.export.export.Path.write_text") as mock_write:
+                    export_manuscript_txt(tmp_path)
+                    written = mock_write.call_args[0][0]
+                    assert "**" not in written
+                    assert "*" not in written or "italic" not in written
+                    assert "[a link]" not in written
+                    assert "bold" in written
+                    assert "italic" in written
+                    assert "a link" in written
 
     def test_returns_txt_path_in_result(self, tmp_path):
         """Result dict contains 'txt_path' key pointing to output file."""
         from src.export.export import export_manuscript_txt
 
-        with patch("src.export.export.Path.read_text", return_value="Some content"):
-            with patch("src.export.export.Path.write_text"):
-                result = export_manuscript_txt(tmp_path)
-                assert "txt_path" in result
-                assert result["txt_path"].endswith("manuscript.txt")
+        with patch("src.export.export.Path.exists", return_value=True):
+            with patch("src.export.export.Path.read_text", return_value="Some content"):
+                with patch("src.export.export.Path.write_text"):
+                    result = export_manuscript_txt(tmp_path)
+                    assert "txt_path" in result
+                    assert result["txt_path"].endswith("manuscript.txt")
 
 
 class TestEpubLoadChapters:

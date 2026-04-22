@@ -742,6 +742,10 @@ async fn run_pipeline_phase(
             Ok(c) => c,
             Err(e) => {
                 *PIPELINE_RUNNING.lock().unwrap() = false;
+                {
+                    let mut cached = PIPELINE_CHILD.lock().unwrap();
+                    *cached = None;
+                }
                 remove_pid_file(&output_path);
                 let _ = app_handle.emit("pipeline-error",
                     format!("Failed to start Python ({}): {}", python, e));
@@ -933,6 +937,10 @@ async fn run_full_pipeline(
             Ok(c) => c,
             Err(e) => {
                 *PIPELINE_RUNNING.lock().unwrap() = false;
+                {
+                    let mut cached = PIPELINE_CHILD.lock().unwrap();
+                    *cached = None;
+                }
                 remove_pid_file(&output_path);
                 let _ = app_handle.emit("pipeline-error",
                     format!("Failed to start Python ({}): {}", python, e));

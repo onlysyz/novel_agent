@@ -43,18 +43,25 @@ PROGRESS_FILE = None
 
 # Phase order for sequential execution
 PHASE_ORDER = ["foundation", "drafting", "review", "export"]
+USE_STREAMING = False  # Set to True when using SSE output
 
 
 def log_progress(phase: str, message: str, step: str = "running"):
-    """Write a progress entry to the progress JSONL file."""
-    if PROGRESS_FILE is None:
-        return
+    """Write a progress entry to the progress JSONL file or stdout (SSE)."""
     entry = {
         "phase": phase,
         "step": step,
         "message": message,
         "timestamp": datetime.now().isoformat(),
     }
+
+    if USE_STREAMING:
+        # SSE format: "data: JSON\n\n"
+        print(f"data: {json.dumps(entry)}", flush=True)
+        return
+
+    if PROGRESS_FILE is None:
+        return
     try:
         with open(PROGRESS_FILE, "a") as f:
             f.write(json.dumps(entry) + "\n")
@@ -822,14 +829,20 @@ Examples:
                         help="Resume from specific chapter (drafting phase)")
     parser.add_argument("--output-dir", type=str, default=".",
                         help="Output directory for novel files (default: current directory)")
+    parser.add_argument("--stream", action="store_true",
+                        help="Enable SSE streaming output to stdout")
 
     args = parser.parse_args()
+
+    # Enable streaming mode if requested
+    global USE_STREAMING
+    USE_STREAMING = args.stream
 
     # Initialize paths based on output directory
     init_paths(args.output_dir)
 
-    # Clear progress file for new run
-    if PROGRESS_FILE and PROGRESS_FILE.exists():
+    # Clear progress file for new run (only in non-streaming mode)
+    if not args.stream and PROGRESS_FILE and PROGRESS_FILE.exists():
         PROGRESS_FILE.unlink()
     log_progress("init", "Pipeline started", "running")
 

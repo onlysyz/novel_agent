@@ -714,12 +714,13 @@ async fn run_pipeline_phase(
         let app_root = find_app_root();
         let python = find_python(&app_root);
         let script = app_root.join("run_pipeline.py");
-        let progress_file = output_path.join(".novelforge").join("progress.jsonl");
 
+        // Use SSE streaming: --stream flag tells Python to output SSE to stdout
         let args = vec![
             script.to_string_lossy().to_string(),
             "--phase".to_string(), phase.clone(),
             "--output-dir".to_string(), output_dir.clone(),
+            "--stream".to_string(),
         ];
 
         let _ = app_handle.emit("pipeline-progress", PipelineProgress {
@@ -728,11 +729,13 @@ async fn run_pipeline_phase(
             message: format!("Running {} phase...", phase),
         });
 
-        // Spawn child process without capturing stdout/stderr
+        // Spawn child process with stdout captured for SSE streaming
         let child = match Command::new(&python)
             .env("PYTHONPATH", app_root.to_str().unwrap_or(""))
             .args(&args)
             .current_dir(&app_root)
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
             .spawn()
         {
             Ok(c) => c,
@@ -745,77 +748,76 @@ async fn run_pipeline_phase(
             }
         };
 
-        // Use Arc<Mutex<Option<Child>>> so the poll thread can check exit status
+        // Use Arc<Mutex<Option<Child>>> for thread-safe access
         use std::sync::{Arc, Mutex};
-        let child: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
-        let child_poll = child.clone();
-        let child_wait = child.clone();
+        let child_arc: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
+        let child_stream = child_arc.clone();
+        let child_wait = child_arc.clone();
 
-        // File-polling thread: read progress.jsonl and emit events
+        // SSE streaming thread: read stdout line by line and emit events
         let app_handle_clone = app_handle.clone();
-        let progress_file_clone = progress_file.clone();
         let phase_clone = phase.clone();
-        let poll_thread = std::thread::spawn(move || {
-            let mut last_pos = 0u64;
-            for _ in 0..50 {
-                if progress_file_clone.exists() { break; }
-                std::thread::sleep(std::time::Duration::from_millis(100));
-            }
-
-            loop {
-                // Check if process exited
-                let child_guard = child_poll.lock().unwrap();
-                if child_guard.is_none() {
-                    break;
+        let stream_thread = std::thread::spawn(move || {
+            let mut stdout_reader = {
+                let mut child_guard = child_stream.lock().unwrap();
+                if let Some(ref mut c) = *child_guard {
+                    use std::io::BufRead;
+                    use std::io::BufReader;
+                    let stdout = c.stdout.take().expect("stdout not captured");
+                    Box::new(BufReader::new(stdout)) as Box<dyn BufRead + Send>
+                } else {
+                    return;
                 }
-                drop(child_guard);
+            };
 
-                if progress_file_clone.exists() {
-                    if let Ok(metadata) = progress_file_clone.metadata() {
-                        let current_size = metadata.len();
-                        if current_size > last_pos {
-                            if let Ok(mut file) = fs::File::open(&progress_file_clone) {
-                                use std::io::{Seek, BufRead, BufReader};
-                                if file.seek(std::io::SeekFrom::Start(last_pos)).is_ok() {
-                                    let reader = BufReader::new(file);
-                                    for line_result in reader.lines() {
-                                        if let Ok(line) = line_result {
-                                            if !line.is_empty() {
-                                                if let Ok(json) = serde_json::from_str::<serde_json::Value>(&line) {
-                                                    let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("");
-                                                    let step = json.get("step").and_then(|v| v.as_str()).unwrap_or("running");
-                                                    let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
-                                                        phase: phase_clone.clone(),
-                                                        step: step.to_string(),
-                                                        message: msg.to_string(),
-                                                    });
-                                                    if step == "complete" {
-                                                        let _ = app_handle_clone.emit("pipeline-complete", &phase_clone);
-                                                    } else if step == "error" {
-                                                        let _ = app_handle_clone.emit("pipeline-error", msg);
-                                                    }
-                                                }
-                                            }
-                                            last_pos += line.len() as u64 + 1;
-                                        }
-                                    }
+            let mut line = String::new();
+            loop {
+                // Read a line from stdout
+                use std::io::BufRead;
+                match stdout_reader.read_line(&mut line) {
+                    Ok(0) => break,  // EOF
+                    Ok(_) => {
+                        let line_str = line.trim();
+                        if line_str.starts_with("data: ") {
+                            let json_str = &line_str[6..];  // Remove "data: " prefix
+                            if let Ok(json) = serde_json::from_str::<serde_json::Value>(json_str) {
+                                let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("");
+                                let step = json.get("step").and_then(|v| v.as_str()).unwrap_or("running");
+                                let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
+                                    phase: phase_clone.clone(),
+                                    step: step.to_string(),
+                                    message: msg.to_string(),
+                                });
+                                if step == "complete" {
+                                    let _ = app_handle_clone.emit("pipeline-complete", &phase_clone);
+                                } else if step == "error" {
+                                    let _ = app_handle_clone.emit("pipeline-error", msg);
                                 }
                             }
                         }
+                        // Also emit non-SSE output as info
+                        else if !line_str.is_empty() && !line_str.starts_with("data:") {
+                            // Check if process has exited
+                            let child_guard = child_stream.lock().unwrap();
+                            if child_guard.is_none() {
+                                break;
+                            }
+                        }
                     }
+                    Err(_) => break,
                 }
-
-                std::thread::sleep(std::time::Duration::from_millis(300));
+                line.clear();
             }
         });
 
+        // Wait for process and stream thread
         let status = {
             let mut child_guard = child_wait.lock().unwrap();
             child_guard.take().map(|mut c| c.wait()).unwrap_or_else(|| {
                 Ok(std::process::ExitStatus::from_raw(0))
             })
         };
-        let _ = poll_thread.join();
+        let _ = stream_thread.join();
         *PIPELINE_RUNNING.lock().unwrap() = false;
 
         match status {

@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { View, PipelineState } from "./types";
 import { I18nProvider, useTranslation } from "./i18n";
 import Dashboard from "./components/Dashboard";
 import ChapterList from "./components/ChapterList";
-import ChapterEditor from "./components/ChapterEditor";
-import FoundationView from "./components/FoundationView";
-import SettingsView from "./components/SettingsView";
-import ExportView from "./components/ExportView";
-import NewProjectView from "./components/NewProjectView";
 import PipelineConsole from "./components/PipelineConsole";
 import AlertModal from "./components/AlertModal";
+
+const ChapterEditor = lazy(() => import("./components/ChapterEditor"));
+const FoundationView = lazy(() => import("./components/FoundationView"));
+const ExportView = lazy(() => import("./components/ExportView"));
+const SettingsView = lazy(() => import("./components/SettingsView"));
+const NewProjectView = lazy(() => import("./components/NewProjectView"));
 
 interface PipelineProgress {
   phase: string;
@@ -175,10 +176,12 @@ function AppInner() {
 
   if (!hasProject) {
     return (
+      <Suspense fallback={<div className="loading">Loading...</div>}>
       <NewProjectView
         onProjectCreated={handleProjectCreated}
         onCancel={handleCancelNewProject}
       />
+      </Suspense>
     );
   }
 
@@ -237,21 +240,29 @@ function AppInner() {
           />
         )}
         {view === "chapters" && selectedChapter !== null && (
+          <Suspense fallback={<div className="loading">Loading editor...</div>}>
           <ChapterEditor
             outputDir={outputDir}
             chapterNum={selectedChapter}
             onSave={handleSaveChapter}
             onClose={() => setSelectedChapter(null)}
           />
+          </Suspense>
         )}
         {view === "foundation" && (
+          <Suspense fallback={<div className="loading">Loading foundation...</div>}>
           <FoundationView outputDir={outputDir} />
+          </Suspense>
         )}
         {view === "export" && state && (
+          <Suspense fallback={<div className="loading">Loading export...</div>}>
           <ExportView outputDir={outputDir} />
+          </Suspense>
         )}
         {view === "settings" && (
+          <Suspense fallback={<div className="loading">Loading settings...</div>}>
           <SettingsView outputDir={outputDir} onNewProject={handleNewProject} />
+          </Suspense>
         )}
       </main>
 

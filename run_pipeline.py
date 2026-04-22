@@ -742,7 +742,8 @@ def run_export(state: dict) -> dict:
         chapter_num = int(chapter_file.stem.split("_")[1])
         manuscript_parts.append(f"\n\n# Chapter {chapter_num}\n\n{content}")
         total_words += len(content.split())
-        log_progress("export", f"  Assembling chapter {idx}/{chapter_count}...", "running")
+        pct = int(idx / chapter_count * 100)
+        log_progress("export", f"  Assembling chapter {idx}/{chapter_count}... ({pct}%)", "running")
 
     manuscript = "\n".join(manuscript_parts)
 

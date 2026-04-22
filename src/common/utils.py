@@ -1,5 +1,6 @@
 """Shared utilities for novel writing pipeline."""
 
+import re
 from pathlib import Path
 from typing import List, Tuple, Optional
 

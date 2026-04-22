@@ -98,6 +98,25 @@ useEffect(() => {
     if (stepsRef.current) stepsRef.current.scrollTop = stepsRef.current.scrollHeight;
   }, [pipelineLog]);
 
+  // Global Enter to run current phase action
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && !pipelineRunning && outputDirLoaded) {
+        const tag = (e.target as HTMLElement).tagName;
+        if (tag === "TEXTAREA" || tag === "INPUT" || tag === "BUTTON") return;
+        e.preventDefault();
+        const phase = state.phase === "none" || state.phase === "foundation" ? "foundation"
+          : state.phase === "drafting" ? "drafting"
+          : state.phase === "review" ? "review"
+          : state.phase === "export" || state.phase === "complete" ? "export"
+          : null;
+        if (phase) handleRun(phase);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [pipelineRunning, outputDirLoaded, state.phase]);
+
   const loadTitle = async () => {
     try {
       const config = await invoke<any>("read_ai_config", { outputDir });

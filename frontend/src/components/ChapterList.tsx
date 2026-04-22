@@ -1,5 +1,5 @@
 import { ChapterSummary } from "../types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
 
@@ -12,10 +12,40 @@ interface Props {
 export default function ChapterList({ outputDir, selectedChapter, onSelectChapter }: Props) {
   const { t } = useTranslation();
   const [chapters, setChapters] = useState<ChapterSummary[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadChapters();
   }, [outputDir]);
+
+  // Sync selectedIndex when selectedChapter changes externally
+  useEffect(() => {
+    if (selectedChapter !== null) {
+      const idx = chapters.findIndex((c) => c.number === selectedChapter);
+      if (idx >= 0) setSelectedIndex(idx);
+    }
+  }, [selectedChapter, chapters]);
+
+  // Arrow key navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (chapters.length === 0) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setSelectedIndex((i) => Math.min(i + 1, chapters.length - 1));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setSelectedIndex((i) => Math.max(i - 1, 0));
+      } else if (e.key === "Enter" && selectedIndex >= 0) {
+        e.preventDefault();
+        onSelectChapter(chapters[selectedIndex].number);
+      }
+    };
+    const el = listRef.current;
+    el?.addEventListener("keydown", handleKeyDown);
+    return () => el?.removeEventListener("keydown", handleKeyDown);
+  }, [chapters, selectedIndex]);
 
   const loadChapters = async () => {
     try {
@@ -41,15 +71,15 @@ export default function ChapterList({ outputDir, selectedChapter, onSelectChapte
       <header className="page-header">
         <h1>{t("chapters_title")}</h1>
       </header>
-      <div className="chapters-grid">
+      <div className="chapters-grid" ref={listRef} tabIndex={0} onFocus={() => { if (selectedIndex < 0 && chapters.length > 0) setSelectedIndex(0); }}>
         {chapters.length === 0 ? (
           <p className="empty-state">{t("no_chapters_yet")}</p>
         ) : (
-          chapters.map((ch) => (
+          chapters.map((ch, idx) => (
             <button
               key={ch.number}
-              className={`chapter-card ${selectedChapter === ch.number ? 'selected' : ''} ${ch.status === 'failed' ? 'failed' : ''}`}
-              onClick={() => onSelectChapter(ch.number)}
+              className={`chapter-card ${idx === selectedIndex ? 'selected' : ''} ${ch.status === 'failed' ? 'failed' : ''}`}
+              onClick={() => { onSelectChapter(ch.number); setSelectedIndex(idx); }}
             >
               <div className="chapter-number">{t("chapter", { n: ch.number })}</div>
               <div className="chapter-title">{ch.title}</div>

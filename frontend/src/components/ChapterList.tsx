@@ -13,6 +13,7 @@ export default function ChapterList({ outputDir, selectedChapter, onSelectChapte
   const { t } = useTranslation();
   const [chapters, setChapters] = useState<ChapterSummary[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [loading, setLoading] = useState(true);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,11 +49,14 @@ export default function ChapterList({ outputDir, selectedChapter, onSelectChapte
   }, [chapters, selectedIndex]);
 
   const loadChapters = async () => {
+    setLoading(true);
     try {
       const chs = await invoke<ChapterSummary[]>("list_chapters", { outputDir });
       setChapters(chs);
     } catch (e) {
       console.error("Error loading chapters:", e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,7 +76,17 @@ export default function ChapterList({ outputDir, selectedChapter, onSelectChapte
         <h1>{t("chapters_title")}</h1>
       </header>
       <div className="chapters-grid" ref={listRef} tabIndex={0} onFocus={() => { if (selectedIndex < 0 && chapters.length > 0) setSelectedIndex(0); }}>
-        {chapters.length === 0 ? (
+        {loading ? (
+          <div className="chapter-skeletons">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <div key={n} className="chapter-card skeleton-card">
+                <div className="skeleton-line w-1_3" />
+                <div className="skeleton-line w-2_3" />
+                <div className="skeleton-line w-1_2" />
+              </div>
+            ))}
+          </div>
+        ) : chapters.length === 0 ? (
           <p className="empty-state">{t("no_chapters_yet")}</p>
         ) : (
           chapters.map((ch, idx) => (

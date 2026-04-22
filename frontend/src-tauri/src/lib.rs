@@ -634,8 +634,9 @@ fn default_ai_config() -> AIConfig {
 }
 
 // Mutex to prevent multiple pipelines from running simultaneously
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 static PIPELINE_RUNNING: Mutex<bool> = Mutex::new(false);
+static PIPELINE_CHILD: Mutex<Option<Arc<Mutex<Option<Child>>>> = Mutex::new(None);
 
 // ── Pipeline PID file management for crash recovery ────────────────────────────
 
@@ -749,10 +750,15 @@ async fn run_pipeline_phase(
         };
 
         // Use Arc<Mutex<Option<Child>>> for thread-safe access
-        use std::sync::{Arc, Mutex};
         let child_arc: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
         let child_stream = child_arc.clone();
         let child_wait = child_arc.clone();
+
+        // Store child handle for cancel support
+        {
+            let mut cached = PIPELINE_CHILD.lock().unwrap();
+            *cached = Some(child_arc.clone());
+        }
 
         // SSE streaming thread: read stdout line by line and emit events
         let app_handle_clone = app_handle.clone();
@@ -819,6 +825,10 @@ async fn run_pipeline_phase(
         };
         let _ = stream_thread.join();
         *PIPELINE_RUNNING.lock().unwrap() = false;
+        {
+            let mut cached = PIPELINE_CHILD.lock().unwrap();
+            *cached = None;
+        }
 
         match status {
             Ok(s) if s.success() => {
@@ -834,6 +844,28 @@ async fn run_pipeline_phase(
 
         remove_pid_file(&output_path);
     });
+
+    Ok(())
+}
+
+#[tauri::command]
+async fn cancel_pipeline(app_handle: tauri::AppHandle) -> Result<(), String> {
+    // Take and kill the cached child process
+    let child_opt = {
+        let mut cached = PIPELINE_CHILD.lock().unwrap();
+        cached.take()
+    };
+
+    if let Some(child_arc) = child_opt {
+        let mut child_guard = child_arc.lock().unwrap();
+        if let Some(ref mut child) = *child_guard {
+            child.kill().map_err(|e| e.to_string())?;
+        }
+    }
+
+    // Reset running state
+    *PIPELINE_RUNNING.lock().unwrap() = false;
+    let _ = app_handle.emit("pipeline-cancelled", ());
 
     Ok(())
 }
@@ -980,6 +1012,10 @@ async fn run_full_pipeline(
         };
         let _ = stream_thread.join();
         *PIPELINE_RUNNING.lock().unwrap() = false;
+        {
+            let mut cached = PIPELINE_CHILD.lock().unwrap();
+            *cached = None;
+        }
 
         match status {
             Ok(s) if s.success() => {
@@ -1079,6 +1115,7 @@ pub fn run() {
             read_foundation_doc,
             check_pipeline_status,
             run_pipeline_phase,
+            cancel_pipeline,
             run_full_pipeline,
             save_chapter,
             list_chapters,

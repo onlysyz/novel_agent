@@ -466,6 +466,17 @@ fn read_foundation_doc(output_dir: String, name: String) -> Result<FoundationDoc
     Ok(FoundationDoc { name, content, score: 0.0 })
 }
 
+/// Save a foundation document (world/characters/outline/canon/voice) to output_dir.
+#[tauri::command]
+fn save_foundation_doc(output_dir: String, name: String, content: String) -> Result<(), String> {
+    let path = match name.as_str() {
+        "world" | "characters" | "outline" | "canon" | "voice" =>
+            PathBuf::from(&output_dir).join(format!("{}.md", name)),
+        _ => return Err("Unknown document".to_string()),
+    };
+    fs::write(&path, content).map_err(|e| e.to_string())
+}
+
 /// Save a chapter file to output_dir/chapters/.
 #[tauri::command]
 fn save_chapter(output_dir: String, chapter_num: u32, content: String) -> Result<(), String> {
@@ -1200,6 +1211,7 @@ pub fn run() {
             read_state,
             read_chapter,
             read_foundation_doc,
+            save_foundation_doc,
             check_pipeline_status,
             run_pipeline_phase,
             cancel_pipeline,

@@ -63,6 +63,8 @@ export const translations = {
     close: "Close",
     save: "Save",
     saving: "Saving...",
+    edit: "Edit",
+    doc_saved: "Document saved!",
     unsaved: "Unsaved",
     chapter_content_placeholder: "Chapter content will appear here...",
 
@@ -195,6 +197,8 @@ export const translations = {
     close: "关闭",
     save: "保存",
     saving: "保存中...",
+    edit: "编辑",
+    doc_saved: "文档已保存！",
     unsaved: "未保存",
     chapter_content_placeholder: "章节内容将在此显示...",
 

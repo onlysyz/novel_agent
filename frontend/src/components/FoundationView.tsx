@@ -16,6 +16,9 @@ export default function FoundationView({ outputDir }: Props) {
   const [doc, setDoc] = useState<FoundationDoc | null>(null);
   const [loading, setLoading] = useState(false);
   const [docHtml, setDocHtml] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
+  const [saving, setSaving] = useState(false);
 
   // Render markdown content whenever doc changes
   useEffect(() => {
@@ -28,16 +31,48 @@ export default function FoundationView({ outputDir }: Props) {
   }, [doc]);
 
   const loadDoc = async (name: DocName) => {
+    if (isEditing && doc) {
+      // User has unsaved edits, confirm before switching
+      if (!window.confirm("You have unsaved changes. Discard them?")) return;
+    }
+    setIsEditing(false);
     setLoading(true);
     try {
       const d = await invoke<FoundationDoc>("read_foundation_doc", { outputDir, name });
       setDoc(d);
+      setEditedContent(d.content);
       setSelectedDoc(name);
     } catch (e) {
       console.error("Error loading doc:", e);
       setDoc(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEdit = () => {
+    setEditedContent(doc?.content || "");
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditedContent(doc?.content || "");
+  };
+
+  const handleSave = async () => {
+    if (!doc) return;
+    setSaving(true);
+    try {
+      await invoke("save_foundation_doc", { outputDir, name: doc.name, content: editedContent });
+      setDoc({ ...doc, content: editedContent });
+      setIsEditing(false);
+      alert(t("doc_saved") || "Document saved");
+    } catch (e) {
+      console.error("Error saving doc:", e);
+      alert(`Error saving: ${e}`);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -76,8 +111,28 @@ export default function FoundationView({ outputDir }: Props) {
           <div className="doc-view">
             <div className="doc-header">
               <h2>{doc.name.charAt(0).toUpperCase() + doc.name.slice(1)}</h2>
+              {!isEditing && (
+                <button className="btn-secondary" onClick={handleEdit}>{t("edit")}</button>
+              )}
             </div>
-            <div className="doc-body" dangerouslySetInnerHTML={{ __html: docHtml }} />
+            {isEditing ? (
+              <div className="doc-edit">
+                <textarea
+                  className="doc-edit-textarea"
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                  rows={20}
+                />
+                <div className="doc-edit-actions">
+                  <button className="btn-secondary" onClick={handleCancel} disabled={saving}>{t("cancel")}</button>
+                  <button className="btn-primary" onClick={handleSave} disabled={saving}>
+                    {saving ? t("saving") : t("save")}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="doc-body" dangerouslySetInnerHTML={{ __html: docHtml }} />
+            )}
           </div>
         ) : (
           <p className="empty-state">{t("select_doc_to_view")}</p>

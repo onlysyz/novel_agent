@@ -467,16 +467,17 @@ def run_drafting(state: dict) -> dict:
     chapters_dir.mkdir(exist_ok=True)
     existing = sorted(chapters_dir.glob("ch_*.md"))
 
-    # Determine starting chapter: skip completed chapters (in chapter_scores)
+    # Determine starting chapter: skip completed chapters (non-zero score, not failed)
     # but INCLUDE failed chapters so they get retried
     chapter_scores = state.get("drafting", {}).get("chapter_scores", {})
-    completed_chapters = set(chapter_scores.keys())  # e.g. {"ch_01", "ch_02", ...}
+    failed_chapters = set(state.get("drafting", {}).get("failed_chapters", []))
 
-    # Find the first chapter that doesn't have a score yet
     start_chapter = 1
     for ch in range(1, chapter_count + 1):
         score_key = f"ch_{ch:02d}"
-        if score_key not in completed_chapters:
+        score = chapter_scores.get(score_key, 0.0)
+        # Retry if: in failed_chapters list OR never successfully scored (> 0)
+        if ch in failed_chapters or score == 0.0:
             start_chapter = ch
             break
     else:

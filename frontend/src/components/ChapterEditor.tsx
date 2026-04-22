@@ -33,7 +33,7 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
       }
       if (e.key === "Escape" && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
-        onClose();
+        confirmClose();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -76,7 +76,13 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
     if (changed) scheduleAutoSave();
   };
 
-  const handleSave = async () => {
+  const confirmClose = () => {
+    if (hasChanges && !window.confirm(t("unsaved_confirm_close") || "You have unsaved changes. Close anyway?")) {
+      return;
+    }
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    onClose();
+  };
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     setSaving(true);
     try {
@@ -104,7 +110,7 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
           <span className="word-count">{wordCount.toLocaleString()} {t("words_count")}</span>
           {autoSaving && <span className="auto-saving">Auto-saving...</span>}
           {hasChanges && !autoSaving && <span className="unsaved">{t("unsaved")}</span>}
-          <button className="btn-secondary" onClick={onClose}>
+          <button className="btn-secondary" onClick={confirmClose}>
             {t("close")}<kbd className="shortcut-hint">Esc</kbd>
           </button>
           <button

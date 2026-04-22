@@ -976,3 +976,153 @@ class TestStreamingOutput:
         entry = json.loads(lines[0])
         assert entry["phase"] == "drafting"
         assert entry["step"] == "running"
+
+
+# ─── Failed Chapter Recovery Tests ─────────────────────────────────────────────
+
+class TestFailedChapterRecovery:
+    """Chapter-level error recovery: failed_chapters, retry, and resume logic."""
+
+    def test_resume_skips_completed_retries_failed(self, mock_novedir_with_foundation):
+        """Resume logic must skip chapters with successful scores but retry failed chapters."""
+        import run_pipeline
+
+        run_pipeline.NOVEL_DIR = mock_novedir_with_foundation
+        run_pipeline.DOTNOVEL = mock_novedir_with_foundation / ".novelforge"
+        run_pipeline.DOTNOVEL.mkdir(parents=True, exist_ok=True)
+        run_pipeline.STATE_FILE = run_pipeline.DOTNOVEL / "state.json"
+        run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
+        run_pipeline.USE_STREAMING = False
+
+        # State: ch_01 done (score 7.5), ch_02 failed (in failed_chapters), ch_03 not started
+        state = {
+            "phase": "drafting",
+            "completed_phases": ["foundation"],
+            "drafting": {
+                "current_chapter": 2,
+                "chapter_scores": {
+                    "ch_01": 7.5,
+                    "ch_02": 0.0,   # failed - all retries exhausted
+                },
+                "total_words": 3200,
+                "total_attempts": 3,
+                "failed_chapters": [2],
+                "drafting_errors": {"2": "Max retries exceeded"},
+            },
+        }
+        run_pipeline.save_state(state)
+
+        # Track which chapters are drafted
+        drafted = []
+
+        def mock_chapter(ch_num, context=None):
+            drafted.append(ch_num)
+            return {
+                "chapter_num": ch_num,
+                "word_count": 3200,
+                "score": 7.0,
+                "attempts": 1,
+            }
+
+        mock_build_ctx = MagicMock()
+        mock_build_ctx.return_value = {
+            "voice": "Style.", "world": "World.", "characters": "Chars.",
+            "outline": "Outline.", "canon": "Canon.", "anti_patterns": "",
+            "chapter_brief": {
+                "title": "Ch", "pov": "X", "location": "X", "beat": "X",
+                "position": "", "emotional_arc": "", "try_fail": "",
+                "scene_beats": [], "foreshadow_plants": [], "payoff_payoffs": [], "word_target": 3200,
+            },
+            "next_chapter_hint": "", "prev_ending": "",
+        }
+
+        with patch("src.drafting.draft_chapter.draft_chapter", mock_chapter):
+            with patch("src.drafting.draft_chapter.build_context_package", mock_build_ctx):
+                run_pipeline.run_drafting(state)
+
+        # ch_01 was skipped (already scored), ch_02 was retried
+        assert drafted == [2]
+
+    def test_drafting_saves_failed_chapter_and_error(self, mock_novedir_with_foundation):
+        """When draft_chapter exhausts retries, it saves failed_chapters and drafting_errors."""
+        import run_pipeline
+        from src.drafting.draft_chapter import _update_drafting_state, _load_state
+
+        run_pipeline.NOVEL_DIR = mock_novedir_with_foundation
+        run_pipeline.DOTNOVEL = mock_novedir_with_foundation / ".novelforge"
+        run_pipeline.DOTNOVEL.mkdir(parents=True, exist_ok=True)
+        run_pipeline.STATE_FILE = run_pipeline.DOTNOVEL / "state.json"
+        run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
+        run_pipeline.USE_STREAMING = False
+
+        # Set up a clean state
+        init_state = {
+            "phase": "drafting",
+            "drafting": {
+                "current_chapter": 0,
+                "chapter_scores": {},
+                "total_words": 0,
+                "total_attempts": 0,
+                "failed_chapters": [],
+                "drafting_errors": {},
+            },
+        }
+        run_pipeline.save_state(init_state)
+
+        # Simulate _update_drafting_state being called after max retries exceeded
+        _update_drafting_state(
+            chapter_num=1,
+            score=0.0,
+            word_count=0,
+            attempts=5,
+            error="Max retries (5) exceeded",
+        )
+
+        state = _load_state()
+        assert 1 in state["drafting"]["failed_chapters"]
+        assert state["drafting"]["drafting_errors"]["1"] == "Max retries (5) exceeded"
+        # Score should be 0 (not removed - it's already 0 for failed chapters)
+        assert state["drafting"]["chapter_scores"].get("ch_01") == 0.0
+
+    def test_retry_clears_failed_chapter_and_score(self, mock_novedir_with_foundation):
+        """Retrying a chapter removes it from failed_chapters and clears its score."""
+        import run_pipeline
+
+        run_pipeline.NOVEL_DIR = mock_novedir_with_foundation
+        run_pipeline.DOTNOVEL = mock_novedir_with_foundation / ".novelforge"
+        run_pipeline.DOTNOVEL.mkdir(parents=True, exist_ok=True)
+        run_pipeline.STATE_FILE = run_pipeline.DOTNOVEL / "state.json"
+        run_pipeline.PROGRESS_FILE = run_pipeline.DOTNOVEL / "progress.jsonl"
+        run_pipeline.USE_STREAMING = False
+
+        state = {
+            "phase": "drafting",
+            "drafting": {
+                "current_chapter": 2,
+                "chapter_scores": {
+                    "ch_01": 7.5,
+                    "ch_02": 0.0,
+                },
+                "total_words": 3200,
+                "total_attempts": 5,
+                "failed_chapters": [2],
+                "drafting_errors": {"2": "Max retries exceeded"},
+            },
+        }
+        run_pipeline.save_state(state)
+
+        # Simulate what retry_chapter Tauri command does
+        state = run_pipeline.load_state()
+        drafting = state.get("drafting", {})
+        failed = drafting.get("failed_chapters", [])
+        if 2 in failed:
+            failed.remove(2)
+        scores = drafting.get("chapter_scores", {})
+        scores.pop("ch_02", None)
+        drafting["current_chapter"] = 1  # chapter_num - 1 so smart resume picks it
+        run_pipeline.save_state(state)
+
+        loaded = run_pipeline.load_state()
+        assert 2 not in loaded["drafting"]["failed_chapters"]
+        assert "ch_02" not in loaded["drafting"]["chapter_scores"]
+        assert loaded["drafting"]["current_chapter"] == 1

@@ -240,8 +240,13 @@ def build_context_package(chapter_num: int) -> dict:
 
     Returns a dict with all context texts needed for chapter generation.
     """
+    import sys as _sys
+    _sys.stderr.write(f"[DEBUG build_context_package] NOVEL_DIR={type(NOVEL_DIR).__name__}({repr(NOVEL_DIR)}), chapter={chapter_num}\n")
+    _sys.stderr.flush()
     # Read all layer files
     voice = (NOVEL_DIR / "voice.md").read_text() if (NOVEL_DIR / "voice.md").exists() else ""
+    _sys.stderr.write(f"[DEBUG build_context_package] voice path exists={(NOVEL_DIR / 'voice.md').exists()}\n")
+    _sys.stderr.flush()
     world = (NOVEL_DIR / "world.md").read_text() if (NOVEL_DIR / "world.md").exists() else ""
     characters = (NOVEL_DIR / "characters.md").read_text() if (NOVEL_DIR / "characters.md").exists() else ""
     outline = (NOVEL_DIR / "outline.md").read_text() if (NOVEL_DIR / "outline.md").exists() else ""

@@ -163,6 +163,14 @@ function AppInner() {
     }
   };
 
+  const handleRetryChapter = async (chapterNum: number) => {
+    try {
+      await invoke("retry_chapter", { outputDir, chapterNum });
+    } catch (e) {
+      console.error("Error retrying chapter:", e);
+    }
+  };
+
   // Runs a pipeline phase; outputDir is passed so Python knows where to write files
   const handleRunPhase = async (phase: string) => {
     console.log("[App] handleRunPhase starting, phase:", phase, "outputDir:", outputDir);
@@ -232,6 +240,7 @@ function AppInner() {
             outputDir={outputDir}
             onRunPhase={handleRunPhase}
             onNewProject={handleNewProject}
+            onRetryChapter={handleRetryChapter}
             pipelineRunning={pipelineRunning}
             pipelineMessage={pipelineMessage}
             pipelineLog={pipelineLog}

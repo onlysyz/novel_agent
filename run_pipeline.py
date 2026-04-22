@@ -108,11 +108,12 @@ def git_commit(message: str) -> bool:
     """Create a git commit with the given message."""
     try:
         # Stage all changes
-        subprocess.run(["git", "add", "-A"], check=True, capture_output=True)
+        subprocess.run(["git", "add", "-A"], check=True, capture_output=True, timeout=30)
         # Check if there are changes to commit
         result = subprocess.run(
             ["git", "diff", "--staged", "--quiet"],
             capture_output=True,
+            timeout=30,
         )
         if result.returncode == 0:
             print("  No changes to commit")
@@ -124,9 +125,13 @@ def git_commit(message: str) -> bool:
             check=True,
             capture_output=True,
             text=True,
+            timeout=30,
         )
         print(f"  Committed: {message}")
         return True
+    except subprocess.TimeoutExpired:
+        print("  Git command timed out")
+        return False
     except subprocess.CalledProcessError as e:
         print(f"  Git commit failed: {e}")
         return False

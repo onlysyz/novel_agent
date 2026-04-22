@@ -10,6 +10,7 @@ interface Props {
   outputDir: string;
   onRunPhase: (phase: string) => Promise<void>;
   onNewProject: () => void;
+  onRetryChapter?: (chapterNum: number) => Promise<void>;
   pipelineRunning?: boolean;
   pipelineMessage?: string;
   pipelineLog?: string[];
@@ -57,6 +58,7 @@ function parseLine(line: string): ParsedStep | null {
 
 export default function Dashboard({
   state, outputDir, onRunPhase, onNewProject,
+  onRetryChapter,
   pipelineRunning = false, pipelineMessage = "", pipelineLog = [],
 }: Props) {
   const { t } = useTranslation();
@@ -114,6 +116,16 @@ useEffect(() => {
       await invoke("cancel_pipeline");
     } catch (e) {
       console.error("[Dashboard] cancel failed:", e);
+    }
+  };
+
+  const handleRetryChapter = async (e: React.MouseEvent, chapterNum: number) => {
+    e.stopPropagation();
+    if (!onRetryChapter) return;
+    try {
+      await onRetryChapter(chapterNum);
+    } catch (err) {
+      console.error("Error retrying chapter:", err);
     }
   };
 
@@ -309,9 +321,21 @@ useEffect(() => {
           <h2>{t("chapter_progress")}</h2>
           <div className="chapter-progress">
             {state.chapters.map((ch) => (
-              <div key={ch.number} className={`chapter-dot ${ch.score ? 'done' : 'pending'}`}>
+              <div
+                key={ch.number}
+                className={`chapter-dot ${ch.score ? 'done' : 'pending'} ${ch.status === 'failed' ? 'failed' : ''}`}
+              >
                 <span className="ch-num">{ch.number}</span>
                 {ch.score && <span className="ch-score">{ch.score.toFixed(0)}</span>}
+                {ch.status === 'failed' && (
+                  <button
+                    className="ch-retry"
+                    onClick={(e) => handleRetryChapter(e, ch.number)}
+                    title={t("retry_chapter") || "Retry chapter"}
+                  >
+                    ↻
+                  </button>
+                )}
               </div>
             ))}
           </div>

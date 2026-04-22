@@ -33,6 +33,8 @@
   --border: rgba(218, 226, 253, 0.1);
   --success: var(--tertiary);
   --warning: #fbbf24;
+  --error: #ef5350;
+  --on-error: #fff;
 }
 
 * {
@@ -896,6 +898,7 @@ body {
   font-size: 0.75rem;
   border: 2px solid transparent;
   transition: all 0.2s;
+  position: relative;
 }
 
 .chapter-dot.done {
@@ -904,6 +907,43 @@ body {
 
 .chapter-dot.pending {
   border-color: var(--border);
+}
+
+.chapter-dot.failed {
+  border-color: var(--error);
+  background: rgba(239, 83, 80, 0.1);
+}
+
+.chapter-dot.failed .ch-num,
+.chapter-dot.failed .ch-score {
+  color: var(--error);
+}
+
+.chapter-dot .ch-retry {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: var(--error);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding: 0;
+}
+
+.chapter-dot:hover .ch-retry {
+  opacity: 1;
+}
+
+.chapter-dot .ch-retry:hover {
+  background: var(--on-error);
 }
 
 .chapter-dot .ch-num {

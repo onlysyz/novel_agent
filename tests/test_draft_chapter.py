@@ -1887,8 +1887,8 @@ class TestDraftChapterIntegration:
         chapters_dir = tmp_path / "chapters"
         chapters_dir.mkdir()
 
-        # Generate text longer than MAX_CHAPTER_WORDS (4500 by default)
-        long_text = "A very long chapter with plenty of words. " * 600  # ~4800 words
+        # Generate text longer than MAX_CHAPTER_WORDS (8000 by default)
+        long_text = "A very long chapter with plenty of words. " * 1100  # ~8800 words
 
         mock_client = MagicMock()
         mock_client.generate.return_value = long_text

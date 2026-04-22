@@ -1845,10 +1845,28 @@ body {
 }
 
 .unsaved {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
   font-size: 0.75rem;
   color: var(--warning);
   font-weight: 600;
   animation: dot-pulse 2s ease-in-out infinite;
+}
+
+.unsaved::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--warning);
+  box-shadow: 0 0 6px var(--warning);
+  animation: unsaved-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes unsaved-glow {
+  0%, 100% { box-shadow: 0 0 4px var(--warning); opacity: 1; }
+  50%       { box-shadow: 0 0 10px var(--warning); opacity: 0.8; }
 }
 
 .auto-saving {

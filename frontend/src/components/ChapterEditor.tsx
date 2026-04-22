@@ -104,13 +104,15 @@ export default function ChapterEditor({ outputDir, chapterNum, onSave, onClose }
           <span className="word-count">{wordCount.toLocaleString()} {t("words_count")}</span>
           {autoSaving && <span className="auto-saving">Auto-saving...</span>}
           {hasChanges && !autoSaving && <span className="unsaved">{t("unsaved")}</span>}
-          <button className="btn-secondary" onClick={onClose}>{t("close")}</button>
+          <button className="btn-secondary" onClick={onClose}>
+            {t("close")}<kbd className="shortcut-hint">Esc</kbd>
+          </button>
           <button
             className="btn-primary"
             onClick={handleSave}
             disabled={!hasChanges || saving}
           >
-            {saving ? t("saving") : t("save")}
+            {saving ? t("saving") : t("save")}<kbd className="shortcut-hint">⌘S</kbd>
           </button>
         </div>
       </header>

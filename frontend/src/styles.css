@@ -708,6 +708,31 @@ body {
   white-space: nowrap;
 }
 
+.review-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.review-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.review-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+.review-progress-label {
+  font-size: 0.75rem;
+  color: #fbbf24;
+  white-space: nowrap;
+}
+
 .step-cursor {
   padding: 0.25rem 1rem;
   font-size: 0.875rem;

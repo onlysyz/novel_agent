@@ -43,6 +43,14 @@ function parseLine(line: string): ParsedStep | null {
   const revM = line.match(/^---\s+Chapter\s+(\d+)/);
   if (revM) return { type: "review", label: `Reviewing Chapter ${revM[1]}` };
 
+  // Revision cycle 1/3
+  const cycleM = line.match(/^Revision cycle (\d+)\/(\d+)/);
+  if (cycleM) {
+    const current = parseInt(cycleM[1]);
+    const total = parseInt(cycleM[2]);
+    return { type: "review", label: `Revision cycle ${current} / ${total}`, current, total, pct: total > 0 ? Math.round(current / total * 100) : 0 };
+  }
+
   // [1/3] Adversarial Edit... / [2/3] ... / [3/3] ...
   const subM = line.match(/^\s+\[(\d+)\/(\d+)\]\s+(.+)/);
   if (subM) return { type: "review", label: `  ↳ [${subM[1]}/${subM[2]}] ${subM[3]}` };
@@ -151,6 +159,12 @@ useEffect(() => {
   const draftingCurrent = chapterStep?.current ?? 0;
   const draftingTotal = chapterStep?.total ?? 0;
 
+  // Review progress from pipeline log (revision cycles)
+  const reviewStep = steps.filter(s => s.type === "review").pop();
+  const reviewPct = reviewStep?.pct ?? 0;
+  const reviewCurrent = reviewStep?.current ?? 0;
+  const reviewTotal = reviewStep?.total ?? 0;
+
   const totalWords = state.chapters.reduce((sum, ch) => sum + ch.word_count, 0);
   const avgChapterScore = state.chapters.length > 0
     ? state.chapters.reduce((sum, ch) => sum + (ch.score || 0), 0) / state.chapters.length : 0;
@@ -250,6 +264,14 @@ useEffect(() => {
         ) : currentPhase === "review" ? (
           <>
             <h2>{t("review_phase")}</h2>
+            {reviewTotal > 0 && (
+              <div className="review-progress">
+                <div className="review-progress-bar">
+                  <div className="review-progress-fill" style={{ width: `${reviewPct}%` }} />
+                </div>
+                <span className="review-progress-label">{t("review_progress_label", { current: reviewCurrent, total: reviewTotal, pct: reviewPct })}</span>
+              </div>
+            )}
             <button className="btn-primary btn-large" onClick={() => handleRun("review")} disabled={pipelineRunning}>
               {pipelineRunning ? t("running") : t("continue_review")}
             </button>

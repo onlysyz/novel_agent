@@ -683,6 +683,31 @@ body {
   transition: width 0.3s ease;
 }
 
+.drafting-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.drafting-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.drafting-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #d8b4fe, #22d3ee);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+.drafting-progress-label {
+  font-size: 0.75rem;
+  color: #d8b4fe;
+  white-space: nowrap;
+}
+
 .step-cursor {
   padding: 0.25rem 1rem;
   font-size: 0.875rem;

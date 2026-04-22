@@ -21,6 +21,9 @@ interface ParsedStep {
   type: "foundation" | "chapter" | "review" | "score" | "complete" | "git" | "info";
   label: string;
   detail?: string;
+  current?: number;
+  total?: number;
+  pct?: number;
 }
 
 function parseLine(line: string): ParsedStep | null {
@@ -30,7 +33,11 @@ function parseLine(line: string): ParsedStep | null {
 
   // [Chapter 5/100]
   const chapM = line.match(/^\[Chapter\s+(\d+)\/(\d+)\]/);
-  if (chapM) return { type: "chapter", label: `Chapter ${chapM[1]} / ${chapM[2]}` };
+  if (chapM) {
+    const current = parseInt(chapM[1]);
+    const total = parseInt(chapM[2]);
+    return { type: "chapter", label: `Chapter ${current} / ${total}`, current, total, pct: total > 0 ? Math.round(current / total * 100) : 0 };
+  }
 
   // --- Chapter 05 ---  (review phase)
   const revM = line.match(/^---\s+Chapter\s+(\d+)/);
@@ -138,6 +145,12 @@ useEffect(() => {
   // Most recent meaningful step label for the action card summary
   const currentStep = steps.length > 0 ? steps[steps.length - 1].label : "";
 
+  // Chapter progress from pipeline log
+  const chapterStep = steps.filter(s => s.type === "chapter").pop();
+  const draftingPct = chapterStep?.pct ?? 0;
+  const draftingCurrent = chapterStep?.current ?? 0;
+  const draftingTotal = chapterStep?.total ?? 0;
+
   const totalWords = state.chapters.reduce((sum, ch) => sum + ch.word_count, 0);
   const avgChapterScore = state.chapters.length > 0
     ? state.chapters.reduce((sum, ch) => sum + (ch.score || 0), 0) / state.chapters.length : 0;
@@ -221,6 +234,14 @@ useEffect(() => {
         ) : currentPhase === "drafting" ? (
           <>
             <h2>{t("drafting_phase")}</h2>
+            {draftingTotal > 0 && (
+              <div className="drafting-progress">
+                <div className="drafting-progress-bar">
+                  <div className="drafting-progress-fill" style={{ width: `${draftingPct}%` }} />
+                </div>
+                <span className="drafting-progress-label">{t("chapter_progress_label", { current: draftingCurrent, total: draftingTotal, pct: draftingPct })}</span>
+              </div>
+            )}
             <p>{t("chapters_written", { n: state.chapters.length })}</p>
             <button className="btn-primary btn-large" onClick={() => handleRun("drafting")} disabled={pipelineRunning}>
               {pipelineRunning ? t("running") : t("continue_drafting")}

@@ -153,7 +153,7 @@ export default function ExportView({ outputDir }: Props) {
             onClick={() => { navigator.clipboard.writeText(manuscript); showToast(t("manuscript_copied"), "success"); }}
             disabled={!manuscript}
           >
-            {t("copy_manuscript")}
+            {t("copy_manuscript")}<kbd className="shortcut-hint">⌘C</kbd>
           </button>
         </div>
       </section>

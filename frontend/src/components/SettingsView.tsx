@@ -103,7 +103,7 @@ export default function SettingsView({ outputDir, onNewProject }: Props) {
           placeholder={t("novel_concept_placeholder")}
           rows={6}
         />
-        <button className="btn-primary" onClick={handleSaveSeed}>{t("save_seed")}</button>
+        <button className="btn-primary" onClick={handleSaveSeed}>{t("save_seed")}<kbd className="shortcut-hint">⌘S</kbd></button>
       </section>
 
       <section className="section">
@@ -149,7 +149,7 @@ export default function SettingsView({ outputDir, onNewProject }: Props) {
           />
         </div>
         <button className="btn-primary" onClick={handleSaveAIConfig}>
-          {configSaved ? t("saved") : t("save")}
+          {configSaved ? t("saved") : t("save")}<kbd className="shortcut-hint">⌘S</kbd>
         </button>
       </section>
 
@@ -186,7 +186,7 @@ export default function SettingsView({ outputDir, onNewProject }: Props) {
           />
         </div>
         <button className="btn-primary" onClick={handleSaveAIConfig}>
-          {configSaved ? t("saved") : t("save")}
+          {configSaved ? t("saved") : t("save")}<kbd className="shortcut-hint">⌘S</kbd>
         </button>
       </section>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { marked } from "marked";
 import { FoundationDoc } from "../types";
@@ -21,6 +21,10 @@ export default function FoundationView({ outputDir }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("");
   const [saving, setSaving] = useState(false);
+  const [autoSaving, setAutoSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSavedContent = useRef<string>("");
 
   // Render markdown content whenever doc changes
   useEffect(() => {
@@ -43,6 +47,8 @@ export default function FoundationView({ outputDir }: Props) {
       const d = await invoke<FoundationDoc>("read_foundation_doc", { outputDir, name });
       setDoc(d);
       setEditedContent(d.content);
+      lastSavedContent.current = d.content;
+      setHasChanges(false);
       setSelectedDoc(name);
     } catch (e) {
       console.error("Error loading doc:", e);
@@ -53,22 +59,54 @@ export default function FoundationView({ outputDir }: Props) {
   };
 
   const handleEdit = () => {
+    lastSavedContent.current = doc?.content || "";
     setEditedContent(doc?.content || "");
+    setHasChanges(false);
     setIsEditing(true);
   };
 
   const handleCancel = () => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     setIsEditing(false);
     setEditedContent(doc?.content || "");
+    setHasChanges(false);
+  };
+
+  const scheduleAutoSave = () => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(async () => {
+      if (!hasChanges || !doc) return;
+      setAutoSaving(true);
+      try {
+        await invoke("save_foundation_doc", { outputDir, name: doc.name, content: editedContent });
+        lastSavedContent.current = editedContent;
+        setHasChanges(false);
+      } catch (e) {
+        console.error("Auto-save failed:", e);
+        showToast(`${t("error_saving")}: ${e}`, "error");
+      } finally {
+        setAutoSaving(false);
+      }
+    }, 3000);
+  };
+
+  const handleContentChange = (newContent: string) => {
+    setEditedContent(newContent);
+    const changed = newContent !== lastSavedContent.current;
+    setHasChanges(changed);
+    if (changed) scheduleAutoSave();
   };
 
   const handleSave = async () => {
     if (!doc) return;
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     setSaving(true);
     try {
       await invoke("save_foundation_doc", { outputDir, name: doc.name, content: editedContent });
+      lastSavedContent.current = editedContent;
       setDoc({ ...doc, content: editedContent });
       setIsEditing(false);
+      setHasChanges(false);
       showToast(t("doc_saved"), "success");
     } catch (e) {
       console.error("Error saving doc:", e);
@@ -122,10 +160,12 @@ export default function FoundationView({ outputDir }: Props) {
                 <textarea
                   className="doc-edit-textarea"
                   value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
+                  onChange={(e) => handleContentChange(e.target.value)}
                   rows={20}
                 />
                 <div className="doc-edit-actions">
+                  {autoSaving && <span className="auto-saving">Auto-saving...</span>}
+                  {hasChanges && !autoSaving && <span className="unsaved">{t("unsaved")}</span>}
                   <button className="btn-secondary" onClick={handleCancel} disabled={saving}>{t("cancel")}</button>
                   <button className="btn-primary" onClick={handleSave} disabled={saving}>
                     {saving ? t("saving") : t("save")}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
+import { useToast } from "./Toast";
 
 interface Props {
   onProjectCreated: () => void;
@@ -19,13 +20,14 @@ const LANGUAGES = [
 
 export default function NewProjectView({ onProjectCreated, onCancel }: Props) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [seed, setSeed] = useState("");
   const [language, setLanguage] = useState("en");
   const [creating, setCreating] = useState(false);
 
   const handleCreate = async () => {
     if (!seed.trim()) {
-      alert(t("please_enter_concept"));
+      showToast(t("please_enter_concept"), "error");
       return;
     }
 
@@ -36,7 +38,7 @@ export default function NewProjectView({ onProjectCreated, onCancel }: Props) {
       onProjectCreated();
     } catch (e) {
       console.error("Error creating project:", e);
-      alert(`Error: ${e}`);
+      showToast(`Error: ${e}`, "error");
     } finally {
       setCreating(false);
     }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
+import { useToast } from "./Toast";
 
 interface Props {
   outputDir: string;
@@ -16,6 +17,7 @@ interface ExportFile {
 
 export default function ExportView({ outputDir }: Props) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [manuscript, setManuscript] = useState("");
   const [exportFiles, setExportFiles] = useState<ExportFile[]>([]);
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,7 @@ export default function ExportView({ outputDir }: Props) {
       await invoke("open_export_file", { outputDir, filename: file.name });
     } catch (e) {
       console.error("Error opening file:", e);
-      alert(`Error opening file: ${e}`);
+      showToast(`Error opening file: ${e}`, "error");
     }
   };
 
@@ -85,7 +87,7 @@ export default function ExportView({ outputDir }: Props) {
       URL.revokeObjectURL(url);
     } catch (e) {
       console.error("Error downloading file:", e);
-      alert(`Error: ${e}`);
+      showToast(`Error: ${e}`, "error");
     } finally {
       setLoading(false);
     }
@@ -148,7 +150,7 @@ export default function ExportView({ outputDir }: Props) {
         <div className="export-actions">
           <button
             className="btn-secondary"
-            onClick={() => { navigator.clipboard.writeText(manuscript); alert(t("manuscript_copied")); }}
+            onClick={() => { navigator.clipboard.writeText(manuscript); showToast(t("manuscript_copied"), "success"); }}
             disabled={!manuscript}
           >
             {t("copy_manuscript")}

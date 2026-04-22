@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "../i18n";
+import { useToast } from "./Toast";
 
 interface Props {
   outputDir: string;
@@ -20,6 +21,7 @@ interface AIConfig {
 
 export default function SettingsView({ outputDir, onNewProject }: Props) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [seed, setSeed] = useState("");
   const [aiConfig, setAiConfig] = useState<AIConfig>({
     api_key: "",
@@ -60,10 +62,10 @@ export default function SettingsView({ outputDir, onNewProject }: Props) {
     try {
       const lang = await invoke<string>("read_language", { outputDir });
       await invoke("write_seed", { outputDir, seed, language: lang });
-      alert(t("seed_saved"));
+      showToast(t("seed_saved"), "success");
     } catch (e) {
       console.error("Error saving seed:", e);
-      alert(`${t("error_saving")}: ${e}`);
+      showToast(`${t("error_saving")}: ${e}`, "error");
     }
   };
 
@@ -74,7 +76,7 @@ export default function SettingsView({ outputDir, onNewProject }: Props) {
       setTimeout(() => setConfigSaved(false), 2000);
     } catch (e) {
       console.error("Error saving AI config:", e);
-      alert(`Error: ${e}`);
+      showToast(`Error: ${e}`, "error");
     }
   };
 

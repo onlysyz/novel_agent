@@ -548,7 +548,13 @@ fn project_exists(output_dir: String) -> bool {
 
 /// Retry a failed chapter by removing it from failed_chapters and re-running drafting.
 #[tauri::command]
-async fn retry_chapter(output_dir: String, chapter_num: u32) -> Result<(), String> {
+async fn retry_chapter(
+    output_dir: String,
+    chapter_num: u32,
+    app_handle: tauri::AppHandle,
+) -> Result<(), String> {
+    use std::process::Command;
+
     let state_path = PathBuf::from(&output_dir).join(".novelforge/state.json");
     if !state_path.exists() {
         return Err("No project state found".to_string());
@@ -567,18 +573,18 @@ async fn retry_chapter(output_dir: String, chapter_num: u32) -> Result<(), Strin
             let key = format!("ch_{:02}", chapter_num);
             scores.remove(&key);
         }
-        // Set current_chapter back so pipeline resumes at this chapter
-        if let Some(cur) = drafting.get("current_chapter").and_then(|c| c.as_u64()) {
-            if cur as u32 >= chapter_num {
-                drafting["current_chapter"] = serde_json::Value::Number(serde_json::Number::from(chapter_num.saturating_sub(1)));
-            }
-        }
+        // Set current_chapter back so smart resume picks this chapter
+        drafting["current_chapter"] = serde_json::Value::Number(serde_json::Number::from(chapter_num.saturating_sub(1)));
     }
+    // Ensure phase is drafting so run_pipeline knows to enter drafting
+    state["phase"] = serde_json::Value::String("drafting".to_string());
 
     let json_str = serde_json::to_string_pretty(&state).map_err(|e| e.to_string())?;
     fs::write(&state_path, json_str).map_err(|e| e.to_string())?;
 
-    Ok(())
+    // Run drafting phase via the same pipeline infrastructure
+    // Smart resume in state.json will pick the retried chapter; no chapter_override needed
+    run_pipeline_phase_internal("drafting".to_string(), output_dir, app_handle, None).await
 }
 
 /// Read manuscript.md from output_dir.
@@ -758,6 +764,160 @@ fn check_pipeline_status(output_dir: String) -> bool {
 }
 
 /// Run a specific pipeline phase.
+async fn run_pipeline_phase_internal(
+    phase: String,
+    output_dir: String,
+    app_handle: tauri::AppHandle,
+    chapter_override: Option<u32>,
+) -> Result<(), String> {
+    let phase_clone = phase.clone();
+    let output_dir_clone = output_dir.clone();
+    let app_handle_clone = app_handle.clone();
+
+    std::thread::spawn(move || {
+        run_pipeline_spawn_thread(phase_clone, output_dir_clone, app_handle_clone, chapter_override);
+    });
+    Ok(())
+}
+
+
+fn run_pipeline_spawn_thread(
+    phase: String,
+    output_dir: String,
+    app_handle: tauri::AppHandle,
+    chapter_override: Option<u32>,
+) {
+    let app_root = find_app_root();
+    let python = find_python(&app_root);
+    let script = app_root.join("run_pipeline.py");
+
+    let mut args = vec![
+        script.to_string_lossy().to_string(),
+        "--phase".to_string(), phase.clone(),
+        "--output-dir".to_string(), output_dir.clone(),
+        "--stream".to_string(),
+    ];
+    if let Some(ch) = chapter_override {
+        args.push("--chapter".to_string());
+        args.push(ch.to_string());
+    }
+
+    let _ = app_handle.emit("pipeline-progress", PipelineProgress {
+        phase: phase.clone(),
+        step: "running".to_string(),
+        message: format!("Running {} phase...", phase),
+    });
+
+    let child = match Command::new(&python)
+        .env("PYTHONPATH", app_root.to_str().unwrap_or(""))
+        .args(&args)
+        .current_dir(&app_root)
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+    {
+        Ok(c) => c,
+        Err(e) => {
+            *PIPELINE_RUNNING.lock().unwrap() = false;
+            {
+                let mut cached = PIPELINE_CHILD.lock().unwrap();
+                *cached = None;
+            }
+            remove_pid_file(&PathBuf::from(&output_dir));
+            let _ = app_handle.emit("pipeline-error",
+                format!("Failed to start Python ({}): {}", python, e));
+            return;
+        }
+    };
+
+    let child_arc: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
+    let child_stream = child_arc.clone();
+    let child_wait = child_arc.clone();
+
+    {
+        let mut cached = PIPELINE_CHILD.lock().unwrap();
+        *cached = Some(child_arc.clone());
+    }
+
+    // SSE streaming thread
+    let app_handle_clone2 = app_handle.clone();
+    let phase_clone2 = phase.clone();
+    let stream_thread = std::thread::spawn(move || {
+        let mut stdout_reader = {
+            let mut child_guard = child_stream.lock().unwrap();
+            if let Some(ref mut c) = *child_guard {
+                use std::io::BufRead;
+                use std::io::BufReader;
+                let stdout = c.stdout.take().expect("stdout not captured");
+                Box::new(BufReader::new(stdout)) as Box<dyn BufRead + Send>
+            } else {
+                return;
+            }
+        };
+
+        let mut line = String::new();
+        loop {
+            use std::io::BufRead;
+            match stdout_reader.read_line(&mut line) {
+                Ok(0) => break,
+                Ok(_) => {
+                    let line_str = line.trim();
+                    if line_str.starts_with("data: ") {
+                        let json_str = &line_str[6..];
+                        if let Ok(json) = serde_json::from_str::<serde_json::Value>(json_str) {
+                            let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("");
+                            let step = json.get("step").and_then(|v| v.as_str()).unwrap_or("running");
+                            let _ = app_handle_clone2.emit("pipeline-progress", PipelineProgress {
+                                phase: phase_clone2.clone(),
+                                step: step.to_string(),
+                                message: msg.to_string(),
+                            });
+                            if step == "complete" {
+                                let _ = app_handle_clone2.emit("pipeline-complete", &phase_clone2);
+                            } else if step == "error" {
+                                let _ = app_handle_clone2.emit("pipeline-error", msg);
+                            }
+                        }
+                    } else if !line_str.is_empty() && !line_str.starts_with("data:") {
+                        let child_guard = child_stream.lock().unwrap();
+                        if child_guard.is_none() { break; }
+                    }
+                }
+                Err(_) => break,
+            }
+            line.clear();
+        }
+    });
+
+    let status = {
+        let mut child_guard = child_wait.lock().unwrap();
+        child_guard.take().map(|mut c| c.wait()).unwrap_or_else(|| {
+            Ok(std::process::ExitStatus::from_raw(0))
+        })
+    };
+    let _ = stream_thread.join();
+    *PIPELINE_RUNNING.lock().unwrap() = false;
+    {
+        let mut cached = PIPELINE_CHILD.lock().unwrap();
+        *cached = None;
+    }
+
+    match status {
+        Ok(s) if s.success() => {
+            let _ = app_handle.emit("pipeline-progress", PipelineProgress {
+                phase: phase.clone(), step: "complete".to_string(),
+                message: format!("{} phase completed", phase),
+            });
+            let _ = app_handle.emit("pipeline-complete", &phase);
+        }
+        Ok(_) => { let _ = app_handle.emit("pipeline-error", "Pipeline exited with error"); }
+        Err(e) => { let _ = app_handle.emit("pipeline-error", format!("Process wait error: {}", e)); }
+    }
+
+    remove_pid_file(&PathBuf::from(&output_dir));
+}
+
+/// Run a specific pipeline phase.
 /// - app_root   (internal): where run_pipeline.py and .venv live
 /// - output_dir (from frontend): where generated novel files are written
 #[tauri::command]
@@ -774,151 +934,12 @@ async fn run_pipeline_phase(
 
     app_handle.emit("pipeline-started", &phase).map_err(|e| e.to_string())?;
 
-    // Write PID file for crash recovery
     let output_path = PathBuf::from(&output_dir);
     if let Err(e) = write_pid_file(&output_path) {
         eprintln!("[Rust] Warning: failed to write PID file: {}", e);
     }
 
-    std::thread::spawn(move || {
-        let app_root = find_app_root();
-        let python = find_python(&app_root);
-        let script = app_root.join("run_pipeline.py");
-
-        // Use SSE streaming: --stream flag tells Python to output SSE to stdout
-        let args = vec![
-            script.to_string_lossy().to_string(),
-            "--phase".to_string(), phase.clone(),
-            "--output-dir".to_string(), output_dir.clone(),
-            "--stream".to_string(),
-        ];
-
-        let _ = app_handle.emit("pipeline-progress", PipelineProgress {
-            phase: phase.clone(),
-            step: "running".to_string(),
-            message: format!("Running {} phase...", phase),
-        });
-
-        // Spawn child process with stdout captured for SSE streaming
-        let child = match Command::new(&python)
-            .env("PYTHONPATH", app_root.to_str().unwrap_or(""))
-            .args(&args)
-            .current_dir(&app_root)
-            .stdout(std::process::Stdio::piped())
-            .stderr(std::process::Stdio::piped())
-            .spawn()
-        {
-            Ok(c) => c,
-            Err(e) => {
-                *PIPELINE_RUNNING.lock().unwrap() = false;
-                {
-                    let mut cached = PIPELINE_CHILD.lock().unwrap();
-                    *cached = None;
-                }
-                remove_pid_file(&output_path);
-                let _ = app_handle.emit("pipeline-error",
-                    format!("Failed to start Python ({}): {}", python, e));
-                return;
-            }
-        };
-
-        // Use Arc<Mutex<Option<Child>>> for thread-safe access
-        let child_arc: Arc<Mutex<Option<Child>>> = Arc::new(Mutex::new(Some(child)));
-        let child_stream = child_arc.clone();
-        let child_wait = child_arc.clone();
-
-        // Store child handle for cancel support
-        {
-            let mut cached = PIPELINE_CHILD.lock().unwrap();
-            *cached = Some(child_arc.clone());
-        }
-
-        // SSE streaming thread: read stdout line by line and emit events
-        let app_handle_clone = app_handle.clone();
-        let phase_clone = phase.clone();
-        let stream_thread = std::thread::spawn(move || {
-            let mut stdout_reader = {
-                let mut child_guard = child_stream.lock().unwrap();
-                if let Some(ref mut c) = *child_guard {
-                    use std::io::BufRead;
-                    use std::io::BufReader;
-                    let stdout = c.stdout.take().expect("stdout not captured");
-                    Box::new(BufReader::new(stdout)) as Box<dyn BufRead + Send>
-                } else {
-                    return;
-                }
-            };
-
-            let mut line = String::new();
-            loop {
-                // Read a line from stdout
-                use std::io::BufRead;
-                match stdout_reader.read_line(&mut line) {
-                    Ok(0) => break,  // EOF
-                    Ok(_) => {
-                        let line_str = line.trim();
-                        if line_str.starts_with("data: ") {
-                            let json_str = &line_str[6..];  // Remove "data: " prefix
-                            if let Ok(json) = serde_json::from_str::<serde_json::Value>(json_str) {
-                                let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("");
-                                let step = json.get("step").and_then(|v| v.as_str()).unwrap_or("running");
-                                let _ = app_handle_clone.emit("pipeline-progress", PipelineProgress {
-                                    phase: phase_clone.clone(),
-                                    step: step.to_string(),
-                                    message: msg.to_string(),
-                                });
-                                if step == "complete" {
-                                    let _ = app_handle_clone.emit("pipeline-complete", &phase_clone);
-                                } else if step == "error" {
-                                    let _ = app_handle_clone.emit("pipeline-error", msg);
-                                }
-                            }
-                        }
-                        // Also emit non-SSE output as info
-                        else if !line_str.is_empty() && !line_str.starts_with("data:") {
-                            // Check if process has exited
-                            let child_guard = child_stream.lock().unwrap();
-                            if child_guard.is_none() {
-                                break;
-                            }
-                        }
-                    }
-                    Err(_) => break,
-                }
-                line.clear();
-            }
-        });
-
-        // Wait for process and stream thread
-        let status = {
-            let mut child_guard = child_wait.lock().unwrap();
-            child_guard.take().map(|mut c| c.wait()).unwrap_or_else(|| {
-                Ok(std::process::ExitStatus::from_raw(0))
-            })
-        };
-        let _ = stream_thread.join();
-        *PIPELINE_RUNNING.lock().unwrap() = false;
-        {
-            let mut cached = PIPELINE_CHILD.lock().unwrap();
-            *cached = None;
-        }
-
-        match status {
-            Ok(s) if s.success() => {
-                let _ = app_handle.emit("pipeline-progress", PipelineProgress {
-                    phase: phase.clone(), step: "complete".to_string(),
-                    message: format!("{} phase completed", phase),
-                });
-                let _ = app_handle.emit("pipeline-complete", &phase);
-            }
-            Ok(_) => { let _ = app_handle.emit("pipeline-error", "Pipeline exited with error"); }
-            Err(e) => { let _ = app_handle.emit("pipeline-error", format!("Process wait error: {}", e)); }
-        }
-
-        remove_pid_file(&output_path);
-    });
-
-    Ok(())
+    run_pipeline_phase_internal(phase, output_dir, app_handle, None).await
 }
 
 #[tauri::command]

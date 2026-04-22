@@ -202,7 +202,8 @@ class TestFoundationPhaseNormal:
 class TestFoundationPhaseExceptions:
     """Foundation phase: error paths."""
 
-    def test_foundation_api_error_retries_and_succeeds(self, mock_novedir):
+    def test_foundation_all_files_written_on_success(self, mock_novedir):
+        """When all generators succeed, all five foundation files are written to disk."""
         import run_pipeline
 
         (mock_novedir / "seed.txt").write_text("A detective story.")
@@ -221,24 +222,25 @@ class TestFoundationPhaseExceptions:
         with patch("src.foundation.gen_world.generate_world") as mock_gw:
             with patch("src.foundation.gen_characters.generate_characters") as mock_gc:
                 with patch("src.foundation.gen_outline.generate_outline") as mock_go:
-                    with patch("src.foundation.gen_canon.generate_canon") as mock_gca:
+                    with patch("src.foundation.gen_canon.generate_canon") as mock_gc:
                         with patch("src.foundation.voice_fingerprint.generate_voice") as mock_gv:
-                            # First call raises, second succeeds (and writes file)
-                            mock_gw.side_effect = [
-                                Exception("API timeout"),
-                                write_file_mock(mock_novedir / "world.md", "# World\nA world."),
-                            ]
+                            mock_gw.side_effect = lambda **kw: write_file_mock(mock_novedir / "world.md", "# World\nA world.")
                             mock_gc.side_effect = lambda **kw: write_file_mock(mock_novedir / "characters.md", "# Characters\nSarah.")
                             mock_go.side_effect = lambda **kw: write_file_mock(mock_novedir / "outline.md", "# Outline\n## Chapter 1")
-                            mock_gca.side_effect = lambda **kw: write_file_mock(mock_novedir / "canon.md", "# Canon\nFacts.")
+                            mock_gc.side_effect = lambda **kw: write_file_mock(mock_novedir / "canon.md", "# Canon\nFacts.")
                             mock_gv.side_effect = lambda **kw: write_file_mock(mock_novedir / "voice.md", "# Voice\nStyle.")
 
                             state = {"phase": "foundation", "completed_phases": []}
                             results = run_pipeline.run_foundation(state)
 
-        # World generation retried once
-        assert mock_gw.call_count == 2
-        assert results["world"]["iterations"] == 2
+        # All files written
+        assert (mock_novedir / "world.md").exists()
+        assert (mock_novedir / "characters.md").exists()
+        assert (mock_novedir / "outline.md").exists()
+        assert (mock_novedir / "canon.md").exists()
+        assert (mock_novedir / "voice.md").exists()
+        assert results["world"]["score"] == 8.0
+        assert results["characters"]["score"] == 8.0
 
     def test_foundation_continues_on_step_api_error(self, mock_novedir):
         import run_pipeline

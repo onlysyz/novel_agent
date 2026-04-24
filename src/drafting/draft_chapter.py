@@ -274,9 +274,23 @@ def build_context_package(chapter_num: int) -> dict:
     }
 
 
-def build_chapter_prompt(ctx: dict, chapter_num: int) -> tuple[str, str]:
+def build_chapter_prompt(ctx: dict, chapter_num: int, language: str = "en") -> tuple[str, str]:
     """Build the system and user prompts for chapter generation."""
     brief = ctx["chapter_brief"]
+
+    # Add language instruction for non-English languages
+    lang_instruction = ""
+    if language != "en":
+        lang_names = {
+            "zh": "Simplified Chinese",
+            "ja": "Japanese",
+            "ko": "Korean",
+            "es": "Spanish",
+            "fr": "French",
+            "de": "German",
+        }
+        lang_name = lang_names.get(language, "English")
+        lang_instruction = f"\n\n## Language\nWrite all content in {lang_name}."
 
     system = f"""You are a novel writer. You write literary fiction with depth, authenticity, and craft.
 
@@ -289,7 +303,7 @@ You understand:
 
 You are writing Chapter {chapter_num} of the novel.
 
-Follow ALL writing rules below. These are not suggestions - they are mandatory."""
+Follow ALL writing rules below. These are not suggestions - they are mandatory.{lang_instruction}"""
 
     user = f"""## VOICE REFERENCE
 {ctx['voice'] or 'No voice guide provided - write in a clear, literary style.'}
@@ -549,6 +563,7 @@ def draft_chapter(
     context: dict = None,
     max_retries: int = 5,
     min_score: float = 6.0,
+    language: str = "en",
 ) -> dict:
     """
     Generate a single chapter with retry logic.
@@ -558,6 +573,7 @@ def draft_chapter(
         context: Pre-assembled context package (generated if not provided)
         max_retries: Maximum generation attempts
         min_score: Minimum acceptable score
+        language: Language code for chapter generation (default: en)
 
     Returns:
         dict with keys: text, word_count, chapter_num, score, attempts
@@ -591,7 +607,7 @@ def draft_chapter(
         print(f"[Chapter {chapter_num}] Attempt {attempt}/{max_retries}")
         _log_progress("drafting", f"Chapter {chapter_num} attempt {attempt}/{max_retries}...", "running")
 
-        system, user = build_chapter_prompt(context, chapter_num)
+        system, user = build_chapter_prompt(context, chapter_num, language)
 
         def chapter_progress_callback(chunk: str, accumulated: str):
             """Emit streaming progress every ~500 chars."""

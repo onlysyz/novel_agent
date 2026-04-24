@@ -118,6 +118,12 @@ export default function FoundationView({ outputDir }: Props) {
     }
   };
 
+  const handleCopy = () => {
+    if (!doc) return;
+    navigator.clipboard.writeText(doc.content);
+    showToast(t("doc_copied") || "Copied as Markdown", "success");
+  };
+
   useEffect(() => {
     loadDoc("world");
     registerSaveHandler(null); // FoundationView has no global save action
@@ -163,7 +169,10 @@ export default function FoundationView({ outputDir }: Props) {
             <div className="doc-header">
               <h2>{doc.name.charAt(0).toUpperCase() + doc.name.slice(1)}</h2>
               {!isEditing && (
-                <button className="btn-secondary" onClick={handleEdit}>{t("edit")}</button>
+                <div className="doc-header-actions">
+                  <button className="btn-secondary btn-small" onClick={handleCopy} title={t("copy_md") || "Copy as Markdown"}>⧉</button>
+                  <button className="btn-secondary" onClick={handleEdit}>{t("edit")}</button>
+                </div>
               )}
             </div>
             {isEditing ? (

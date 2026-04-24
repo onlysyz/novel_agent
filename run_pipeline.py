@@ -351,6 +351,9 @@ def run_foundation(state: dict) -> dict:
     print()
     log_progress("foundation", f"Novel concept: {seed[:80]}...", "running")
 
+    # Store language in state for downstream phases
+    state["language"] = language
+
     results = {}
 
     # Step 1: World Bible
@@ -522,7 +525,8 @@ def run_drafting(state: dict) -> dict:
 
         try:
             context = context_cache.get(chapter_num, build_context_package(chapter_num))
-            result = draft_chapter(chapter_num, context)
+            language = state.get("language", "en")
+            result = draft_chapter(chapter_num, context, language=language)
 
             chapter_scores[f"ch_{chapter_num:02d}"] = result["score"]
             total_words += result["word_count"]

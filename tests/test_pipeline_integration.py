@@ -290,7 +290,7 @@ class TestDraftingPhaseNormal:
 
         called_chapters = []
 
-        def mock_chapter(ch_num, context=None):
+        def mock_chapter(ch_num, context=None, language=None):
             called_chapters.append(ch_num)
             chapters_dir = run_pipeline.NOVEL_DIR / "chapters"
             chapters_dir.mkdir(exist_ok=True)
@@ -425,7 +425,7 @@ class TestDraftingPhaseNormal:
 
         call_counts = {}
 
-        def mock_chapter(ch_num, context=None):
+        def mock_chapter(ch_num, context=None, language=None):
             call_counts[ch_num] = call_counts.get(ch_num, 0) + 1
             return {
                 "chapter_num": ch_num,
@@ -480,7 +480,7 @@ class TestDraftingPhaseExceptions:
 
         call_count = {}
 
-        def mock_chapter(ch_num, context=None):
+        def mock_chapter(ch_num, context=None, language=None):
             call_count[ch_num] = call_count.get(ch_num, 0) + 1
             if ch_num == 1:
                 raise TimeoutError("API request timed out after 3 attempts")
@@ -534,7 +534,7 @@ class TestDraftingPhaseExceptions:
 
         call_count = {}
 
-        def mock_chapter(ch_num, context=None):
+        def mock_chapter(ch_num, context=None, language=None):
             call_count[ch_num] = call_count.get(ch_num, 0) + 1
             if ch_num == 1:
                 raise RuntimeError("API quota exceeded. Please check your Anthropic account usage at https://console.anthropic.com/")
@@ -593,7 +593,7 @@ class TestDraftingPhaseExceptions:
 
         call_count = {}
 
-        def mock_chapter(ch_num, context=None):
+        def mock_chapter(ch_num, context=None, language=None):
             call_count[ch_num] = call_count.get(ch_num, 0) + 1
             if ch_num == 1:
                 raise ValueError("Content too long for model context. Please reduce input size.")
@@ -1015,7 +1015,7 @@ class TestFailedChapterRecovery:
         # Track which chapters are drafted
         drafted = []
 
-        def mock_chapter(ch_num, context=None):
+        def mock_chapter(ch_num, context=None, language=None):
             drafted.append(ch_num)
             return {
                 "chapter_num": ch_num,

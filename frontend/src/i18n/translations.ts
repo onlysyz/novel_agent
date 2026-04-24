@@ -66,6 +66,8 @@ export const translations = {
     edit: "Edit",
     doc_saved: "Document saved!",
     unsaved: "Unsaved",
+    doc_copied: "Copied as Markdown",
+    copy_md: "Copy as Markdown",
     chapter_content_placeholder: "Chapter content will appear here...",
 
     // FoundationView
@@ -209,6 +211,8 @@ export const translations = {
     edit: "编辑",
     doc_saved: "文档已保存！",
     unsaved: "未保存",
+    doc_copied: "已复制为 Markdown",
+    copy_md: "复制为 Markdown",
     chapter_content_placeholder: "章节内容将在此显示...",
 
     // FoundationView
